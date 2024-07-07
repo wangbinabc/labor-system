@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.ProvicePerformanceMapper">
+    
+    <resultMap type="ProvicePerformance" id="ProvicePerformanceResult">
+        <result property="ppId"    column="pp_id"    />
+        <result property="ppDeptId"    column="pp_dept_id"    />
+        <result property="ppDeptName"    column="pp_dept_name"    />
+        <result property="ppProvinceDeptId"    column="pp_province_dept_id"    />
+        <result property="ppProvinceDeptName"    column="pp_province_dept_name"    />
+        <result property="ppYear"    column="pp_year"    />
+        <result property="ppCycle"    column="pp_cycle"    />
+        <result property="ppTargetRanking"    column="pp_target_ranking"    />
+        <result property="ppQuarterlyRanking"    column="pp_quarterly_ranking"    />
+        <result property="ppQuarterlyPlanScore"    column="pp_quarterly_plan_score"    />
+        <result property="ppQuarterlyActualScore"    column="pp_quarterly_actual_score"    />
+        <result property="disabled"    column="disabled"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectProvicePerformanceVo">
+        select pp_id, pp_dept_id, pp_dept_name, pp_province_dept_id, pp_province_dept_name, pp_year, pp_cycle, pp_target_ranking, pp_quarterly_ranking, pp_quarterly_plan_score, pp_quarterly_actual_score, disabled, create_by, create_time, update_by, update_time from provice_performance
+    </sql>
+
+    <select id="findExportInfos" resultType="com.yuantu.labor.domain.ProvicePerformance">
+        <include refid="selectProvicePerformanceVo"/>
+        where disabled = 0
+        <if test="export.ids != null and export.ids.size() > 0 ">
+            and pp_id in
+            <foreach collection="export.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <!--统计页面专用,正常查询请用selectProvicePerformanceListByScreen-->
+    <select id="selectProvicePerformanceList" parameterType="ProvicePerformance" resultMap="ProvicePerformanceResult">
+        <include refid="selectProvicePerformanceVo"/>
+        <where>  
+            <if test="ppDeptId != null "> and pp_dept_id = #{ppDeptId}</if>
+            <if test="ppDeptName != null  and ppDeptName != ''"> and pp_dept_name like concat('%', #{ppDeptName}, '%')</if>
+            <if test="ppProvinceDeptId != null "> and pp_province_dept_id = #{ppProvinceDeptId}</if>
+            <if test="ppProvinceDeptName != null  and ppProvinceDeptName != ''"> and pp_province_dept_name like concat('%', #{ppProvinceDeptName}, '%')</if>
+            <if test="ppYear != null "> and pp_year = #{ppYear}</if>
+            <if test="ppCycle == null ">and pp_cycle != 0</if>
+            <if test="ppCycle != null ">and pp_cycle = #{ppCycle}</if>
+            <if test="ppTargetRanking != null "> and pp_target_ranking = #{ppTargetRanking}</if>
+            <if test="ppQuarterlyRanking != null "> and pp_quarterly_ranking = #{ppQuarterlyRanking}</if>
+            <if test="ppQuarterlyPlanScore != null "> and pp_quarterly_plan_score = #{ppQuarterlyPlanScore}</if>
+            <if test="ppQuarterlyActualScore != null "> and pp_quarterly_actual_score = #{ppQuarterlyActualScore}</if>
+            and disabled = 0
+        </where>
+        order by pp_year asc ,pp_cycle asc
+    </select>
+
+
+    <select id="selectProvicePerformanceListByScreen" parameterType="com.yuantu.labor.vo.ProvicePerformanceScreenVO" resultMap="ProvicePerformanceResult">
+        <include refid="selectProvicePerformanceVo"/>
+        <where>
+            <if test="ppDeptId != null "> and pp_dept_id = #{ppDeptId}</if>
+            <if test="ppDeptName != null  and ppDeptName != ''"> and pp_dept_name like concat('%', #{ppDeptName}, '%')</if>
+            <if test="ppProvinceDeptId != null "> and pp_province_dept_id = #{ppProvinceDeptId}</if>
+            <if test="ppProvinceDeptName != null  and ppProvinceDeptName != ''"> and pp_province_dept_name like concat('%', #{ppProvinceDeptName}, '%')</if>
+            <if test="ppYear != null "> and pp_year = #{ppYear}</if>
+            <if test="ppCycle != null  and ppCycle != ''"> and pp_cycle = #{ppCycle}</if>
+            <if test="ppTargetRanking != null "> and pp_target_ranking = #{ppTargetRanking}</if>
+            <if test="ppQuarterlyRankingStart != null "> and pp_quarterly_ranking &gt;= #{ppQuarterlyRankingStart}</if>
+            <if test="ppQuarterlyRankingEnd != null "> and pp_quarterly_ranking &lt;= #{ppQuarterlyRankingEnd}</if>
+            <if test="ppQuarterlyPlanScore != null "> and pp_quarterly_plan_score = #{ppQuarterlyPlanScore}</if>
+            <if test="ppQuarterlyActualScoreStart != null "> and pp_quarterly_actual_score &gt;= #{ppQuarterlyActualScoreStart}</if>
+            <if test="ppQuarterlyActualScoreEnd != null "> and pp_quarterly_actual_score &lt;= #{ppQuarterlyActualScoreEnd}</if>
+            <if test="updateTimeStart != null ">and update_time &gt;=  #{updateTimeStart}</if>
+            <if test="updateTimeEnd != null ">and update_time &lt;= #{updateTimeEnd}</if>
+            and disabled = 0
+        </where>
+        order by pp_year asc ,pp_cycle asc
+    </select>
+    
+    <select id="selectProvicePerformanceByPpId" parameterType="Long" resultMap="ProvicePerformanceResult">
+        <include refid="selectProvicePerformanceVo"/>
+        where pp_id = #{ppId}  and disabled = 0
+    </select>
+        
+    <insert id="insertProvicePerformance" parameterType="ProvicePerformance" useGeneratedKeys="true" keyProperty="ppId">
+        insert into provice_performance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ppDeptId != null">pp_dept_id,</if>
+            <if test="ppDeptName != null">pp_dept_name,</if>
+            <if test="ppProvinceDeptId != null">pp_province_dept_id,</if>
+            <if test="ppProvinceDeptName != null">pp_province_dept_name,</if>
+            <if test="ppYear != null">pp_year,</if>
+            <if test="ppCycle != null">pp_cycle,</if>
+            <if test="ppTargetRanking != null">pp_target_ranking,</if>
+            <if test="ppQuarterlyRanking != null">pp_quarterly_ranking,</if>
+            <if test="ppQuarterlyPlanScore != null">pp_quarterly_plan_score,</if>
+            <if test="ppQuarterlyActualScore != null">pp_quarterly_actual_score,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ppDeptId != null">#{ppDeptId},</if>
+            <if test="ppDeptName != null">#{ppDeptName},</if>
+            <if test="ppProvinceDeptId != null">#{ppProvinceDeptId},</if>
+            <if test="ppProvinceDeptName != null">#{ppProvinceDeptName},</if>
+            <if test="ppYear != null">#{ppYear},</if>
+            <if test="ppCycle != null">#{ppCycle},</if>
+            <if test="ppTargetRanking != null">#{ppTargetRanking},</if>
+            <if test="ppQuarterlyRanking != null">#{ppQuarterlyRanking},</if>
+            <if test="ppQuarterlyPlanScore != null">#{ppQuarterlyPlanScore},</if>
+            <if test="ppQuarterlyActualScore != null">#{ppQuarterlyActualScore},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProvicePerformance" parameterType="ProvicePerformance">
+        update provice_performance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ppDeptId != null">pp_dept_id = #{ppDeptId},</if>
+            <if test="ppDeptName != null">pp_dept_name = #{ppDeptName},</if>
+            <if test="ppProvinceDeptId != null">pp_province_dept_id = #{ppProvinceDeptId},</if>
+            <if test="ppProvinceDeptName != null">pp_province_dept_name = #{ppProvinceDeptName},</if>
+            <if test="ppYear != null">pp_year = #{ppYear},</if>
+            <if test="ppCycle != null">pp_cycle = #{ppCycle},</if>
+            <if test="ppTargetRanking != null">pp_target_ranking = #{ppTargetRanking},</if>
+            <if test="ppQuarterlyRanking != null">pp_quarterly_ranking = #{ppQuarterlyRanking},</if>
+            <if test="ppQuarterlyPlanScore != null">pp_quarterly_plan_score = #{ppQuarterlyPlanScore},</if>
+            <if test="ppQuarterlyActualScore != null">pp_quarterly_actual_score = #{ppQuarterlyActualScore},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where pp_id = #{ppId}
+    </update>
+
+    <delete id="deleteProvicePerformanceByPpId" parameterType="Long">
+        update provice_performance set disabled = 1  where pp_id = #{ppId}
+    </delete>
+
+    <delete id="deleteProvicePerformanceByPpIds" parameterType="String">
+        update provice_performance set disabled = 1   where pp_id in
+        <foreach item="ppId" collection="array" open="(" separator="," close=")">
+            #{ppId}
+        </foreach>
+    </delete>
+</mapper>

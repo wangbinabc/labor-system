@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpAttendanceMapper">
+
+    <resultMap type="EmpAttendance" id="EmpAttendanceResult">
+        <result property="attendId" column="attend_id"/>
+        <result property="attendEmpId" column="attend_emp_id"/>
+        <result property="attendEmpName" column="attend_emp_name"/>
+        <result property="attendEmpIdcard" column="attend_emp_idcard"/>
+        <result property="attendRecordDate" column="attend_record_date"/>
+        <result property="attendIsweekday" column="attend_isweekday"/>
+        <result property="attendStatus" column="attend_status"/>
+        <result property="attendStatusDetail" column="attend_status_detail"/>
+        <result property="attendUpdateTime" column="attend_update_time"/>
+        <result property="disabled" column="disabled"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectEmpAttendanceVo">
+        select attend_id, attend_emp_id, attend_emp_name,
+        INSERT
+        (
+        SP_DECRYPT
+        (
+        emp_attendance
+        .
+        attend_emp_idcard
+        )
+        ,
+        5
+        ,
+        10
+        ,
+        '**********'
+        )
+        as
+        attend_emp_idcard
+        ,
+        attend_record_date
+        ,
+        attend_isweekday
+        ,
+        attend_status
+        ,
+        attend_status_detail
+        ,
+        attend_update_time
+        ,
+        emp_attendance
+        .
+        disabled
+        ,
+        emp_attendance
+        .
+        create_by
+        ,
+        emp_attendance
+        .
+        create_time
+        ,
+        emp_attendance
+        .
+        update_by
+        ,
+        emp_attendance
+        .
+        update_time
+        ,
+        flag
+        from emp_attendance
+
+    </sql>
+
+    <select id="selectEmpAttendanceList" parameterType="EmpAttendance" resultMap="EmpAttendanceResult">
+        <include refid="selectEmpAttendanceVo"/>
+        <where>
+            and emp_attendance.disabled = 0
+            <if test="attendEmpId != null ">and attend_emp_id = #{attendEmpId}</if>
+            <if test="attendEmpName != null  and attendEmpName != ''">and (attend_emp_name like concat('%',
+                #{attendEmpName}, '%') or CAST(SP_DECRYPT(attend_emp_idcard) AS CHAR(128)) like concat('%',
+                #{attendEmpName}, '%'))
+            </if>
+            <if test="attendEmpIdcard != null  and attendEmpIdcard != ''">and ( CAST(SP_DECRYPT(attend_emp_idcard) AS
+                CHAR(128)) like concat('%', #{attendEmpIdcard}, '%') or attend_emp_name like concat('%',
+                #{attendEmpIdcard}, '%'))
+            </if>
+            <if test="attendRecordDate != null ">and attend_record_date = #{attendRecordDate}</if>
+            <if test="attendIsweekday != null ">and attend_isweekday = #{attendIsweekday}</if>
+            <if test="attendStatus != null  and attendStatus != ''">and attend_status = #{attendStatus}</if>
+            <if test="attendStatusDetail != null  and attendStatusDetail != ''">and attend_status_detail =
+                #{attendStatusDetail}
+            </if>
+            <if test="attendUpdateTime != null ">and attend_update_time = #{attendUpdateTime}</if>
+            <if test="flag != null">and flag = #{flag}</if>
+        </where>
+    </select>
+
+
+    <select id="selectEmpAttendanceEffectivenessList" parameterType="com.yuantu.labor.vo.EmpEffectivenessSearchVO"
+            resultType="com.yuantu.labor.vo.EmpEffectivenessVO">
+        select employee.emp_dept_id as dept_id, employee.emp_dept_name as dept_name,employee.emp_id as
+        emp_id,employee.emp_name as emp_name,INSERT(SP_DECRYPT(employee.emp_idcard),5,10,'*********') as emp_idcard ,
+        IFNULL((t_count.count1)/t_sum.sum1*100,0) as result
+        from
+        (SELECT
+        emp_attendance.attend_emp_id,
+        count(1) as count1
+        FROM
+        emp_attendance
+        WHERE
+        emp_attendance.attend_status != '3' and
+        emp_attendance.disabled = 0
+        <if test="searchYearMonth != null">
+            and DATE_FORMAT(emp_attendance.attend_record_date, '%Y-%m') = #{searchYearMonth}
+        </if>
+        GROUP BY
+        emp_attendance.attend_emp_id
+        -- emp_attendance.attend_emp_name,
+        -- emp_attendance.attend_emp_idcard
+        ) t_count
+        RIGHT JOIN
+        (SELECT
+        emp_attendance.attend_emp_name,
+        emp_attendance.attend_emp_id,
+        emp_attendance.attend_emp_idcard,
+        count(1) as sum1
+        FROM
+        emp_attendance
+        WHERE
+        emp_attendance.disabled = 0
+        <if test="searchYearMonth != null">
+            and DATE_FORMAT(emp_attendance.attend_record_date, '%Y-%m') = #{searchYearMonth}
+        </if>
+        GROUP BY
+        emp_attendance.attend_emp_id
+        -- emp_attendance.attend_emp_name,
+        -- emp_attendance.attend_emp_idcard
+        ) t_sum
+        on t_count.attend_emp_id = t_sum.attend_emp_id
+        RIGHT JOIN employee on t_sum.attend_emp_id = employee.emp_id group by employee.emp_id
+        <where>
+            <if test="empName != null  and empName != ''">and (t_sum.attend_emp_name like concat('%', #{empName}, '%')
+                or CAST(SP_DECRYPT(t_sum.attend_emp_idcard) AS CHAR(128)) like concat('%', #{empName}, '%'))
+            </if>
+            <if test="empIdcard != null  and empIdcard != ''">and (CAST(SP_DECRYPT(t_sum.attend_emp_idcard) AS
+                CHAR(128)) like concat('%', #{empIdcard}, '%') or t_sum.attend_emp_name like concat('%', #{empIdcard},
+                '%'))
+            </if>
+            and employee.disabled = 0
+        </where>
+    </select>
+
+    <select id="selectDeptAttendanceEffectivenessList" parameterType="com.yuantu.labor.vo.DeptEffectivenessSearchVO"
+            resultType="com.yuantu.labor.vo.DeptEffectivenessVO">
+        -- SELECT E1.emp_dept_name as dept_name, IFNULL((E2.RES/E1.RES)*100,0) as result
+        -- FROM ( select t2. emp_dept_name,IFNULL(t1.res,0) RES
+        -- FROM (
+        -- SELECT e.emp_dept_name,COUNT(ea.attend_status) res FROM employee e
+        -- left JOIN emp_attendance ea on ea.attend_emp_id = e.emp_id
+        -- where e.disabled = 0 and ea.disabled = 0
+        -- GROUP BY e.emp_dept_name) t1
+        -- RIGHT JOIN
+        -- (SELECT DISTINCT emp_dept_name from employee) t2
+        -- on t1.emp_dept_name = t2.emp_dept_name
+        -- ) E1
+        -- LEFT JOIN
+        -- ( SELECT e.emp_dept_name,COUNT(1) RES
+        -- FROM employee e
+        -- RIGHT JOIN
+        -- emp_attendance ea on ea.attend_emp_id = e.emp_id
+        -- where e.disabled = 0 and ea.disabled = 0 and ea.attend_status !='3'
+        -- GROUP BY e.emp_dept_name
+        -- ) E2
+        -- ON E1.emp_dept_name = E2.emp_dept_name
+        SELECT DISTINCT E1.emp_dept_id as dept_id, IFNULL((E2.RES/E1.RES)*100,0) as result
+        FROM ( select t2.emp_dept_id, t1.emp_dept_name,IFNULL(t1.res,0) RES
+        FROM (
+        SELECT e.emp_dept_id,e.emp_dept_name,COUNT(ea.attend_status) res FROM employee e
+        left JOIN emp_attendance ea on ea.attend_emp_id = e.emp_id
+        where e.disabled = 0 and ea.disabled = 0 and emp_dept_id is not null
+        <if test="searchYearMonth != null">
+            and DATE_FORMAT(ea.attend_record_date, '%Y-%m') = #{searchYearMonth}
+        </if>
+        GROUP BY e.emp_dept_id) t1
+        RIGHT JOIN
+        (SELECT DISTINCT emp_dept_id from employee where emp_dept_id is not null) t2
+        on t1.emp_dept_id = t2.emp_dept_id
+        ) E1
+        LEFT JOIN
+        ( SELECT e.emp_dept_id,COUNT(1) RES
+        FROM employee e
+        RIGHT JOIN
+        emp_attendance ea on ea.attend_emp_id = e.emp_id
+        where e.disabled = 0 and ea.disabled = 0 and ea.attend_status !='3'
+        <if test="searchYearMonth != null">
+            and DATE_FORMAT(ea.attend_record_date, '%Y-%m') = #{searchYearMonth}
+        </if>
+        GROUP BY e.emp_dept_id
+        ) E2
+        ON E1.emp_dept_id = E2.emp_dept_id
+        <where>
+            <if test="deptName != null  and deptName != ''">and E1.emp_dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="deptId != null">and E1.emp_dept_id = #{deptId}</if>
+        </where>
+
+    </select>
+
+
+    <select id="selectEmpAttendanceListByScreen" resultMap="EmpAttendanceResult">
+        select
+        ea.attend_id,
+        ea.attend_emp_id,
+        ea.attend_emp_name,
+        ea.flag,
+        INSERT(SP_DECRYPT(ea.attend_emp_idcard),5,10,'*********') as attend_emp_idcard,
+        ea.attend_record_date,
+        ea.attend_isweekday,
+        ea.attend_status, ea.attend_status_detail,ea.create_by,
+        ea.create_time, ea.update_by,
+        ea.update_time, e.emp_category
+        from emp_attendance ea left join employee e on ea.attend_emp_id = e.emp_id
+        <where>
+            and ea.disabled = 0
+            <!--            <if test="attendEmpId != null ">and attend_emp_id = #{attendEmpId}</if>-->
+            <!--            <if test="attendEmpName != null  and attendEmpName != ''"> and (ea.attend_emp_name like concat('%', #{attendEmpName}, '%') or ea.attend_emp_idcard like concat('%', #{attendEmpName}, '%')) </if>-->
+            <!--            <if test="attendEmpIdcard != null  and attendEmpIdcard != ''"> and (ea.attend_emp_idcard like concat('%', #{attendEmpIdcard}, '%') or ea.attend_emp_name like concat('%', #{attendEmpIdcard}, '%')</if>-->
+            <!--            <if test="empAttend.attendEmpName != null and empAttend.attendEmpName != ''">and (attend_emp_name like-->
+            <!--                concat('%',-->
+            <!--                #{empAttend.attendEmpName}, '%') or CAST(SP_DECRYPT(attend_emp_idcard) AS CHAR(128)) like concat('%',-->
+            <!--                #{empAttend.attendEmpName}, '%'))-->
+            <!--            </if>-->
+            <!--            <if test="empAttend.attendEmpIdcard != null  and empAttend.attendEmpIdcard != ''">and (-->
+            <!--                CAST(SP_DECRYPT(attend_emp_idcard) AS-->
+            <!--                CHAR(128)) like concat('%', #{empAttend.attendEmpIdcard}, '%') or attend_emp_name like concat('%',-->
+            <!--                #{empAttend.attendEmpIdcard}, '%'))-->
+            <!--            </if>-->
+            <if test="empAttend.attendRecordDateStart != null ">and ea.attend_record_date &gt;=
+                #{empAttend.attendRecordDateStart}
+            </if>
+            <if test="empAttend.attendRecordDateEnd != null ">and ea.attend_record_date &lt;=
+                #{empAttend.attendRecordDateEnd}
+            </if>
+            <if test="empAttend.attendIsweekday != null ">and ea.attend_isweekday = #{empAttend.attendIsweekday}</if>
+            <if test="empAttend.attendStatus != null  and empAttend.attendStatus != ''">and ea.attend_status =
+                #{empAttend.attendStatus}
+            </if>
+            <if test="empAttend.attendStatusDetail != null  and empAttend.attendStatusDetail != ''">and
+                ea.attend_status_detail =
+                #{empAttend.attendStatusDetail}
+            </if>
+            <if test="empAttend.updateTimeStart != null ">and ea.update_time &gt;= #{empAttend.updateTimeStart}</if>
+            <if test="empAttend.updateTimeEnd != null ">and ea.update_time &lt;= #{empAttend.updateTimeEnd}</if>
+            <if test="attendIds != null and attendIds.size() > 0">
+                and attend_id in
+                <foreach collection="attendIds" item="attendId" open="(" separator="," close=")">
+                    #{attendId}
+                </foreach>
+            </if>
+            <if test="attendIds.size() == 0 and query != null">
+                and 1 = 2
+            </if>
+        </where>
+    </select>
+
+
+    <select id="findExportInfos" resultType="com.yuantu.labor.domain.EmpAttendance">
+        <include refid="selectEmpAttendanceVo"/>
+        where emp_attendance.disabled = 0
+        <if test="export.ids != null and export.ids.size() > 0 ">
+            and attend_id in
+            <foreach collection="export.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectEmpAttendanceListByYearMonth" parameterType="com.yuantu.labor.vo.EmpAttendanceQueryParamsVO"
+            resultMap="EmpAttendanceResult">
+        <include refid="selectEmpAttendanceVo"/>
+        <where>
+            and emp_attendance.disabled = 0
+            <if test="nameOrIdcard != null  and nameOrIdcard != ''">and( attend_emp_name like concat('%',
+                #{nameOrIdcard}, '%') or CAST(SP_DECRYPT(attend_emp_idcard) AS CHAR(128)) like concat('%',
+                #{nameOrIdcard}, '%') )
+            </if>
+            <if test="year != null and year != ''">and year(attend_record_date) = #{year}</if>
+            <if test="month != null and month != ''">and month(attend_record_date) = #{month}</if>
+        </where>
+    </select>
+
+    <select id="selectEmpAttendanceByAttendId" parameterType="Long" resultMap="EmpAttendanceResult">
+        <include refid="selectEmpAttendanceVo"/>
+        where attend_id = #{attendId} and emp_attendance.disabled = 0
+    </select>
+
+    <select id="countEmpAttendanceByAttendanceYear" parameterType="String"
+            resultType="com.yuantu.labor.vo.AttendanceYearVO">
+        select t.attend_status,t.record_year, count(1) num from
+        (select attend_status,YEAR(attend_record_date) as record_year from emp_attendance
+        WHERE emp_attendance.disabled = 0
+        ) t
+        <where>
+            <if test="attendanceYear != null and attendanceYear != ''">
+                t.record_year = #{AttendanceYear}
+            </if>
+        </where>
+        GROUP BY attend_status,record_year
+    </select>
+
+    <select id="findInfosDuringOneYearByEmpIds" resultType="com.yuantu.labor.domain.EmpAttendance">
+        <include refid="selectEmpAttendanceVo"/>
+        where DATE_FORMAT(attend_record_date, '%Y-%m-%d') &gt;= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 YEAR),
+        '%Y-%m-%d')
+        and emp_attendance.disabled = 0 and attend_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+        and flag = 1
+    </select>
+
+    <select id="findEmpAttendanceByEmpIdAndAttendRecordDateBetween" resultMap="EmpAttendanceResult">
+        <include refid="selectEmpAttendanceVo"/>
+        <where>
+            and emp_attendance.disabled = 0
+            and attend_emp_id = #{empId}
+            <if test="startTime != null">
+                and DATE_FORMAT(attend_record_date, '%Y-%m-%d') &gt;= DATE_FORMAT(#{startTime}, '%Y-%m-%d')
+            </if>
+            <if test="endTime != null">
+                and DATE_FORMAT(attend_record_date, '%Y-%m-%d') &lt;= DATE_FORMAT(#{endTime}, '%Y-%m-%d')
+            </if>
+        </where>
+        and flag = 1
+    </select>
+
+    <select id="findEmpAttendanceByEmpIdAndAttendRecordDate" resultMap="EmpAttendanceResult">
+        <include refid="selectEmpAttendanceVo"/>
+        where emp_attendance.disabled = 0
+        and attend_emp_id = #{empId}
+        and DATE_FORMAT(attend_record_date, '%Y-%m') = DATE_FORMAT(#{time}, '%Y-%m')
+        and flag = 1
+    </select>
+
+    <select id="findEmpAttendanceByEmpIdAndAttendRecordDateBetweenByMonth" resultMap="EmpAttendanceResult">
+        <include refid="selectEmpAttendanceVo"/>
+        <where>
+            and emp_attendance.disabled = 0
+            and attend_emp_id = #{empId}
+            <if test="startTime != null">
+                and DATE_FORMAT(attend_record_date, '%Y-%m') &gt;= DATE_FORMAT(#{startTime}, '%Y-%m')
+            </if>
+            <if test="endTime != null">
+                and DATE_FORMAT(attend_record_date, '%Y-%m') &lt;= DATE_FORMAT(#{endTime}, '%Y-%m')
+            </if>
+            and flag = 1
+        </where>
+    </select>
+    <select id="findCurrentInfo" resultType="com.yuantu.labor.domain.EmpAttendance">
+        <include refid="selectEmpAttendanceVo"/>
+        where attend_emp_id = #{attendEmpId} and DATE_FORMAT(emp_attendance.create_time
+        , '%Y-%m-%d') = DATE_FORMAT(#{now}, '%Y-%m-%d') and emp_attendance.disabled = 0
+    </select>
+    <select id="findInfosByEmpIds" resultType="com.yuantu.labor.domain.EmpAttendance">
+        <include refid="selectEmpAttendanceVo"/>
+        where
+        emp_attendance.disabled = 0 and attend_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+    <select id="findInfosByEmpIdAndRecordTime" resultType="com.yuantu.labor.domain.EmpAttendance">
+        <include refid="selectEmpAttendanceVo"/>
+        where emp_attendance.disabled = 0 and attend_emp_id = #{empId} and
+        DATE_FORMAT(attend_record_date, '%Y-%m') = DATE_FORMAT(#{time}, '%Y-%m')
+        and flag = #{flag}
+    </select>
+    <select id="findInfosByEmpIdsAndRecordTime" resultType="com.yuantu.labor.domain.EmpAttendance">
+        <include refid="selectEmpAttendanceVo"/>
+        where emp_attendance.disabled = 0 and attend_emp_id in
+        <foreach collection="empIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="now != null">
+            and DATE_FORMAT(attend_record_date, '%Y-%m') = DATE_FORMAT(#{now}, '%Y-%m')
+        </if>
+    </select>
+    <select id="findInfosByEmpIdsAndRecordTimeForYear" resultType="com.yuantu.labor.domain.EmpAttendance">
+        <include refid="selectEmpAttendanceVo"/>
+        where emp_attendance.disabled = 0
+        <if test="attendIds != null and attendIds.size() > 0">
+            and attend_id in
+            <foreach collection="attendIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="now != null">
+            and DATE_FORMAT(attend_record_date, '%Y') = #{now}
+        </if>
+    </select>
+    <select id="findEmpAttendIdByEmpIdsAndFlag" resultType="java.lang.Long">
+        select attend_id from emp_attendance where attend_emp_id in
+        <foreach collection="empIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and flag = #{flag}
+        and disabled = 0
+    </select>
+    <select id="findNamesByEmpNames" resultType="java.lang.String">
+        select attend_emp_name from emp_attendance where disabled = 0
+        and attend_emp_name in
+        <foreach collection="empNames" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="findLaborAttendInfos" resultType="com.yuantu.labor.vo.LaborDateVO">
+        select attend_emp_name as name, DATE_FORMAT(attend_record_date, '%Y/%m/%d') as recordDate
+        from emp_attendance
+        where disabled = 0 and flag = #{flag}
+        and attend_emp_name in
+        <foreach collection="employNameInfos" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+        and DATE_FORMAT(attend_record_date, '%Y/%m/%d') in
+        <foreach collection="recordDateInfos" item="date" open="(" separator="," close=")">
+            #{date}
+        </foreach>
+    </select>
+
+    <insert id="insertEmpAttendance" parameterType="EmpAttendance" useGeneratedKeys="true" keyProperty="attendId">
+        insert into emp_attendance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="attendEmpId != null">attend_emp_id,</if>
+            <if test="attendEmpName != null">attend_emp_name,</if>
+            <if test="attendEmpIdcard != null">attend_emp_idcard,</if>
+            <if test="attendRecordDate != null">attend_record_date,</if>
+            <if test="attendIsweekday != null">attend_isweekday,</if>
+            <if test="attendStatus != null">attend_status,</if>
+            <if test="attendStatusDetail != null">attend_status_detail,</if>
+            <if test="attendUpdateTime != null">attend_update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="flag != null">flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="attendEmpId != null">#{attendEmpId},</if>
+            <if test="attendEmpName != null">#{attendEmpName},</if>
+            <if test="attendEmpIdcard != null">SP_ENCRYPT(#{attendEmpIdcard}),</if>
+            <if test="attendRecordDate != null">#{attendRecordDate},</if>
+            <if test="attendIsweekday != null">#{attendIsweekday},</if>
+            <if test="attendStatus != null">#{attendStatus},</if>
+            <if test="attendStatusDetail != null">#{attendStatusDetail},</if>
+            <if test="attendUpdateTime != null">#{attendUpdateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="flag != null">#{flag},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsertInfos">
+        insert into emp_attendance(attend_emp_id, attend_emp_name,attend_emp_idcard,attend_record_date,attend_isweekday,
+        attend_status,attend_status_detail,create_by,create_time,flag) values
+        <foreach collection="attendInfos" item="item"
+                 separator=",">
+            (#{item.attendEmpId},
+            #{item.attendEmpName},SP_ENCRYPT(#{item.attendEmpIdcard}),#{item.attendRecordDate},#{item.attendIsweekday},
+            #{item.attendStatus},#{item.attendStatusDetail},#{item.createBy},#{item.createTime},#{item.flag})
+        </foreach>
+    </insert>
+
+    <update id="updateEmpAttendance" parameterType="EmpAttendance">
+        update emp_attendance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="attendEmpId != null">attend_emp_id = #{attendEmpId},</if>
+            <if test="attendEmpName != null">attend_emp_name = #{attendEmpName},</if>
+            <if test="attendEmpIdcard != null">attend_emp_idcard = SP_ENCRYPT(#{attendEmpIdcard}),</if>
+            <if test="attendRecordDate != null">attend_record_date = #{attendRecordDate},</if>
+            <if test="attendIsweekday != null">attend_isweekday = #{attendIsweekday},</if>
+            <if test="attendStatus != null">attend_status = #{attendStatus},</if>
+            <if test="attendStatusDetail != null">attend_status_detail = #{attendStatusDetail},</if>
+            <if test="attendUpdateTime != null">attend_update_time = #{attendUpdateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where attend_id = #{attendId}
+    </update>
+
+    <delete id="deleteEmpAttendanceByAttendId" parameterType="Long">
+        update emp_attendance
+        set disabled = 1
+        where attend_id = #{attendId}
+    </delete>
+
+    <delete id="deleteEmpAttendanceByAttendIds" parameterType="String">
+        update emp_attendance set disabled = 1 where attend_id in
+        <foreach item="attendId" collection="array" open="(" separator="," close=")">
+            #{attendId}
+        </foreach>
+    </delete>
+
+</mapper>

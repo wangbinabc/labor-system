@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpImportHistoryMapper">
+
+    <resultMap type="EmpImportHistory" id="EmpImportHistoryResult">
+        <result property="id" column="id"/>
+        <result property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="idCard" column="id_card"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="disabled" column="disabled"/>
+    </resultMap>
+
+    <sql id="selectEmpImportHistoryVo">
+        select id,
+               emp_id,
+               emp_name,
+               id_card,
+               status,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               disabled
+        from emp_import_history
+    </sql>
+
+    <select id="selectEmpImportHistoryList" parameterType="EmpImportHistory" resultMap="EmpImportHistoryResult">
+        <include refid="selectEmpImportHistoryVo"/>
+        <where>
+            <if test="empId != null ">and emp_id = #{empId}</if>
+            <if test="empName != null  and empName != ''">and emp_name like concat('%', #{empName}, '%')</if>
+            <if test="idCard != null  and idCard != ''">and id_card = #{idCard}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="disabled != null ">and disabled = #{disabled}</if>
+        </where>
+    </select>
+
+    <select id="selectEmpImportHistoryById" parameterType="Long" resultMap="EmpImportHistoryResult">
+        <include refid="selectEmpImportHistoryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectMatchInfos" resultType="com.yuantu.labor.vo.EmpImportHistoryVO">
+        <include refid="selectEmpImportHistoryVo"/>
+        where disabled = 0 and create_by = #{createId}
+        <if test="matchSearch.empIdCard != null and matchSearch.empIdCard != ''">
+            and id_card = #{matchSearch.empIdCard}
+        </if>
+        <if test="matchSearch.empName != null and matchSearch.empName != ''">
+            and emp_name like concat('%', #{matchSearch.empName}, '%')
+        </if>
+        order by status asc, create_time desc
+    </select>
+    <select id="findTotalNums" resultType="java.lang.Long">
+        select count(id)
+        from emp_import_history
+        where create_by = #{userId}
+          and disabled = 0
+    </select>
+    <select id="findUnmatchedNums" resultType="java.lang.Long">
+        select count(id)
+        from emp_import_history
+        where create_by = #{userId}
+          and status = 0
+          and disabled = 0
+    </select>
+
+    <insert id="insertEmpImportHistory" parameterType="EmpImportHistory" useGeneratedKeys="true" keyProperty="id">
+        insert into emp_import_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">emp_id,</if>
+            <if test="empName != null">emp_name,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="disabled != null">disabled,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">#{empId},</if>
+            <if test="empName != null">#{empName},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="disabled != null">#{disabled},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsertInfos">
+        insert into emp_import_history(emp_id, emp_name, id_card, status, disabled, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.empId}, #{item.empName}, #{item.idCard}, #{item.status}, #{item.disabled}, #{item.createBy},
+            #{item.createTime})
+        </foreach>
+    </insert>
+
+    <update id="updateEmpImportHistory" parameterType="EmpImportHistory">
+        update emp_import_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">emp_id = #{empId},</if>
+            <if test="empName != null">emp_name = #{empName},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="removeInfoByCreateId">
+        update emp_import_history
+        set disabled = 1
+        where create_by = #{createId}
+          and disabled = 0
+    </update>
+    <update id="removeInfosByIds">
+        update update emp_import_history
+        set disabled = 1
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and disabled = 0
+    </update>
+
+    <delete id="deleteEmpImportHistoryById" parameterType="Long">
+        delete
+        from emp_import_history
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteEmpImportHistoryByIds" parameterType="String">
+        delete from emp_import_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

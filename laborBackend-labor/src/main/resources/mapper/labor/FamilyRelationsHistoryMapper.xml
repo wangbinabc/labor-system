@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.FamilyRelationsHistoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.yuantu.labor.domain.FamilyRelationsHistory">
+        <id property="historyId" column="history_id"/>
+        <result property="famId" column="fam_id"/>
+        <result property="famAppellation" column="fam_appellation"/>
+        <result property="famName" column="fam_name"/>
+        <result property="famAge" column="fam_age"/>
+        <result property="famUnitPost" column="fam_unit_post"/>
+        <result property="famEmpId" column="fam_emp_id"/>
+        <result property="famEmpName" column="fam_emp_name"/>
+        <result property="historyYearMonth" column="history_year_month"/>
+        <result property="famEmpSort" column="fam_emp_sort"/>
+        <result property="famContactPhone" column="fam_contact_phone"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        history_id
+        ,fam_id,fam_appellation,
+        fam_name,fam_age,fam_unit_post,
+        fam_emp_id,fam_emp_name,history_year_month, fam_emp_sort, fam_contact_phone
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from family_relations_history
+        where history_id = #{historyId}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from family_relations_history
+        where history_id = #{historyId}
+    </delete>
+
+    <delete id="removeInfosByEmpId">
+        delete
+        from family_relations_history
+        where fam_emp_id = #{famEmpId}
+          and history_year_month = #{yearMonth}
+    </delete>
+
+
+    <insert id="insert" keyColumn="history_id" keyProperty="historyId"
+            parameterType="com.yuantu.labor.domain.FamilyRelationsHistory" useGeneratedKeys="true">
+        insert into family_relations_history
+        ( fam_id, fam_appellation
+        , fam_name, fam_age, fam_unit_post
+        , fam_emp_id, fam_emp_name, history_year_month, fam_emp_sort, fam_contact_phone)
+        values ( #{famId}, #{famAppellation}
+               , #{famName}, #{famAge}, #{famUnitPost}
+               , #{famEmpId}, #{famEmpName}, #{historyyearMonth}, #{famEmpSort}, #{famContactPhone})
+    </insert>
+    <insert id="insertSelective" keyColumn="history_id" keyProperty="historyId"
+            parameterType="com.yuantu.labor.domain.FamilyRelationsHistory" useGeneratedKeys="true">
+        insert into family_relations_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="famId != null">fam_id,</if>
+            <if test="famAppellation != null">fam_appellation,</if>
+            <if test="famName != null">fam_name,</if>
+            <if test="famAge != null">fam_age,</if>
+            <if test="famUnitPost != null">fam_unit_post,</if>
+            <if test="famEmpId != null">fam_emp_id,</if>
+            <if test="famEmpName != null">fam_emp_name,</if>
+            <if test="famEmpSort != null">fam_emp_sort,</if>
+            <if test="historyYearMonth != null">history_year_month,</if>
+            <if test="famContactPhone != null">fam_contact_phone,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="famId != null">#{famId},</if>
+            <if test="famAppellation != null">#{famAppellation},</if>
+            <if test="famName != null">#{famName},</if>
+            <if test="famAge != null">#{famAge},</if>
+            <if test="famUnitPost != null">#{famUnitPost},</if>
+            <if test="famEmpId != null">#{famEmpId},</if>
+            <if test="famEmpName != null">#{famEmpName},</if>
+            <if test="famEmpSort != null">#{famEmpSort},</if>
+            <if test="historyYearMonth != null">#{historyYearMonth},</if>
+            <if test="famContactPhone != null">#{famContactPhone},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsertFamilyRelationsHistory">
+        insert into family_relations_history ( fam_id, fam_appellation
+        , fam_name, fam_age, fam_unit_post
+        , fam_emp_id, fam_emp_name, history_year_month, fam_emp_sort, fam_contact_phone) values
+        <foreach collection="relations" item="relation" separator=",">
+            (#{relation.famId}, #{relation.famAppellation}, #{relation.famName}, #{relation.famAge},
+            #{relation.famUnitPost}, #{relation.famEmpId}, #{relation.famEmpName}, #{relation.historyYearMonth},
+            #{relation.famEmpSort}, #{relation.famContactPhone})
+        </foreach>
+    </insert>
+
+    <insert id="batchInsertFamilyInfos">
+        insert into family_relations_history
+        (fam_appellation, fam_name, fam_age, fam_unit_post, fam_emp_id, fam_emp_name, fam_emp_sort, fam_contact_phone,
+        history_year_month)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.famAppellation}, #{item.famName}, #{item.famAge}, #{item.famUnitPost}, #{item.famEmpId},
+            #{item.famEmpName}, #{item.famEmpSort}, #{item.famContactPhone}, #{item.historyYearMonth})
+        </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.yuantu.labor.domain.FamilyRelationsHistory">
+        update family_relations_history
+        <set>
+            <if test="famId != null">
+                fam_id = #{famId},
+            </if>
+            <if test="famAppellation != null">
+                fam_appellation = #{famAppellation},
+            </if>
+            <if test="famName != null">
+                fam_name = #{famName},
+            </if>
+            <if test="famAge != null">
+                fam_age = #{famAge},
+            </if>
+            <if test="famUnitPost != null">
+                fam_unit_post = #{famUnitPost},
+            </if>
+            <if test="famEmpId != null">
+                fam_emp_id = #{famEmpId},
+            </if>
+            <if test="famEmpName != null">
+                fam_emp_name = #{famEmpName},
+            </if>
+            <if test="famEmpSort != null">
+                fam_emp_sort = #{famEmpSort},
+            </if>
+            <if test="yearMonth != null">
+                history_year_month = #{historyYearMonth},
+            </if>
+            <if test="famContactPhone != null">
+                fam_contact_phone = #{famContactPhone}
+            </if>
+        </set>
+        where history_id = #{historyId}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yuantu.labor.domain.FamilyRelationsHistory">
+        update family_relations_history
+        set fam_id             = #{famId},
+            fam_appellation    = #{famAppellation},
+            fam_name           = #{famName},
+            fam_age            = #{famAge},
+            fam_unit_post      = #{famUnitPost},
+            fam_emp_id         = #{famEmpId},
+            fam_emp_name       = #{famEmpName},
+            fam_emp_sort       = #{famEmpSort},
+            history_year_month = #{historyYearMonth},
+            fam_contact_phone  = #{famContactPhone}
+        where history_id = #{historyId}
+    </update>
+
+
+    <select id="searchFamilyInfo" parameterType="com.yuantu.labor.vo.EmpSearchVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from family_relations_history
+        <where>
+            <if test="contactPhone1 != null  and contactPhone1 != ''">and (fam_emp_sort = 1 and fam_contact_phone like
+                concat('%', #{contactPhone1}, '%'))
+            </if>
+            <if test="contactPhone2 != null  and contactPhone2 != ''">and (fam_emp_sort = 2 and fam_contact_phone like
+                concat('%', #{contactPhone2}, '%'))
+            </if>
+            <if test="famAppellation1 != null  and famAppellation1 != ''">and (fam_emp_sort = 1 and fam_appellation =
+                #{famAppellation1})
+            </if>
+            <if test="famAppellation2 != null  and famAppellation2 != ''">and (fam_emp_sort = 2 and fam_appellation =
+                #{famAppellation2})
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFamilyInfosByEmpIds" resultType="com.yuantu.labor.domain.FamilyRelationsHistory">
+        select
+        <include refid="Base_Column_List"/>
+        from family_relations_history
+        where fam_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+    <select id="findInfosByEmpIdAndHistoryYearMonth"
+            resultType="com.yuantu.labor.domain.FamilyRelationsHistory">
+        select
+        <include refid="Base_Column_List"/>
+        from family_relations_history
+        where fam_emp_id = #{empId} and history_year_month = #{historyYearMonth}
+    </select>
+
+    <select id="selectRecentFamliyHistory" resultType="com.yuantu.labor.domain.FamilyRelationsHistory">
+        select fam_id, max(history_year_month) as history_year_month
+        from family_relations_history
+        group by fam_id
+        having history_year_month &lt; #{lastMonth}
+    </select>
+    <select id="findInfosByEmpIdsAndHistoryYearMonth"
+            resultType="com.yuantu.labor.domain.FamilyRelationsHistory">
+        select
+        <include refid="Base_Column_List"/>
+        from family_relations_history
+        where history_year_month = #{yearMonth}
+        and fam_emp_id in
+        <foreach collection="empHistoryIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.TrainExamLibraryMapper">
+    
+    <resultMap type="TrainExamLibrary" id="TrainExamLibraryResult">
+        <result property="examId"    column="exam_id"    />
+        <result property="examName"    column="exam_name"    />
+        <result property="examAnnexPath"    column="exam_annex_path"    />
+        <result property="disabled"    column="disabled"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTrainExamLibraryVo">
+        select exam_id, exam_name, exam_annex_path, disabled, create_by, create_time, update_by, update_time from train_exam_library
+    </sql>
+
+    <select id="selectTrainExamLibraryList" parameterType="TrainExamLibrary" resultMap="TrainExamLibraryResult">
+        <include refid="selectTrainExamLibraryVo"/>
+        <where>
+            and disabled = 0
+            <if test="examName != null  and examName != ''"> and exam_name like concat('%', #{examName}, '%')</if>
+            <if test="examAnnexPath != null  and examAnnexPath != ''"> and exam_annex_path = #{examAnnexPath}</if>
+
+        </where>
+    </select>
+    
+
+</mapper>

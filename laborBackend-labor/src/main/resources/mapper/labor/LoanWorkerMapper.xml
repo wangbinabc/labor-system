@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.LoanWorkerMapper">
+
+    <resultMap type="com.yuantu.labor.domain.LoanWorker" id="LoanWorkerResult">
+        <result property="loanId" column="loan_id"/>
+        <result property="loanEmpName" column="loan_emp_name"/>
+        <result property="loanEmpIdcard" column="loan_emp_idcard"/>
+        <result property="loanApplyUnitId" column="loan_apply_unit_id"/>
+        <result property="loanApplyUnitName" column="loan_apply_unit_name"/>
+        <result property="loanApplyDeptId" column="loan_apply_dept_id"/>
+        <result property="loanApplyDeptName" column="loan_apply_dept_name"/>
+        <result property="loanApplyOffice" column="loan_apply_office"/>
+        <result property="loanEmpGender" column="loan_emp_gender"/>
+        <result property="loanEmpEducation" column="loan_emp_education"/>
+        <result property="loanEmpAge" column="loan_emp_age"/>
+        <result property="loanEmpSpeciality" column="loan_emp_speciality"/>
+        <result property="loanEmpTitle" column="loan_emp_title"/>
+        <result property="loanEmpCredentials" column="loan_emp_credentials"/>
+        <result property="loanRemark" column="loan_remark"/>
+        <result property="loanBeginTime" column="loan_begin_time"/>
+        <result property="loanArrageArea" column="loan_arrage_area"/>
+        <result property="loanNewPost" column="loan_new_post"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap id="loanWorkListResult" type="com.yuantu.labor.vo.LoanWorkerListVO">
+        <result property="loanId" column="loan_id"/>
+        <result property="loanEmpName" column="loan_emp_name"/>
+        <result property="loanEmpIdcard" column="loan_emp_idcard"/>
+        <result property="loanApplyUnitId" column="loan_apply_unit_id"/>
+        <result property="loanApplyUnitName" column="loan_apply_unit_name"/>
+        <result property="loanApplyDeptId" column="loan_apply_dept_id"/>
+        <result property="loanApplyDeptName" column="loan_apply_dept_name"/>
+        <result property="loanApplyOffice" column="loan_apply_office"/>
+        <result property="loanEmpGender" column="loan_emp_gender"/>
+        <result property="loanEmpEducation" column="loan_emp_education"/>
+        <result property="loanEmpAge" column="loan_emp_age"/>
+        <result property="loanEmpSpeciality" column="loan_emp_speciality"/>
+        <result property="loanEmpTitle" column="loan_emp_title"/>
+        <result property="loanEmpCredentials" column="loan_emp_credentials"/>
+        <result property="loanRemark" column="loan_remark"/>
+        <result property="loanBeginTime" column="loan_begin_time"/>
+        <result property="loanArrageArea" column="loan_arrage_area"/>
+        <result property="loanNewPost" column="loan_new_post"/>
+        <result property="loanUpdateDate" column="update_time" />
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectLoanWorkerVo">
+        select loan_id,
+               loan_emp_name,
+               loan_emp_idcard,
+               loan_apply_unit_id,
+               loan_apply_unit_name,
+               loan_apply_dept_id,
+               loan_apply_dept_name,
+               loan_apply_office,
+               loan_emp_gender,
+               loan_emp_education,
+               loan_emp_age,
+               loan_emp_speciality,
+               loan_emp_title,
+               loan_emp_credentials,
+               loan_begin_time,
+               loan_arrage_area,
+               loan_new_post,
+               loan_remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               disabled
+        from loan_worker
+    </sql>
+
+    <select id="selectLoanWorkerList" parameterType="com.yuantu.labor.domain.LoanWorker" resultMap="LoanWorkerResult">
+        <include refid="selectLoanWorkerVo"/>
+        <where>
+            <if test="loanApplyUnitId != null ">and loan_apply_unit_id = #{loanApplyUnitId}</if>
+            <if test="loanApplyUnitName != null  and loanApplyUnitName != ''">and loan_apply_unit_name like concat('%',
+                #{loanApplyUnitName}, '%')
+            </if>
+            <if test="loanApplyDeptId != null ">and loan_apply_dept_id = #{loanApplyDeptId}</if>
+            <if test="loanApplyDeptName != null  and loanApplyDeptName != ''">and loan_apply_dept_name like concat('%',
+                #{loanApplyDeptName}, '%')
+            </if>
+            <if test="loanApplyOffice != null  and loanApplyOffice != ''">and loan_apply_office like
+                concat('%', #{loanApplyOffice}, '%')
+            </if>
+            <if test="loanBeginTime != null ">and loan_begin_time = #{loanBeginTime}</if>
+            <if test="loanEmpName != null  and loanEmpName != ''">and loan_emp_name like concat('%', #{loanEmpName},
+                '%')
+            </if>
+            <if test="loanEmpIdcard != null  and loanEmpIdcard != ''">and CAST(SP_DECRYPT(loan_emp_idcard) AS CHAR(128)) like concat('%', #{loanEmpIdcard},'%')</if>
+            <if test="loanArrageArea != null  and loanArrageArea != ''">and loan_arrage_area = #{loanArrageArea}</if>
+            <if test="loanNewPost != null  and loanNewPost != ''">and loan_new_post = #{loanNewPost}</if>
+            <if test="loanEmpAge !=null">and loan_emp_age = #{loanEmpAge}</if>
+            <if test="loanEmpGender !=null and loanEmpGender !=''">and loan_emp_gender = #{loanEmpGender}</if>
+            <if test="loanEmpEducation !=null and loanEmpEducation !=''">and loan_emp_education =#{loanEmpEducation}</if>
+            <if test="loanEmpSpeciality !=null and loanEmpSpeciality !=''">and loan_emp_speciality =#{loanEmpSpeciality}</if>
+            <if test="loanEmpTitle !=null and loanEmpTitle !=''">and loan_emp_title = #{loanEmpTitle}</if>
+            <if test="loanEmpCredentials !=null and loanEmpCredentials !=''">and loan_emp_credentials = #{loanEmpCredentials}</if>
+
+            and disabled = 0
+
+        </where>
+
+    </select>
+
+    <select id="selectLoanWorkerByLoanId" resultMap="LoanWorkerResult">
+        <include refid="selectLoanWorkerVo"/>
+        where loan_id = #{loanId}
+    </select>
+
+    <insert id="insertLoanWorker" parameterType="com.yuantu.labor.domain.LoanWorker" useGeneratedKeys="true"
+            keyProperty="loanId">
+        insert into loan_worker
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="loanEmpName != null">loan_emp_name,</if>
+            <if test="loanEmpIdcard != null">loan_emp_idcard,</if>
+            <if test="loanApplyUnitId != null">loan_apply_unit_id,</if>
+            <if test="loanApplyUnitName != null">loan_apply_unit_name,</if>
+            <if test="loanApplyDeptId != null">loan_apply_dept_id,</if>
+            <if test="loanApplyDeptName != null">loan_apply_dept_name,</if>
+            <if test="loanApplyOffice != null">loan_apply_office,</if>
+            <if test="loanEmpAge !=null">loan_emp_age,</if>
+            <if test="loanEmpGender !=null ">loan_emp_gender,</if>
+            <if test="loanEmpEducation !=null ">loan_emp_education,</if>
+            <if test="loanEmpSpeciality !=null">loan_emp_speciality,</if>
+            <if test="loanEmpTitle !=null ">loan_emp_title,</if>
+            <if test="loanEmpCredentials !=null ">loan_emp_credentials,</if>
+            <if test="loanRemark !=null ">loan_remark,</if>
+            <if test="loanBeginTime != null">loan_begin_time,</if>
+            <if test="loanArrageArea != null">loan_arrage_area,</if>
+            <if test="loanNewPost != null">loan_new_post,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="loanEmpName != null">#{loanEmpName},</if>
+            <if test="loanEmpIdcard != null">SP_ENCRYPT(#{loanEmpIdcard}),</if>
+            <if test="loanApplyUnitId != null">#{loanApplyUnitId},</if>
+            <if test="loanApplyUnitName != null">#{loanApplyUnitName},</if>
+            <if test="loanApplyDeptId != null">#{loanApplyDeptId},</if>
+            <if test="loanApplyDeptName != null">#{loanApplyDeptName},</if>
+            <if test="loanApplyOffice != null">#{loanApplyOffice},</if>
+            <if test="loanEmpAge !=null">#{loanEmpAge},</if>
+            <if test="loanEmpGender !=null ">#{loanEmpGender},</if>
+            <if test="loanEmpEducation !=null ">#{loanEmpEducation},</if>
+            <if test="loanEmpSpeciality !=null">#{loanEmpSpeciality},</if>
+            <if test="loanEmpTitle !=null ">#{loanEmpTitle},</if>
+            <if test="loanEmpCredentials !=null ">#{loanEmpCredentials},</if>
+            <if test="loanRemark !=null ">#{loanRemark},</if>
+            <if test="loanBeginTime != null">#{loanBeginTime},</if>
+            <if test="loanArrageArea != null">#{loanArrageArea},</if>
+            <if test="loanNewPost != null">#{loanNewPost},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsertInfos">
+        insert into loan_worker (   loan_emp_name,
+        loan_emp_idcard,
+        loan_apply_unit_id,
+        loan_apply_unit_name,
+        loan_apply_dept_id,
+        loan_apply_dept_name,
+        loan_apply_office,
+        loan_emp_gender,
+        loan_emp_age,
+        loan_emp_education,
+        loan_emp_speciality,
+        loan_emp_title,
+        loan_emp_credentials,
+        loan_begin_time,
+        loan_arrage_area,
+        loan_new_post,
+        loan_remark,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        disabled) values
+        <foreach collection="loanWorkers" item="loanWorker" separator=",">
+            (
+            #{loanWorker.loanEmpName}, SP_ENCRYPT(#{loanWorker.loanEmpIdcard}),
+            #{loanWorker.loanApplyUnitId}, #{loanWorker.loanApplyUnitName}, #{loanWorker.loanApplyDeptId},#{loanWorker.loanApplyDeptName},
+            #{loanWorker.loanApplyOffice}, #{loanWorker.loanEmpGender},#{loanWorker.loanEmpAge},#{loanWorker.loanEmpEducation},
+            #{loanWorker.loanEmpSpeciality},#{loanWorker.loanEmpTitle},#{loanWorker.loanEmpCredentials},
+            #{loanWorker.loanBeginTime},#{loanWorker.loanArrageArea},#{loanWorker.loanNewPost},#{loanWorker.loanRemark},
+            #{loanWorker.createBy}, #{loanWorker.createTime},#{loanWorker.updateBy},#{loanWorker.updateTime}, #{loanWorker.disabled})
+        </foreach>
+
+    </insert>
+
+    <update id="updateLoanWorker" parameterType="com.yuantu.labor.domain.LoanWorker">
+        update loan_worker
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="loanEmpName != null">loan_emp_name = #{loanEmpName},</if>
+            <if test="loanEmpIdcard != null">loan_emp_idcard = SP_ENCRYPT(#{loanEmpIdcard}),</if>
+            <if test="loanApplyUnitId != null">loan_apply_unit_id = #{loanApplyUnitId},</if>
+            <if test="loanApplyUnitName != null">loan_apply_unit_name = #{loanApplyUnitName},</if>
+            <if test="loanApplyDeptId != null">loan_apply_dept_id = #{loanApplyDeptId},</if>
+            <if test="loanApplyDeptName != null">loan_apply_dept_name = #{loanApplyDeptName},</if>
+            <if test="loanApplyOffice != null">loan_apply_office = #{loanApplyOffice},</if>
+            <if test="loanEmpAge !=null">loan_emp_age = #{loanEmpAge},</if>
+            <if test="loanEmpGender !=null">loan_emp_gender = #{loanEmpGender},</if>
+            <if test="loanEmpEducation !=null">loan_emp_education =#{loanEmpEducation},</if>
+            <if test="loanEmpSpeciality !=null">loan_emp_speciality =#{loanEmpSpeciality},</if>
+            <if test="loanEmpTitle !=null">loan_emp_title = #{loanEmpTitle},</if>
+            <if test="loanEmpCredentials !=null">loan_emp_credentials = #{loanEmpCredentials},</if>
+            <if test="loanRemark !=null ">loan_remark = #{loanRemark},</if>
+            <if test="loanBeginTime != null">loan_begin_time = #{loanBeginTime},</if>
+            <if test="loanArrageArea != null">loan_arrage_area = #{loanArrageArea},</if>
+            <if test="loanNewPost != null">loan_new_post = #{loanNewPost},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+        </trim>
+        where loan_id = #{loanId}
+    </update>
+
+    <update id="deleteLoanWorkerByLoanId" parameterType="Integer">
+        update loan_worker
+        set disabled =1
+        where loan_id = #{loanId}
+    </update>
+
+    <update id="deleteLoanWorkerByLoanIds" parameterType="String">
+        update loan_worker set disabled =1 where loan_id in
+        <foreach item="loanId" collection="array" open="(" separator="," close=")">
+            #{loanId}
+        </foreach>
+    </update>
+    <select id="selectLoanWorkersListByWhere" parameterType="com.yuantu.labor.vo.LoanWorkerQueryVO"
+            resultMap="loanWorkListResult">
+        select loan_id,
+        loan_emp_name,
+        CAST(SP_DECRYPT(loan_emp_idcard) AS CHAR(128)) as loan_emp_idcard,
+        loan_apply_unit_id,
+        loan_apply_unit_name,
+        loan_apply_dept_id,
+        loan_apply_dept_name,
+        loan_apply_office,
+        loan_emp_gender,
+        loan_emp_education,
+        loan_emp_age,
+        loan_emp_speciality,
+        loan_emp_title,
+        loan_emp_credentials,
+        loan_begin_time,
+        loan_arrage_area,
+        loan_new_post,
+        loan_remark,
+        loan_worker.create_by,
+        loan_worker.create_time,
+        loan_worker.update_by,
+        loan_worker.update_time,
+        loan_worker.disabled
+        from loan_worker
+--         left JOIN department on loan_apply_dept_id=dept_id
+--         left join sys_dict_data on dict_type='loan_unit' and loan_apply_unit_id = dict_value
+        <where>
+<!--            <if test="query.yearMonth!=null and query.yearMonth !='' ">and loan_begin_time like-->
+<!--                concat(#{query.yearMonth},'%')-->
+<!--            </if>-->
+            <if test="query.empName !=null and query.empName!=''">and (loan_emp_name like concat('%', #{query.empName},
+                '%') or
+                CAST(SP_DECRYPT(loan_emp_idcard) AS CHAR(128))
+                like
+                concat('%', #{query.empName}, '%'))
+            </if>
+            <if test="query.loanEmpGender != null and query.loanEmpGender != '' ">
+                and loan_emp_gender = #{query.loanEmpGender}
+            </if>
+            <if test="query.loanEmpEducation != null and query.loanEmpEducation != '' ">
+                and loan_emp_education = #{query.loanEmpEducation}
+            </if>
+            <if test="query.loanEmpSpeciality != null and query.loanEmpSpeciality != '' ">
+                and loan_emp_speciality like concat('%',#{query.loanEmpSpeciality},'%')
+            </if>
+            <if test="query.loanEmpTitle != null and query.loanEmpTitle != '' ">
+                and loan_emp_title = #{query.loanEmpTitle}
+            </if>
+
+            <if test="query.loanApplyUnitId != null">
+                and loan_apply_unit_id = #{query.loanApplyUnitId}
+            </if>
+            <if test="query.loanApplyUnitName != null and query.loanApplyUnitName!=''">
+                and loan_apply_unit_name = #{query.loanApplyUnitName}
+            </if>
+            <if test="query.loanApplyDeptId != null">
+                and loan_apply_dept_id = #{query.loanApplyDeptId}
+            </if>
+            <if test="query.loanApplyDeptName != null and query.loanApplyDeptName!=''">
+                and loan_apply_dept_name = #{query.loanApplyDeptName}
+            </if>
+            <if test="query.loanApplyOffice != null  and query.loanApplyOffice != ''">and loan_apply_office like
+            concat('%', #{query.loanApplyOffice}, '%')
+            </if>
+
+            <if test="query.loanEmpAgeBegin !=null">and loan_emp_age >= #{query.loanEmpAgeBegin}</if>
+
+            <if test="query.loanEmpAgeEnd !=null">and loan_emp_age &lt;= #{query.loanEmpAgeEnd}</if>
+
+            <if test="query.loanEmpCredentials !=null and query.loanEmpCredentials !=''">and loan_emp_credentials like concat('%',#{query.loanEmpCredentials},'%')</if>
+
+            <if test="query.loanArrageArea != null and query.loanArrageArea != '' ">
+                and loan_arrage_area like concat('%', #{query.loanArrageArea}, '%')
+            </if>
+            <if test="query.loanNewPost != null and query.loanNewPost != '' ">
+                and loan_new_post like concat('%', #{query.loanNewPost}, '%')
+            </if>
+            <if test="query.loanBeginTimeStart != null ">
+                and loan_begin_time &gt;= #{query.loanBeginTimeStart}
+            </if>
+            <if test="query.loanBeginTimeEnd != null ">
+                and loan_worker.loan_begin_time &lt;= #{query.loanBeginTimeEnd}
+            </if>
+            <if test="query.loanUpdateDateStart != null ">
+                and loan_worker.update_time &gt;= #{query.loanUpdateDateStart}
+            </if>
+            <if test="query.loanUpdateDateEnd != null ">
+                and loan_worker.update_time &lt;= #{query.loanUpdateDateEnd}
+            </if>
+            <if test="query.loanIds !=null">
+                and loan_id in
+                <foreach item="loanId" collection="query.loanIds" open="(" separator="," close=")">
+                    #{query.loanId}
+                </foreach>
+            </if>
+            and loan_worker.disabled = 0
+        </where>
+
+    </select>
+    <select id="countByDept" resultType="com.yuantu.labor.vo.PieChartVO">
+        select loan_apply_dept_id as id, CONCAT(unit_name, "-", dept_name) as name, COUNT(*) as value
+        from loan_worker
+            left JOIN department
+        on department.dept_id=loan_apply_dept_id
+            LEFT JOIN employing_units on employing_units.unit_id = loan_apply_unit_id
+        where loan_worker.disabled = 0
+        GROUP BY loan_apply_dept_id
+    </select>
+
+    <select id="countByUnit" resultType="com.yuantu.labor.vo.PieChartVO">
+        select loan_apply_unit_id as id, dict_label as name, COUNT(*) as value
+        from loan_worker
+            left join sys_dict_data on dict_type='loan_unit' and loan_apply_unit_id = dict_value
+        where loan_worker.disabled = 0
+        GROUP BY loan_apply_unit_id
+    </select>
+    <select id="findExportInfosLoanEmpIds" resultType="com.yuantu.labor.vo.LoanWorkerExportListVO">
+        select loan_id,
+        loan_emp_name,
+        CAST(SP_DECRYPT(loan_emp_idcard) AS CHAR(128)) as loan_emp_idcard,
+        dict_label as loan_apply_unit_id,
+        dict_label as loan_apply_unit_name,
+        loan_apply_dept_id,
+        dept_name as loan_apply_dept_name,
+        loan_apply_office,
+        loan_emp_gender,
+        loan_emp_education,
+        loan_emp_age,
+        loan_emp_speciality,
+        loan_emp_title,
+        loan_emp_credentials,
+        loan_begin_time,
+        loan_arrage_area,
+        loan_new_post,
+        loan_remark,
+        loan_worker.create_by,
+        loan_worker.create_time,
+        loan_worker.update_by,
+        loan_worker.update_time as loanUpdateDate,
+        loan_worker.disabled
+        from loan_worker
+        left JOIN department on loan_apply_dept_id=dept_id
+        left join sys_dict_data on dict_type='loan_unit' and loan_apply_unit_id = dict_value
+        where loan_worker.disabled = 0
+        <if test="loanIds != null and loanIds.size() > 0">
+            and loan_worker.loan_id in
+            <foreach collection="loanIds" item="loanId" open="(" separator="," close=")">
+                #{loanId}
+            </foreach>
+        </if>
+    </select>
+    <select id="findInfosByLoanIdCards" resultType="com.yuantu.labor.domain.LoanWorker">
+        <include refid="selectLoanWorkerVo"/>
+        where disabled = 0
+        and loan_emp_idcard in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="findInfoByName" resultType="com.yuantu.labor.domain.LoanWorker">
+        <include refid="selectLoanWorkerVo"/>
+        where disabled = 0
+        and loan_emp_name = #{name} limit 1
+    </select>
+    <select id="findCurrentInfos" resultType="com.yuantu.labor.domain.LoanWorker">
+        <include refid="selectLoanWorkerVo"/>
+        where disabled = 0
+    </select>
+    <select id="findLoanIdsByParams" resultType="java.lang.Long">
+        select loan_id from loan_worker where 1 = 1
+        <if test="loanEmpName != null and loanEmpName != '' ">
+            and (loan_emp_name like concat('%',#{loanEmpName},'%')
+            or CAST(SP_DECRYPT(loan_emp_idcard) AS CHAR(128)) like concat('%',#{loanEmpName},'%'))
+        </if>
+        <if test="isRelated != null">
+            and disabled = #{isRelated}
+        </if>
+        <if test="isRelated == null">
+            and disabled = 0
+        </if>
+        <if test="deptId != null">
+            and loan_apply_dept_id = #{deptId}
+        </if>
+        <if test="empCategory != null and empCategory == '3' ">
+            and 1 = 1
+        </if>
+        <if test="loanEmpName == null and isRelated == null and empCategory == null">
+            and 1 = 2
+        </if>
+    </select>
+    <select id="findInfoByNames" resultType="com.yuantu.labor.domain.LoanWorker">
+        <include refid="selectLoanWorkerVo"/>
+        where disabled = 0
+        and  loan_emp_name in
+       <foreach collection="names" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+    <select id="findNamesByEmpNames" resultType="java.lang.String">
+        select loan_emp_name from loan_worker where disabled = 0
+        and loan_emp_name in
+        <foreach collection="empNames" item="empName" open="(" separator="," close=")">
+            #{empName}
+        </foreach>
+    </select>
+
+</mapper>

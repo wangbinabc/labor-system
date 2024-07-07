@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.ChinaAddressMapper">
+
+    <resultMap type="ChinaAddress" id="ChinaAddressResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="disabled" column="disabled"/>
+        <result property="level" column="level"/>
+    </resultMap>
+
+    <sql id="selectChinaAddressVo">
+        select id, name, parent_id, disabled, level
+        from china_address
+    </sql>
+
+    <select id="selectChinaAddressList" parameterType="ChinaAddress" resultMap="ChinaAddressResult">
+        <include refid="selectChinaAddressVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="disabled != null ">and disabled = #{disabled}</if>
+            <if test="level != null ">and level = #{level}</if>
+        </where>
+    </select>
+
+    <select id="selectChinaAddressById" parameterType="Long" resultMap="ChinaAddressResult">
+        <include refid="selectChinaAddressVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertChinaAddress" parameterType="ChinaAddress" useGeneratedKeys="true" keyProperty="id">
+        insert into china_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="disabled != null">disabled,</if>
+            <if test="level != null">level,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="disabled != null">#{disabled},</if>
+            <if test="level != null">#{level},</if>
+        </trim>
+    </insert>
+
+    <update id="updateChinaAddress" parameterType="ChinaAddress">
+        update china_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="level != null">level = #{level},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChinaAddressById" parameterType="Long">
+        delete
+        from china_address
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteChinaAddressByIds" parameterType="String">
+        delete from china_address where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findAll" resultMap="ChinaAddressResult">
+        <include refid="selectChinaAddressVo"/>
+        where disabled = 0
+    </select>
+    <select id="findInfoByNameAndLevel" resultType="com.yuantu.labor.domain.ChinaAddress">
+        <include refid="selectChinaAddressVo"/>
+        where name like concat('%', #{name}, '%') and level = #{level} and disabled = 0 limit 1
+    </select>
+    <select id="findInfoByNameAndLevelAndParentId" resultType="com.yuantu.labor.domain.ChinaAddress">
+        <include refid="selectChinaAddressVo"/>
+        where name like concat('%', #{name}, '%') and level = #{level} and parent_id = #{parentId} and disabled = 0
+        limit 1
+    </select>
+</mapper>

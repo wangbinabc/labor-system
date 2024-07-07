@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.DeptEfficiencyMapper">
+
+    <resultMap type="DeptEfficiency" id="DeptEfficiencyResult">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptProfit" column="dept_profit"/>
+        <result property="deptAttendRatio" column="dept_attend_ratio"/>
+        <result property="deptPerformRatio" column="dept_perform_ratio"/>
+        <result property="deptCostRatio" column="dept_cost_ratio"/>
+        <result property="deptEffectRatio" column="dept_effect_ratio"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectDeptEfficiencyVo">
+        select id,
+               dept_id,
+               dept_profit,
+               dept_attend_ratio,
+               dept_perform_ratio,
+               dept_cost_ratio,
+               dept_effect_ratio,
+               create_time
+        from dept_efficiency
+    </sql>
+
+    <select id="selectDeptEfficiencyList" parameterType="DeptEfficiency" resultMap="DeptEfficiencyResult">
+        <include refid="selectDeptEfficiencyVo"/>
+        <where>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="deptProfit != null  and deptProfit != ''">and dept_profit = #{deptProfit}</if>
+            <if test="deptAttendRatio != null  and deptAttendRatio != ''">and dept_attend_ratio = #{deptAttendRatio}
+            </if>
+            <if test="deptPerformRatio != null  and deptPerformRatio != ''">and dept_perform_ratio =
+                #{deptPerformRatio}
+            </if>
+            <if test="deptCostRatio != null  and deptCostRatio != ''">and dept_cost_ratio = #{deptCostRatio}</if>
+            <if test="deptEffectRatio != null  and deptEffectRatio != ''">and dept_effect_ratio = #{deptEffectRatio}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDeptEfficiencyById" parameterType="Long" resultMap="DeptEfficiencyResult">
+        <include refid="selectDeptEfficiencyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDeptEfficiency" parameterType="DeptEfficiency">
+        insert into dept_efficiency
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptProfit != null">dept_profit,</if>
+            <if test="deptAttendRatio != null">dept_attend_ratio,</if>
+            <if test="deptPerformRatio != null">dept_perform_ratio,</if>
+            <if test="deptCostRatio != null">dept_cost_ratio,</if>
+            <if test="deptEffectRatio != null">dept_effect_ratio,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptProfit != null">#{deptProfit},</if>
+            <if test="deptAttendRatio != null">#{deptAttendRatio},</if>
+            <if test="deptPerformRatio != null">#{deptPerformRatio},</if>
+            <if test="deptCostRatio != null">#{deptCostRatio},</if>
+            <if test="deptEffectRatio != null">#{deptEffectRatio},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+    <insert id="insertInfos">
+        insert into dept_efficiency(dept_id,dept_profit,dept_attend_ratio,dept_perform_ratio,dept_cost_ratio,dept_effect_ratio,create_time)
+        values
+        <foreach collection="deptEfficiencyInfos" item="info" separator=",">
+            (#{info.deptId},#{info.deptProfit},#{info.deptAttendRatio},#{info.deptPerformRatio},
+             #{info.deptCostRatio},#{info.deptEffectRatio},#{info.createTime})
+        </foreach>
+    </insert>
+
+    <update id="updateDeptEfficiency" parameterType="DeptEfficiency">
+        update dept_efficiency
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptProfit != null">dept_profit = #{deptProfit},</if>
+            <if test="deptAttendRatio != null">dept_attend_ratio = #{deptAttendRatio},</if>
+            <if test="deptPerformRatio != null">dept_perform_ratio = #{deptPerformRatio},</if>
+            <if test="deptCostRatio != null">dept_cost_ratio = #{deptCostRatio},</if>
+            <if test="deptEffectRatio != null">dept_effect_ratio = #{deptEffectRatio},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDeptEfficiencyById" parameterType="Long">
+        delete
+        from dept_efficiency
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDeptEfficiencyByIds" parameterType="String">
+        delete from dept_efficiency where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="removeCurrentMonthInfos">
+        delete
+        from dept_efficiency
+        where DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+    </delete>
+</mapper>

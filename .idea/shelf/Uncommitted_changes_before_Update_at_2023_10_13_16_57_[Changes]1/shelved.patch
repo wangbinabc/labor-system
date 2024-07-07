@@ -1,0 +1,729 @@
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/service/ITrainProjectService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.service;\r\n\r\nimport java.util.List;\r\nimport com.yuantu.labor.domain.TrainProject;\r\n\r\n/**\r\n * 培训项目Service接口\r\n * \r\n * @author ruoyi\r\n * @date 2023-09-14\r\n */\r\npublic interface ITrainProjectService \r\n{\r\n    /**\r\n     * 查询培训项目\r\n     * \r\n     * @param projectId 培训项目主键\r\n     * @return 培训项目\r\n     */\r\n    public TrainProject selectTrainProjectByProjectId(Integer projectId);\r\n\r\n    /**\r\n     * 查询培训项目列表\r\n     * \r\n     * @param trainProject 培训项目\r\n     * @return 培训项目集合\r\n     */\r\n    public List<TrainProject> selectTrainProjectList(TrainProject trainProject);\r\n\r\n    /**\r\n     * 新增培训项目\r\n     * \r\n     * @param trainProject 培训项目\r\n     * @return 结果\r\n     */\r\n    public int insertTrainProject(TrainProject trainProject);\r\n\r\n    /**\r\n     * 修改培训项目\r\n     * \r\n     * @param trainProject 培训项目\r\n     * @return 结果\r\n     */\r\n    public int updateTrainProject(TrainProject trainProject);\r\n\r\n    /**\r\n     * 批量删除培训项目\r\n     * \r\n     * @param projectIds 需要删除的培训项目主键集合\r\n     * @return 结果\r\n     */\r\n    public int deleteTrainProjectByProjectIds(Integer[] projectIds);\r\n\r\n    /**\r\n     * 删除培训项目信息\r\n     * \r\n     * @param projectId 培训项目主键\r\n     * @return 结果\r\n     */\r\n    public int deleteTrainProjectByProjectId(Integer projectId);\r\n\r\n    public int checkProjectUnique(TrainProject trainProject);\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/service/ITrainProjectService.java b/laborBackend-labor/src/main/java/com/yuantu/labor/service/ITrainProjectService.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/service/ITrainProjectService.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/service/ITrainProjectService.java	(date 1697167130574)
+@@ -2,6 +2,10 @@
+ 
+ import java.util.List;
+ import com.yuantu.labor.domain.TrainProject;
++import com.yuantu.labor.vo.ImportResultVO;
++import org.springframework.web.multipart.MultipartFile;
++
++import javax.servlet.http.HttpServletResponse;
+ 
+ /**
+  * 培训项目Service接口
+@@ -61,4 +65,7 @@
+ 
+     public int checkProjectUnique(TrainProject trainProject);
+ 
++    public void downloadExcel(HttpServletResponse response,String path);
++    public ImportResultVO uploadTrainProjectFile(MultipartFile multipartFile, Long userId, String username);
++
+ }
+Index: laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainProjectController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.web.controller.labor;\r\n\r\nimport java.util.List;\r\nimport javax.servlet.http.HttpServletResponse;\r\n\r\nimport com.yuantu.labor.domain.Department;\r\nimport com.yuantu.labor.domain.EmployingUnits;\r\nimport com.yuantu.labor.service.IDepartmentService;\r\nimport com.yuantu.labor.service.IEmployeeService;\r\nimport com.yuantu.labor.vo.EmpNameCardVO;\r\nimport com.yuantu.labor.vo.EmployeeInfoVO;\r\nimport io.swagger.annotations.Api;\r\nimport io.swagger.annotations.ApiOperation;\r\nimport org.springframework.security.access.prepost.PreAuthorize;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.PutMapping;\r\nimport org.springframework.web.bind.annotation.DeleteMapping;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\nimport com.yuantu.common.annotation.Log;\r\nimport com.yuantu.common.core.controller.BaseController;\r\nimport com.yuantu.common.core.domain.AjaxResult;\r\nimport com.yuantu.common.enums.BusinessType;\r\nimport com.yuantu.labor.domain.TrainProject;\r\nimport com.yuantu.labor.service.ITrainProjectService;\r\nimport com.yuantu.common.utils.poi.ExcelUtil;\r\nimport com.yuantu.common.core.page.TableDataInfo;\r\n\r\n/**\r\n * 培训项目Controller\r\n * \r\n * @author ruoyi\r\n * @date 2023-09-14\r\n */\r\n@Api(\"培训项目管理\")\r\n@RestController\r\n@RequestMapping(\"/labor/project\")\r\npublic class TrainProjectController extends BaseController\r\n{\r\n    @Autowired\r\n    private ITrainProjectService trainProjectService;\r\n\r\n\r\n    @Autowired\r\n    private IDepartmentService departmentService;\r\n    /**\r\n     * 查询培训项目列表\r\n     */\r\n    @ApiOperation(\"根据条件查询培训项目列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:list')\")\r\n    @GetMapping(\"/list\")\r\n    public TableDataInfo list(TrainProject trainProject)\r\n    {\r\n        startPage();\r\n        List<TrainProject> list = trainProjectService.selectTrainProjectList(trainProject);\r\n        return getDataTable(list);\r\n    }\r\n\r\n    /**\r\n     * 导出培训项目列表\r\n     */\r\n    @ApiOperation(\"导出培训项目列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:export')\")\r\n    @Log(title = \"培训项目\", businessType = BusinessType.EXPORT)\r\n    @PostMapping(\"/export/{projectIds}\")\r\n    public void export(HttpServletResponse response, @PathVariable Integer[] projectIds)\r\n    {\r\n        TrainProject project = new TrainProject();\r\n        project.setProjectIds(projectIds);\r\n        List<TrainProject> list = trainProjectService.selectTrainProjectList(project);\r\n        ExcelUtil<TrainProject> util = new ExcelUtil<TrainProject>(TrainProject.class);\r\n        util.exportExcel(response, list, \"培训项目数据\");\r\n    }\r\n\r\n    /**\r\n     * 获取培训项目详细信息\r\n     */\r\n    @ApiOperation(\"根据id获取培训项目详细信息\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:query')\")\r\n    @GetMapping(value = \"/getInfo/{projectId}\")\r\n    public AjaxResult getInfo(@PathVariable(\"projectId\") Integer projectId)\r\n    {\r\n        return success(trainProjectService.selectTrainProjectByProjectId(projectId));\r\n    }\r\n\r\n    /**\r\n     * 新增培训项目\r\n     */\r\n\r\n    @ApiOperation(\"新增培训项目\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:add')\")\r\n    @Log(title = \"培训项目\", businessType = BusinessType.INSERT)\r\n    @PostMapping(\"/add\")\r\n    public AjaxResult add(@RequestBody TrainProject trainProject)\r\n    {\r\n        int result = trainProjectService.checkProjectUnique(trainProject);\r\n        if(result>0){\r\n            return  error(\"增加\"+trainProject.getProjectName()+\"失败，项目已经存在\");\r\n        }else{\r\n            if(trainProject.getProjectDeptName()==null){\r\n                Department dept = departmentService.selectDepartmentByDeptId(new Long(trainProject.getProjectDeptId()));\r\n                trainProject.setProjectDeptName(dept.getDeptName());\r\n            }\r\n            return toAjax(trainProjectService.insertTrainProject(trainProject));\r\n        }\r\n    }\r\n\r\n    /**\r\n     * 修改培训项目\r\n     */\r\n    @ApiOperation(\"修改培训项目\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:edit')\")\r\n    @Log(title = \"培训项目\", businessType = BusinessType.UPDATE)\r\n    @PutMapping(\"/edit\")\r\n    public AjaxResult edit(@RequestBody TrainProject trainProject)\r\n    {\r\n        Department dept = departmentService.selectDepartmentByDeptId(new Long(trainProject.getProjectDeptId()));\r\n        trainProject.setProjectDeptName(dept.getDeptName());\r\n        return toAjax(trainProjectService.updateTrainProject(trainProject));\r\n    }\r\n\r\n    /**\r\n     * 删除培训项目\r\n     */\r\n    @ApiOperation(\"根据ID删除培训项目\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:remove')\")\r\n    @Log(title = \"培训项目\", businessType = BusinessType.DELETE)\r\n\t@DeleteMapping(\"/remove/{projectIds}\")\r\n    public AjaxResult remove(@PathVariable Integer[] projectIds)\r\n    {\r\n        return toAjax(trainProjectService.deleteTrainProjectByProjectIds(projectIds));\r\n    }\r\n\r\n    /**\r\n     * 初始化新增页面数据\r\n     * @return\r\n     */\r\n    @ApiOperation(\"初始化新增页面数据\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:query')\")\r\n    @GetMapping(\"/initAdd\")\r\n    public AjaxResult initAdd() {\r\n        AjaxResult ajax = AjaxResult.success();\r\n        List<Department> deptList = departmentService.selectDepartmentListByDept(new Department());\r\n        ajax.put(\"deptsData\",deptList);\r\n        return ajax;\r\n    }\r\n\r\n    @ApiOperation(\"修改培训项目\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:project:edit')\")\r\n    @Log(title = \"培训项目\", businessType = BusinessType.UPDATE)\r\n    @PutMapping(\"/editStatus\")\r\n    public AjaxResult editStatus(@RequestBody TrainProject trainProject)\r\n    {\r\n\r\n        return toAjax(trainProjectService.updateTrainProject(trainProject));\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainProjectController.java b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainProjectController.java
+--- a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainProjectController.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainProjectController.java	(date 1697185816157)
+@@ -51,7 +51,7 @@
+      * 查询培训项目列表
+      */
+     @ApiOperation("根据条件查询培训项目列表")
+-    @PreAuthorize("@ss.hasPermi('labor:project:list')")
++    //@PreAuthorize("@ss.hasPermi('labor:project:list')")
+     @GetMapping("/list")
+     public TableDataInfo list(TrainProject trainProject)
+     {
+@@ -66,7 +66,7 @@
+     @ApiOperation("导出培训项目列表")
+     @PreAuthorize("@ss.hasPermi('labor:project:export')")
+     @Log(title = "培训项目", businessType = BusinessType.EXPORT)
+-    @PostMapping("/export/{projectIds}")
++    @GetMapping("/export/{projectIds}")
+     public void export(HttpServletResponse response, @PathVariable Integer[] projectIds)
+     {
+         TrainProject project = new TrainProject();
+@@ -80,7 +80,7 @@
+      * 获取培训项目详细信息
+      */
+     @ApiOperation("根据id获取培训项目详细信息")
+-    @PreAuthorize("@ss.hasPermi('labor:project:query')")
++    //@PreAuthorize("@ss.hasPermi('labor:project:query')")
+     @GetMapping(value = "/getInfo/{projectId}")
+     public AjaxResult getInfo(@PathVariable("projectId") Integer projectId)
+     {
+@@ -159,4 +159,18 @@
+         return toAjax(trainProjectService.updateTrainProject(trainProject));
+     }
+ 
++    /**
++     * 下载模板
++     * @param response
++     */
++    @ApiOperation(value = "下载培训项目模板")
++    @GetMapping("/excel/download")
++    public void downloadExcel(HttpServletResponse response) {
++        try {
++            trainProjectService.downloadExcel(response,"trainProject.xlsx");
++        } catch (Exception e) {
++            e.printStackTrace();
++        }
++    }
++
+ }
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/TrainProjectServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.service.impl;\r\n\r\nimport java.util.List;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\nimport com.yuantu.labor.mapper.TrainProjectMapper;\r\nimport com.yuantu.labor.domain.TrainProject;\r\nimport com.yuantu.labor.service.ITrainProjectService;\r\n\r\n/**\r\n * 培训项目Service业务层处理\r\n * \r\n * @author ruoyi\r\n * @date 2023-09-14\r\n */\r\n@Service\r\npublic class TrainProjectServiceImpl implements ITrainProjectService \r\n{\r\n    @Autowired\r\n    private TrainProjectMapper trainProjectMapper;\r\n\r\n    /**\r\n     * 查询培训项目\r\n     * \r\n     * @param projectId 培训项目主键\r\n     * @return 培训项目\r\n     */\r\n    @Override\r\n    public TrainProject selectTrainProjectByProjectId(Integer projectId)\r\n    {\r\n        return trainProjectMapper.selectTrainProjectByProjectId(projectId);\r\n    }\r\n\r\n    /**\r\n     * 查询培训项目列表\r\n     * \r\n     * @param trainProject 培训项目\r\n     * @return 培训项目\r\n     */\r\n    @Override\r\n    public List<TrainProject> selectTrainProjectList(TrainProject trainProject)\r\n    {\r\n        return trainProjectMapper.selectTrainProjectList(trainProject);\r\n    }\r\n\r\n    /**\r\n     * 新增培训项目\r\n     * \r\n     * @param trainProject 培训项目\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int insertTrainProject(TrainProject trainProject)\r\n    {\r\n        return trainProjectMapper.insertTrainProject(trainProject);\r\n    }\r\n\r\n    /**\r\n     * 修改培训项目\r\n     * \r\n     * @param trainProject 培训项目\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int updateTrainProject(TrainProject trainProject)\r\n    {\r\n        return trainProjectMapper.updateTrainProject(trainProject);\r\n    }\r\n\r\n    /**\r\n     * 批量删除培训项目\r\n     * \r\n     * @param projectIds 需要删除的培训项目主键\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int deleteTrainProjectByProjectIds(Integer[] projectIds)\r\n    {\r\n        return trainProjectMapper.deleteTrainProjectByProjectIds(projectIds);\r\n    }\r\n\r\n    /**\r\n     * 删除培训项目信息\r\n     * \r\n     * @param projectId 培训项目主键\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int deleteTrainProjectByProjectId(Integer projectId)\r\n    {\r\n        return trainProjectMapper.deleteTrainProjectByProjectId(projectId);\r\n    }\r\n\r\n    @Override\r\n    public int checkProjectUnique(TrainProject trainProject) {\r\n        return trainProjectMapper.checkProjectUnique(trainProject);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/TrainProjectServiceImpl.java b/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/TrainProjectServiceImpl.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/TrainProjectServiceImpl.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/TrainProjectServiceImpl.java	(date 1697185430970)
+@@ -1,11 +1,42 @@
+ package com.yuantu.labor.service.impl;
+ 
++import java.io.IOException;
++import java.io.InputStream;
++import java.text.SimpleDateFormat;
++import java.util.Date;
+ import java.util.List;
++import java.util.stream.Collectors;
++
++import cn.afterturn.easypoi.excel.ExcelExportUtil;
++import cn.afterturn.easypoi.excel.ExcelImportUtil;
++import cn.afterturn.easypoi.excel.entity.ExportParams;
++import cn.afterturn.easypoi.excel.entity.ImportParams;
++import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
++import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
++import com.yuantu.common.exception.ServiceException;
++import com.yuantu.common.utils.file.FileUtils;
++import com.yuantu.common.utils.poi.ExcelUtil;
++import com.yuantu.labor.cenum.*;
++import com.yuantu.labor.domain.Department;
++import com.yuantu.labor.domain.FileImportRecord;
++import com.yuantu.labor.handler.TrainProjectExcelImportVerifyHandler;
++import com.yuantu.labor.mapper.FileImportRecordMapper;
++import com.yuantu.labor.vo.*;
++import org.apache.poi.ss.usermodel.Workbook;
++import org.apache.poi.ss.usermodel.WorkbookFactory;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++import org.springframework.beans.BeanUtils;
+ import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.core.io.ClassPathResource;
+ import org.springframework.stereotype.Service;
+ import com.yuantu.labor.mapper.TrainProjectMapper;
+ import com.yuantu.labor.domain.TrainProject;
+ import com.yuantu.labor.service.ITrainProjectService;
++import org.springframework.util.CollectionUtils;
++import org.springframework.web.multipart.MultipartFile;
++
++import javax.servlet.http.HttpServletResponse;
+ 
+ /**
+  * 培训项目Service业务层处理
+@@ -18,7 +49,11 @@
+ {
+     @Autowired
+     private TrainProjectMapper trainProjectMapper;
+-
++    @Autowired
++    private FileImportRecordMapper fileImportRecordMapper;
++    @Autowired
++    private TrainProjectExcelImportVerifyHandler trainProjectExcelImportVerifyHandler;
++    private static final Logger log = LoggerFactory.getLogger(TrainProjectServiceImpl.class);
+     /**
+      * 查询培训项目
+      * 
+@@ -55,6 +90,10 @@
+         return trainProjectMapper.insertTrainProject(trainProject);
+     }
+ 
++    public int insertTrainProjectFromExcel(TrainProject trainProject,Long userId){
++        return 0;
++    }
++
+     /**
+      * 修改培训项目
+      * 
+@@ -96,4 +135,195 @@
+         return trainProjectMapper.checkProjectUnique(trainProject);
+     }
+ 
++    @Override
++    public void downloadExcel(HttpServletResponse response, String path) {
++        InputStream inputStream = null;
++        try {
++            ClassPathResource classPathResource = new ClassPathResource("static/"+path);
++            inputStream = classPathResource.getInputStream();
++            ExcelUtil.downLoadExcel("data", response, WorkbookFactory.create(inputStream));
++        } catch (Exception e) {
++            e.printStackTrace();
++        } finally {
++            if (inputStream != null) {
++                try {
++                    inputStream.close();
++                } catch (IOException e) {
++                    e.printStackTrace();
++                }
++            }
++        }
++    }
++
++    @Override
++    public ImportResultVO uploadTrainProjectFile(MultipartFile multipartFile, Long userId, String username) {
++         Date now = new Date();
++         //实例化FileImportRecord导入记录对象,通用代码
++        FileImportRecord fileImportRecord = new FileImportRecord();
++        fileImportRecord.setSuccessCount(0);
++        fileImportRecord.setFailureCount(0);
++        fileImportRecord.setTotalCount(0);
++        fileImportRecord.setDisabled(false);
++        fileImportRecord.setFileType(ImportFileTypeEnum.SEVEN.getKey());
++        fileImportRecord.setImportStatus(FileImportStatusEnum.DURING.getKey());
++        fileImportRecord.setCreatorId(userId);
++        fileImportRecord.setCreatedTime(now);
++        //先创建数据库导入记录
++        fileImportRecordMapper.insertFileImportRecord(fileImportRecord);
++
++        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd*HH:mm:ss");
++
++        String nowStr = dateFormat.format(now);
++
++        /**
++        ExcelImportResult<EmpImportVO> excelDate = getExcelDate(multipartFile, TrainProjectImportVO.class);
++
++        //
++        List<ErrorForm> failReport = excelDate.getFailList().stream()
++                .map(entity -> {
++                    int line = entity.getRowNum() == null ? 0 : entity.getRowNum() + 1;
++                    return new ErrorForm(line, entity.getErrorMsg());
++                }).collect(Collectors.toList());
++        //批量导入数据到表中
++        if (!CollectionUtils.isEmpty(excelDate.getList())) {
++            batchInsertTrainProjectInfos(userId,excelDate.getList());
++        }
++        //统计成功和失败的数量，公共
++        int successCount = CollectionUtils.isEmpty(excelDate.getList()) ? 0 : excelDate.getList().size();
++        int errorCount = CollectionUtils.isEmpty(failReport) ? 0 : failReport.size();
++
++        Long failFileId = null;
++        String failFileUrl = null;
++        fileImportRecord.setImportStatus(FileImportStatusEnum.FINISHED.getKey());
++        if (errorCount != 0) {
++            Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("错误信息", "Sheet1", ExcelType.XSSF),
++                    ErrorForm.class, failReport);
++            //上传附件
++            MultipartFile file = FileUtils.workbookToCommonsMultipartFile(workbook, multipartFile.getOriginalFilename() + "错误信息" + nowStr + ".xlsx");
++            if (file != null) {
++                FileVO failFileInfo = fileService.upLoadEmpFile(FileTypeEnum.TRAIN_RESULT_FAIL_INFO.getKey(), "employee", file, username);
++                failFileId = failFileInfo.getFileId();
++                failFileUrl = failFileInfo.getFileUrl();
++            }
++            if (successCount == 0) {
++                fileImportRecord.setImportStatus(FileImportStatusEnum.FAIL.getKey());
++            }
++        }
++        Long empInfoFileId = fileService.upLoadEmpFile(FileTypeEnum.EMP_INFO.getKey(), "employee", multipartFile, username).getFileId();
++        //更新导入记录
++        fileImportRecord.setSuccessCount(successCount);
++        fileImportRecord.setFailureCount(errorCount);
++        fileImportRecord.setTotalCount(successCount + errorCount);
++        fileImportRecord.setOriginFileId(empInfoFileId);
++        fileImportRecord.setFailFileId(failFileId);
++        fileImportRecordMapper.updateFileImportRecord(fileImportRecord);
++        //返回导入记录
++        ImportResultVO importResult = new ImportResultVO();
++        importResult.setTotalCount(successCount + errorCount);
++        importResult.setSuccessCount(successCount);
++        importResult.setErrorCount(errorCount);
++        importResult.setFailFileId(failFileId);
++        importResult.setFailFileUrl(failFileUrl);
++
++        return importResult;;
++         **/
++        return null;
++    }
++    /**
++
++    private ExcelImportResult<TrainProjectImportVO> getExcelDate(MultipartFile file, Class<TrainProjectImportVO> trainProjectImportClass) {
++
++        try {
++            //ImportParams对象用于存放导入过程参数
++            ImportParams params = new ImportParams();
++            params.setHeadRows(1);
++            params.setTitleRows(0);
++            params.setNeedVerify(true);
++            //Excel单元格数据是否规范校验
++            params.setVerifyHandler(trainProjectExcelImportVerifyHandler);
++            return ExcelImportUtil.importExcelMore(file.getInputStream(), trainProjectImportClass, params);
++        } catch (Exception e) {
++            log.error("获取excel数据失败", e);
++            throw new ServiceException("获取excel数据失败");
++        } finally {
++            // 清除threadLocal 防止内存泄漏
++            ThreadLocal<List<TrainProjectCheckVO>> threadLocal = trainProjectExcelImportVerifyHandler.getThreadLocal();
++            if (threadLocal != null) {
++                threadLocal.remove();
++            }
++        }
++    }
++    private void batchInsertTrainProjectInfos(Long userId, List<TrainProjectImportVO> projectImportInfos) {
++
++        for (TrainProjectImportVO projectImportInfo : projectImportInfos) {
++            TrainProject project = transformTrainProjectImportInfoToProjectAdd(projectImportInfo);
++            insertTrainProjectFromExcel(project, userId);
++        }
++    }
++
++    private TrainProject transformTrainProjectImportInfoToProjectAdd(TrainProjectImportVO projectImpotVO) {
++
++        TrainProject projectNew = new TrainProject();
++        BeanUtils.copyProperties(projectImpotVO, projectNew);
++        for (EmpTypeEnum value : EmpTypeEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpType())) {
++                empAdd.setEmpType(value.getKey());
++            }
++        }
++        for (EmpStatusEnum value : EmpStatusEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpStatus())) {
++                empAdd.setEmpStatus(value.getKey());
++            }
++        }
++        for (EmpSalaryEnum value : EmpSalaryEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpSalaryLevel())) {
++                empAdd.setEmpSalaryLevel(value.getKey());
++            }
++        }
++        for (EmpPostLevelEnum value : EmpPostLevelEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpPosition())) {
++                empAdd.setEmpPositionLevel(value.getKey());
++            }
++        }
++        for (EmpPoliticalEnum value : EmpPoliticalEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpPoliticalStatus())) {
++                empAdd.setEmpPoliticalStatus(value.getKey());
++            }
++        }
++        for (EmpEducationEnum value : EmpEducationEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpEducation())) {
++                empAdd.setEmpEducation(value.getKey());
++            }
++        }
++        for (EmpCategoryEnum value : EmpCategoryEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpCategory())) {
++                empAdd.setEmpCategory(value.getKey());
++            }
++        }
++        for (EmpTitleEnum value : EmpTitleEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpTitle())) {
++                empAdd.setEmpTitle(value.getKey());
++            }
++        }
++
++        for (EmpPostLevelEnum value : EmpPostLevelEnum.values()) {
++            if (value.getValue().equals(empImportInfo.getEmpPositionLevel())) {
++                empAdd.setEmpPositionLevel(value.getKey());
++            }
++        }
++
++        String empUnitDeptName = empImportInfo.getEmpDeptName();
++        String[] split = empUnitDeptName.split("-");
++        String empUnit = split[0];
++        String empDept = split[1];
++        Department department = departmentMapper.findDepartmentInfoByUnitAndDeptName(empUnit, empDept);
++        if (department != null) {
++            empAdd.setEmpDeptId(department.getDeptId());
++            empAdd.setEmpDeptName(department.getDeptName());
++        }
++        return empAdd;
++    }
++    **/
++
++
+ }
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.cenum;\r\n\r\nimport lombok.AllArgsConstructor;\r\nimport lombok.Getter;\r\n\r\n/**\r\n * @Author : wj\r\n * @create 2023/3/17 11:18\r\n */\r\n@Getter\r\n@AllArgsConstructor\r\npublic enum ImportFileTypeEnum {\r\n\r\n    ONE(\"1\", \"人员信息\"),\r\n\r\n    TWO(\"2\", \"借工基本信息\"),\r\n\r\n    THREE(\"3\", \"职业资格管理\"),\r\n\r\n    FOUR(\"4\", \"社会履历\"),\r\n\r\n    FIVE(\"5\", \"项目履历\"),\r\n\r\n    SIX(\"6\", \"部门绩效\"),\r\n\r\n\r\n    ;\r\n\r\n    private String key;\r\n\r\n    private String value;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java b/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java	(date 1697177149779)
+@@ -23,6 +23,12 @@
+ 
+     SIX("6", "部门绩效"),
+ 
++    SEVEN("7", "培训项目"),
++
++    EIGHT("8","培训记录"),
++
++    NINE("9","培训成果"),
++
+ 
+     ;
+ 
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/EmployeeServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.service.impl;\r\n\r\nimport java.io.*;\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.*;\r\nimport java.util.function.Function;\r\nimport java.util.stream.Collectors;\r\n\r\nimport com.yuantu.common.annotation.Excel;\r\nimport com.yuantu.common.core.domain.entity.SysDictData;\r\nimport com.yuantu.common.utils.file.FileUtils;\r\nimport com.yuantu.labor.handler.MySequentialOutStream;\r\nimport com.yuantu.system.mapper.SysDictDataMapper;\r\nimport net.sf.sevenzipjbinding.*;\r\nimport net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;\r\nimport net.sf.sevenzipjbinding.simple.ISimpleInArchive;\r\nimport net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem;\r\nimport org.springframework.beans.factory.annotation.Value;\r\nimport org.springframework.core.io.Resource;\r\nimport org.springframework.core.io.ResourceLoader;\r\n\r\nimport cn.afterturn.easypoi.excel.ExcelExportUtil;\r\nimport cn.afterturn.easypoi.excel.ExcelImportUtil;\r\nimport cn.afterturn.easypoi.excel.entity.ExportParams;\r\nimport cn.afterturn.easypoi.excel.entity.ImportParams;\r\nimport cn.afterturn.easypoi.excel.entity.enmus.ExcelType;\r\nimport cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;\r\nimport com.yuantu.common.exception.ServiceException;\r\nimport com.yuantu.common.utils.DateUtils;\r\nimport com.yuantu.common.utils.poi.ExcelUtil;\r\nimport com.yuantu.labor.cenum.*;\r\nimport com.yuantu.labor.domain.*;\r\nimport com.yuantu.labor.handler.EmployeeExcelImportVerifyHandler;\r\nimport com.yuantu.labor.mapper.*;\r\nimport com.yuantu.labor.vo.*;\r\nimport com.yuantu.system.mapper.SysConfigMapper;\r\nimport org.apache.poi.ss.usermodel.Workbook;\r\nimport org.apache.poi.ss.usermodel.WorkbookFactory;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport org.springframework.beans.BeanUtils;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.core.io.ClassPathResource;\r\nimport org.springframework.core.io.DefaultResourceLoader;\r\nimport org.springframework.stereotype.Service;\r\nimport com.yuantu.labor.service.IEmployeeService;\r\nimport org.springframework.util.CollectionUtils;\r\nimport org.springframework.web.multipart.MultipartFile;\r\n\r\n\r\nimport javax.servlet.http.HttpServletResponse;\r\n\r\n/**\r\n * 员工Service业务层处理\r\n *\r\n * @author ruoyi\r\n * @date 2023-09-06\r\n */\r\n\r\n@Service\r\npublic class EmployeeServiceImpl implements IEmployeeService {\r\n\r\n    @Autowired\r\n    private EmployeeMapper employeeMapper;\r\n\r\n    @Autowired\r\n    private FamilyRelationsMapper familyRelationsMapper;\r\n\r\n    @Autowired\r\n    private EmpDocumentMapper empDocumentMapper;\r\n\r\n    @Autowired\r\n    private SysConfigMapper configMapper;\r\n\r\n    @Autowired\r\n    private PostHistoryMapper postHistoryMapper;\r\n\r\n    @Autowired\r\n    private EmpHistoryMapper empHistoryMapper;\r\n\r\n    @Autowired\r\n    private FileService fileService;\r\n\r\n    @Autowired\r\n    private FileImportRecordMapper fileImportRecordMapper;\r\n\r\n    @Autowired\r\n    private DepartmentMapper departmentMapper;\r\n\r\n    @Autowired\r\n    private EmpImportHistoryMapper empImportHistoryMapper;\r\n\r\n    @Autowired\r\n    private SysDictDataMapper dictDataMapper;\r\n\r\n\r\n    @Autowired\r\n    private EmployeeExcelImportVerifyHandler employeeExcelImportVerifyHandler;\r\n\r\n\r\n    private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);\r\n\r\n\r\n    /**\r\n     * 查询员工\r\n     *\r\n     * @param empId 员工主键\r\n     * @return 员工\r\n     */\r\n    @Override\r\n    public Employee selectEmployeeByEmpId(Long empId) {\r\n\r\n        return employeeMapper.selectEmployeeByEmpId(empId);\r\n\r\n    }\r\n\r\n    @Override\r\n    public EmpDetailVO selectEmployeeInfoByEmpId(Long empId) {\r\n        EmpDetailVO empDetail = new EmpDetailVO();\r\n        Employee employee = employeeMapper.selectEmployeeByEmpId(empId);\r\n        if (employee == null) {\r\n            throw new ServiceException(\"员工信息不存在\");\r\n        }\r\n        BeanUtils.copyProperties(employee, empDetail);\r\n        List<FamilyRelations> familyRelations = familyRelationsMapper.findFamilyInfoByEmpId(empId);\r\n        List<EmpFamilyVO> empFamilies = new ArrayList<>();\r\n        for (FamilyRelations familyRelation : familyRelations) {\r\n            EmpFamilyVO empFamily = new EmpFamilyVO();\r\n            BeanUtils.copyProperties(familyRelation, empFamily);\r\n            empFamily.setFamAge(String.valueOf(familyRelation.getFamAge()));\r\n            empFamilies.add(empFamily);\r\n        }\r\n        empDetail.setEmpFamilies(empFamilies);\r\n\r\n        List<String> docTypes = new ArrayList<>();\r\n        docTypes.add(EmpDocTypeEnum.ONE.getKey());\r\n        docTypes.add(EmpDocTypeEnum.TWO.getKey());\r\n        docTypes.add(EmpDocTypeEnum.THREE.getKey());\r\n        docTypes.add(EmpDocTypeEnum.FOUR.getKey());\r\n        List<EmpDocument> empDocuments = empDocumentMapper.findDocInfosByEmpIdAndTypes(empId, docTypes);\r\n        EmpDocument avatarDoc = empDocuments.stream().filter(s -> FileTypeEnum.PHOTO.getKey().equals(s.getDocType())).findFirst().\r\n                orElse(new EmpDocument());\r\n        List<EmpDocument> idFiles = empDocuments.stream().filter(s -> FileTypeEnum.ID_CARD.getKey().equals(s.getDocType()))\r\n                .collect(Collectors.toList());\r\n        List<EmpDocument> paperFiles = empDocuments.stream().filter(s -> FileTypeEnum.PAPER.getKey().equals(s.getDocType()))\r\n                .collect(Collectors.toList());\r\n        List<EmpDocument> educationFiles = empDocuments.stream().filter(s -> FileTypeEnum.EDUCATION.getKey().equals(s.getDocType()))\r\n                .collect(Collectors.toList());\r\n        empDetail.setAvatarDocId(avatarDoc.getDocId());\r\n        empDetail.setAvatarDocUrl(avatarDoc.getDocAnnexPath());\r\n\r\n        List<FileVO> idCardDocList = new ArrayList<>();\r\n        for (EmpDocument idFile : idFiles) {\r\n            FileVO file = new FileVO();\r\n            file.setFileName(idFile.getDocName());\r\n            file.setFileId(idFile.getDocId());\r\n            file.setFileUrl(idFile.getDocAnnexPath());\r\n            idCardDocList.add(file);\r\n        }\r\n        List<FileVO> educateDocList = new ArrayList<>();\r\n        for (EmpDocument educationFile : educationFiles) {\r\n            FileVO file = new FileVO();\r\n            file.setFileName(educationFile.getDocName());\r\n            file.setFileId(educationFile.getDocId());\r\n            file.setFileUrl(educationFile.getDocAnnexPath());\r\n            educateDocList.add(file);\r\n        }\r\n        List<FileVO> paperDocList = new ArrayList<>();\r\n        for (EmpDocument paperFile : paperFiles) {\r\n            FileVO file = new FileVO();\r\n            file.setFileName(paperFile.getDocName());\r\n            file.setFileId(paperFile.getDocId());\r\n            file.setFileUrl(paperFile.getDocAnnexPath());\r\n            paperDocList.add(file);\r\n        }\r\n        empDetail.setIdCardDocList(idCardDocList);\r\n        empDetail.setPaperDocList(paperDocList);\r\n        empDetail.setEducateDocList(educateDocList);\r\n        return empDetail;\r\n    }\r\n\r\n    /**\r\n     * 查询员工列表\r\n     *\r\n     * @param employee 员工\r\n     * @return 员工\r\n     */\r\n    @Override\r\n    public List<Employee> selectEmployeeList(EmpSearchVO employee) {\r\n\r\n        String keyword = employee.getKeyword();\r\n        String regex = \"\\\\d{17}[0-9Xx]\";\r\n        if (keyword != null) {\r\n            if (keyword.matches(regex)) {\r\n                employee.setEmpIdcard(keyword);\r\n            } else {\r\n                employee.setEmpName(keyword);\r\n            }\r\n        }\r\n        return employeeMapper.selectEmployeeInfoList(employee);\r\n    }\r\n\r\n\r\n    @Override\r\n    public List<EmpHistory> selectEmployeeHistoryList(EmpSearchVO employee) {\r\n        String keyword = employee.getKeyword();\r\n        String regex = \"\\\\d{17}[0-9Xx]\";\r\n        if (keyword != null) {\r\n            if (keyword.matches(regex)) {\r\n                employee.setEmpIdcard(keyword);\r\n            } else {\r\n                employee.setEmpName(keyword);\r\n            }\r\n        }\r\n        return empHistoryMapper.selectEmployeeInfoHistoryList(employee);\r\n    }\r\n\r\n    @Override\r\n    public List<Employee> selectEmployeeExportInfos(EmpExportVO empExport) {\r\n\r\n        return employeeMapper.findEmpExportInfos(empExport);\r\n    }\r\n\r\n    @Override\r\n    public List<EmpHistory> selectEmployeeHistoryExportInfos(EmpExportVO empExport) {\r\n\r\n        return empHistoryMapper.selectEmployeeInfoHistoryExportInfos(empExport);\r\n    }\r\n\r\n    @Override\r\n    public void exportDivide(HttpServletResponse response, EmpExportDivideVO empExportDivide) {\r\n        EmpExportVO empExport = new EmpExportVO();\r\n        BeanUtils.copyProperties(empExportDivide, empExport);\r\n        List<Employee> empExportInfos = employeeMapper.findEmpExportInfos(empExport);\r\n        String groupByProperty = empExportDivide.getFieldName();\r\n        Map<String, List<Employee>> groupedData = empExportInfos.stream()\r\n                .collect(Collectors.groupingBy(emp -> {\r\n                    try {\r\n                        // 使用反射获取指定属性的值\r\n                        return (String) emp.getClass().getMethod(\"get\" +\r\n                                groupByProperty.substring(0, 1).toUpperCase() +\r\n                                groupByProperty.substring(1)).invoke(emp);\r\n                    } catch (Exception e) {\r\n                        e.printStackTrace();\r\n                        // 处理获取属性值异常\r\n                        return null;\r\n                    }\r\n                }));\r\n\r\n        File baseDir = new File(\"人员信息\");\r\n        for (String key : groupedData.keySet()) {\r\n            File file = new File(baseDir + File.separator + key + File.separator + empExportDivide.getExcelName() + \".xlsx\");\r\n            if (!file.exists()) {\r\n                file.getParentFile().mkdirs();\r\n                try {\r\n                    file.createNewFile();\r\n                } catch (IOException e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n            List<Employee> employees = groupedData.get(key);\r\n            ExcelUtil<Employee> util = new ExcelUtil<Employee>(Employee.class);\r\n            util.init(employees, \"员工信息\", empExportDivide.getExcelName(), Excel.Type.EXPORT);\r\n            util.writeSheet();\r\n            Workbook wb = util.getWb();\r\n            MultipartFile multipartFile = FileUtils.workbookToCommonsMultipartFile(wb, key + \".xlsx\");\r\n            if (multipartFile != null) {\r\n                try (InputStream inputStream = multipartFile.getInputStream()) {\r\n                    org.apache.commons.io.FileUtils.copyInputStreamToFile(inputStream, file);\r\n                } catch (IOException e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n        }\r\n        FileUtils.writeCompressedFileToResponse(response, baseDir);\r\n        FileUtils.deleteFolder(baseDir);\r\n    }\r\n\r\n    @Override\r\n    public void exportHistoryDivide(HttpServletResponse response, EmpExportDivideVO empExportDivide) {\r\n        EmpExportVO empExport = new EmpExportVO();\r\n        BeanUtils.copyProperties(empExportDivide, empExport);\r\n        List<EmpHistory> empExportInfos = empHistoryMapper.selectEmployeeInfoHistoryExportInfos(empExport);\r\n        String groupByProperty = empExportDivide.getFieldName();\r\n        Map<String, List<EmpHistory>> groupedData = empExportInfos.stream()\r\n                .collect(Collectors.groupingBy(emp -> {\r\n                    try {\r\n                        // 使用反射获取指定属性的值\r\n                        return (String) emp.getClass().getMethod(\"get\" +\r\n                                groupByProperty.substring(0, 1).toUpperCase() +\r\n                                groupByProperty.substring(1)).invoke(emp);\r\n                    } catch (Exception e) {\r\n                        e.printStackTrace();\r\n                        // 处理获取属性值异常\r\n                        return null;\r\n                    }\r\n                }));\r\n\r\n        File baseDir = new File(\"人员历史信息\");\r\n        for (String key : groupedData.keySet()) {\r\n            File file = new File(baseDir + File.separator + key + File.separator + empExportDivide.getExcelName() + \".xlsx\");\r\n            if (!file.exists()) {\r\n                file.getParentFile().mkdirs();\r\n                try {\r\n                    file.createNewFile();\r\n                } catch (IOException e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n            List<EmpHistory> empHistories = groupedData.get(key);\r\n            ExcelUtil<EmpHistory> util = new ExcelUtil<EmpHistory>(EmpHistory.class);\r\n            util.init(empHistories, \"员工历史信息\", empExportDivide.getExcelName(), Excel.Type.EXPORT);\r\n            util.writeSheet();\r\n            Workbook wb = util.getWb();\r\n            MultipartFile multipartFile = FileUtils.workbookToCommonsMultipartFile(wb, key + \".xlsx\");\r\n            if (multipartFile != null) {\r\n                try (InputStream inputStream = multipartFile.getInputStream()) {\r\n                    org.apache.commons.io.FileUtils.copyInputStreamToFile(inputStream, file);\r\n                } catch (IOException e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n        }\r\n        FileUtils.writeCompressedFileToResponse(response, baseDir);\r\n        FileUtils.deleteFolder(baseDir);\r\n    }\r\n\r\n    /**\r\n     * 新增员工\r\n     *\r\n     * @param empAdd 员工\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public Long insertEmployee(EmpAddVO empAdd, Long userId) {\r\n\r\n        Employee employee;\r\n        Date now = new Date();\r\n        if (empAdd.getEmpId() == null) {\r\n            employee = new Employee();\r\n            BeanUtils.copyProperties(empAdd, employee);\r\n            String empIdcard = empAdd.getEmpIdcard();\r\n            int age = DateUtils.calculateAge(empIdcard);\r\n            char sexChar = empIdcard.charAt(empIdcard.length() - 2);\r\n            int sexNum = Integer.parseInt(String.valueOf(sexChar));\r\n            if (sexNum % 2 == 0) {\r\n                employee.setEmpGender(EmpGenderEnum.FEMALE.getKey());\r\n            } else {\r\n                employee.setEmpGender(EmpGenderEnum.MALE.getKey());\r\n            }\r\n            employee.setEmpAge(age);\r\n            String deptName = departmentMapper.selectDepartmentByDeptId(empAdd.getEmpDeptId()).getDeptName();\r\n            employee.setEmpDeptName(deptName);\r\n\r\n            Employee existEmployee = employeeMapper.findInfoByEmpIdCard(empIdcard);\r\n            changeEmpStatus(empAdd.getEmpHiredate(), employee, empIdcard);\r\n            if (existEmployee == null) {\r\n                employee.setEmpCreateBy(userId);\r\n                employee.setEmpCreateTime(now);\r\n                employee.setEmpUpdateTime(now);\r\n                employee.setDisabled(false);\r\n                employeeMapper.insertEmployee(employee);\r\n            } else {\r\n                employee.setEmpId(existEmployee.getEmpId());\r\n                BeanUtils.copyProperties(employee, existEmployee);\r\n                existEmployee.setEmpUpdateBy(userId);\r\n                existEmployee.setEmpUpdateTime(now);\r\n                employeeMapper.updateEmployee(existEmployee);\r\n            }\r\n        } else {\r\n            employee = employeeMapper.selectEmployeeByEmpId(empAdd.getEmpId());\r\n            String empIdcard = employee.getEmpIdcard();\r\n            if (!empAdd.getEmpPosition().equals(employee.getEmpPosition()) ||\r\n                    !empAdd.getEmpPositionLevel().equals(employee.getEmpPositionLevel())) {\r\n                postHistoryMapper.removeCurrentDayInfo(employee.getEmpId());\r\n                PostHistory postHistory = new PostHistory();\r\n                postHistory.setPhEmpId(employee.getEmpId());\r\n                postHistory.setPhEmpName(employee.getEmpName());\r\n                postHistory.setPhEmpIdcard(empIdcard);\r\n                postHistory.setPhOriginPostName(employee.getEmpPosition());\r\n                postHistory.setPhDestinPostName(empAdd.getEmpPosition());\r\n                String existPositionLevel = employee.getEmpPositionLevel();\r\n                String newPositionLevel = empAdd.getEmpPositionLevel();\r\n                postHistory.setPhOriginPostLevel(existPositionLevel);\r\n                postHistory.setPhDestinPostLevel(newPositionLevel);\r\n                SysDictData sysDictData = new SysDictData();\r\n                sysDictData.setDictType(\"emp_position_level\");\r\n                List<SysDictData> sysDictDataList = dictDataMapper.selectDictDataList(sysDictData);\r\n                Map<String, SysDictData> dictDataMap = sysDictDataList.stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));\r\n                Long existSort = dictDataMap.get(existPositionLevel).getDictSort();\r\n                Long newSort = dictDataMap.get(newPositionLevel).getDictSort();\r\n                int compare = (int) (existSort - newSort);\r\n                if (compare < 0) {\r\n                    postHistory.setPhAdjustType(PostChangeTypeEnum.ONE.getKey());\r\n                }\r\n                if (compare == 0) {\r\n                    postHistory.setPhAdjustType(PostChangeTypeEnum.TWO.getKey());\r\n                }\r\n                if (compare > 0) {\r\n                    postHistory.setPhAdjustType(PostChangeTypeEnum.THREE.getKey());\r\n                }\r\n                postHistory.setPhAdjustDate(now);\r\n                postHistory.setPhUpdateDate(now);\r\n                postHistory.setDisabled(0);\r\n                postHistoryMapper.insertPostHistory(postHistory);\r\n            }\r\n\r\n            if (!empIdcard.equals(empAdd.getEmpIdcard())) {\r\n                int age = DateUtils.calculateAge(empIdcard);\r\n                char sexChar = empIdcard.charAt(empIdcard.length() - 2);\r\n                int sexNum = Integer.parseInt(String.valueOf(sexChar));\r\n                if (sexNum % 2 == 0) {\r\n                    employee.setEmpGender(EmpGenderEnum.FEMALE.getKey());\r\n                } else {\r\n                    employee.setEmpGender(EmpGenderEnum.MALE.getKey());\r\n                }\r\n                employee.setEmpAge(age);\r\n            }\r\n            BeanUtils.copyProperties(empAdd, employee);\r\n            changeEmpStatus(empAdd.getEmpHiredate(), employee, employee.getEmpIdcard());\r\n            String deptName = departmentMapper.selectDepartmentByDeptId(empAdd.getEmpDeptId()).getDeptName();\r\n            employee.setEmpDeptName(deptName);\r\n            employee.setEmpUpdateBy(userId);\r\n            employee.setEmpUpdateTime(now);\r\n            if (!Objects.equals(employee.getEmpStatus(), empAdd.getEmpStatus())) {\r\n                employee.setEmpStatusUpdateTime(now);\r\n            }\r\n            employeeMapper.updateEmployee(employee);\r\n        }\r\n\r\n        Long empId = employee.getEmpId();\r\n        // 添加员工亲属信息\r\n        familyRelationsMapper.removeInfoByEmpId(empId);\r\n        List<EmpFamilyVO> empFamilies = empAdd.getEmpFamilies();\r\n        if (!CollectionUtils.isEmpty(empFamilies)) {\r\n            List<FamilyRelations> familyRelations = new ArrayList<>();\r\n            for (EmpFamilyVO empFamily : empFamilies) {\r\n                FamilyRelations familyRelation = new FamilyRelations();\r\n                BeanUtils.copyProperties(empFamily, familyRelation);\r\n                familyRelation.setFamEmpId(empId);\r\n                familyRelation.setFamEmpName(employee.getEmpName());\r\n                familyRelation.setFamAge(Long.parseLong(empFamily.getFamAge()));\r\n                familyRelations.add(familyRelation);\r\n            }\r\n            familyRelationsMapper.batchInsertFamilyInfos(familyRelations);\r\n        }\r\n        //添加员工文件信息\r\n        // empDocumentMapper.removeInfoByEmpId(empId);\r\n        List<String> docTypes = new ArrayList<>();\r\n        docTypes.add(EmpDocTypeEnum.ONE.getKey());\r\n        docTypes.add(EmpDocTypeEnum.TWO.getKey());\r\n        docTypes.add(EmpDocTypeEnum.THREE.getKey());\r\n        docTypes.add(EmpDocTypeEnum.FOUR.getKey());\r\n        List<EmpDocument> existDocList = empDocumentMapper.findDocInfosByEmpIdAndTypes(empId, docTypes);\r\n        List<Long> removeIds = new ArrayList<>();\r\n        List<Long> addIds = new ArrayList<>();\r\n\r\n        if (empAdd.getAvatarDocId() != null) {\r\n            Long avatarDocId = empAdd.getAvatarDocId();\r\n            EmpDocument empDocument = empDocumentMapper.selectEmpDocumentByDocId(avatarDocId);\r\n            employee.setEmpAvatarUrl(empDocument.getDocAnnexPath());\r\n            employeeMapper.updateEmpAvatarUrl(employee);\r\n            EmpDocument document = existDocList.stream().filter(s -> EmpDocTypeEnum.ONE.getKey().equals(s.getDocType())).findFirst().orElse(null);\r\n            if (document == null) {\r\n                addIds.add(avatarDocId);\r\n            } else {\r\n                if (!document.getDocId().equals(avatarDocId)) {\r\n                    removeIds.add(document.getDocId());\r\n                    addIds.add(avatarDocId);\r\n                }\r\n            }\r\n        } else {\r\n            empDocumentMapper.removeInfoByEmpIdsAndDocTypes(Collections.singletonList(empId), Arrays.asList(EmpDocTypeEnum.ONE.getKey()));\r\n        }\r\n        if (!CollectionUtils.isEmpty(empAdd.getIdCardDocList())) {\r\n            List<Long> idCardDocList = empAdd.getIdCardDocList();\r\n            List<Long> existIdDocList = existDocList.stream().filter(s -> EmpDocTypeEnum.TWO.getKey().equals(s.getDocType())).\r\n                    map(EmpDocument::getDocId).collect(Collectors.toList());\r\n            if (CollectionUtils.isEmpty(existIdDocList)) {\r\n                addIds.addAll(empAdd.getIdCardDocList());\r\n            } else {\r\n                List<Long> addIdDocList = new ArrayList<>(idCardDocList);\r\n                List<Long> removeIdDocList = new ArrayList<>(existIdDocList);\r\n                addIdDocList.removeAll(existIdDocList);\r\n                removeIdDocList.removeAll(idCardDocList);\r\n                if (!CollectionUtils.isEmpty(addIdDocList)) {\r\n                    addIds.addAll(addIdDocList);\r\n                }\r\n                if (!CollectionUtils.isEmpty(removeIdDocList)) {\r\n                    removeIds.addAll(removeIdDocList);\r\n                }\r\n            }\r\n        } else {\r\n            empDocumentMapper.removeInfoByEmpIdsAndDocTypes(Collections.singletonList(empId), Collections.singletonList(EmpDocTypeEnum.TWO.getKey()));\r\n        }\r\n        if (!CollectionUtils.isEmpty(empAdd.getEducateDocList())) {\r\n            List<Long> educateDocList = empAdd.getEducateDocList();\r\n            List<Long> existEduDocList = existDocList.stream().filter(s -> EmpDocTypeEnum.FOUR.getKey().\r\n                    equals(s.getDocType())).map(EmpDocument::getDocId).collect(Collectors.toList());\r\n            if (CollectionUtils.isEmpty(existEduDocList)) {\r\n                addIds.addAll(educateDocList);\r\n            } else {\r\n                List<Long> addEduDocList = new ArrayList<>(educateDocList);\r\n                List<Long> removeEduDocList = new ArrayList<>(existEduDocList);\r\n                addEduDocList.removeAll(existEduDocList);\r\n                removeEduDocList.removeAll(educateDocList);\r\n                if (!CollectionUtils.isEmpty(addEduDocList)) {\r\n                    addIds.addAll(addEduDocList);\r\n                }\r\n                if (!CollectionUtils.isEmpty(removeEduDocList)) {\r\n                    removeIds.addAll(removeEduDocList);\r\n                }\r\n            }\r\n        } else {\r\n            empDocumentMapper.removeInfoByEmpIdsAndDocTypes(Collections.singletonList(empId), Collections.singletonList(EmpDocTypeEnum.FOUR.getKey()));\r\n        }\r\n        if (!CollectionUtils.isEmpty(empAdd.getPaperDocList())) {\r\n            List<Long> paperDocList = empAdd.getPaperDocList();\r\n            List<Long> existPaperDocList = existDocList.stream().filter(s -> EmpDocTypeEnum.THREE.getKey().\r\n                    equals(s.getDocType())).map(EmpDocument::getDocId).collect(Collectors.toList());\r\n            if (CollectionUtils.isEmpty(existPaperDocList)) {\r\n                addIds.addAll(paperDocList);\r\n            } else {\r\n                List<Long> addPaperDocList = new ArrayList<>(paperDocList);\r\n                List<Long> removePaperDocList = new ArrayList<>(existPaperDocList);\r\n                addPaperDocList.removeAll(existPaperDocList);\r\n                removePaperDocList.removeAll(paperDocList);\r\n                if (!CollectionUtils.isEmpty(addPaperDocList)) {\r\n                    addIds.addAll(addPaperDocList);\r\n                }\r\n                if (!CollectionUtils.isEmpty(removePaperDocList)) {\r\n                    removeIds.addAll(removePaperDocList);\r\n                }\r\n            }\r\n        } else {\r\n            empDocumentMapper.removeInfoByEmpIdsAndDocTypes(Collections.singletonList(empId), Collections.singletonList(EmpDocTypeEnum.THREE.getKey()));\r\n        }\r\n\r\n        if (!CollectionUtils.isEmpty(addIds)) {\r\n            empDocumentMapper.bindEmpInfos(empId, addIds);\r\n        }\r\n        if (!CollectionUtils.isEmpty(removeIds)) {\r\n            empDocumentMapper.removeInfoByDocIdList(removeIds);\r\n        }\r\n        return employee.getEmpId();\r\n    }\r\n\r\n\r\n    private void changeEmpStatus(Date empHireDate, Employee employee, String empIdcard) {\r\n        String manRetireAge = configMapper.checkConfigKeyUnique(\"labor.man.retireAge\").getConfigValue();\r\n        String womanRetireAge = configMapper.checkConfigKeyUnique(\"labor.woman.retireAge\").getConfigValue();\r\n        Date expireTime = DateUtils.calculateExpireTime(empIdcard, employee.getEmpGender(), manRetireAge, womanRetireAge);\r\n        employee.setEmpExpireTime(expireTime);\r\n        String retireDays = configMapper.checkConfigKeyUnique(\"labor.employee.retireDays\").getConfigValue();\r\n        String empStatus = employee.getEmpStatus();\r\n        SimpleDateFormat format = new SimpleDateFormat(\"yyyy-MM\");\r\n        Date now = new Date();\r\n        long intervalDays = DateUtils.calculateDays(now, expireTime);\r\n        long intervalNum = expireTime.getTime() - now.getTime();\r\n        if (EmpStatusEnum.ON_POSITION.getKey().equals(empStatus)) {\r\n            if (intervalNum <= 0) {\r\n                employee.setEmpStatus(EmpStatusEnum.RE_EMPLOY.getKey());\r\n            } else {\r\n                if (intervalDays <= Long.parseLong(retireDays)) {\r\n                    employee.setEmpStatus(EmpStatusEnum.ALMOST.getKey());\r\n                } else {\r\n                    String empHireDataStr = format.format(empHireDate);\r\n                    String nowStr = format.format(now);\r\n                    if (empHireDataStr.equals(nowStr)) {\r\n                        employee.setEmpStatus(EmpStatusEnum.NEW_POSITION.getKey());\r\n                    } else {\r\n                        employee.setEmpStatus(EmpStatusEnum.ON_POSITION.getKey());\r\n                    }\r\n                }\r\n            }\r\n        } else if (EmpStatusEnum.EXPIRE.getKey().equals(empStatus)) {\r\n            if (intervalNum <= 0) {\r\n                employee.setEmpStatus(EmpStatusEnum.EXPIRE.getKey());\r\n            } else {\r\n                throw new ServiceException(\"员工状态校验未通过\");\r\n            }\r\n        }\r\n    }\r\n\r\n    /**\r\n     * 修改员工\r\n     *\r\n     * @param employee 员工\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int updateEmployee(Employee employee) {\r\n        return employeeMapper.updateEmployee(employee);\r\n    }\r\n\r\n    /**\r\n     * 批量删除员工\r\n     *\r\n     * @param empIds 需要删除的员工主键\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int deleteEmployeeByEmpIds(Long[] empIds) {\r\n        List<Long> empIdList = Arrays.asList(empIds);\r\n        List<String> docTypes = new ArrayList<>();\r\n        docTypes.add(\"1\");\r\n        docTypes.add(\"2\");\r\n        docTypes.add(\"3\");\r\n        docTypes.add(\"4\");\r\n        empDocumentMapper.removeInfoByEmpIdsAndDocTypes(empIdList, docTypes);\r\n        return employeeMapper.deleteEmployeeByEmpIds(empIds);\r\n    }\r\n\r\n    @Override\r\n    public int deleteEmpFamilyByFamId(Long[] famIds) {\r\n        return familyRelationsMapper.deleteFamilyRelationsByFamIds(famIds);\r\n    }\r\n\r\n    /**\r\n     * 删除员工信息\r\n     *\r\n     * @param empId 员工主键\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int deleteEmployeeByEmpId(Long empId) {\r\n        return employeeMapper.deleteEmployeeByEmpId(empId);\r\n    }\r\n\r\n    /**\r\n     * 根据employeeInfoVO的条件查询出员工集合\r\n     *\r\n     * @param employeeInfoVO\r\n     * @return\r\n     */\r\n    @Override\r\n    public HashMap<String, Collection<PieChartVO>> selectEmployeeByEmployeeInfoVO(EmployeeInfoVO employeeInfoVO) {\r\n        HashMap<String, Collection<PieChartVO>> empMap = new HashMap<>();\r\n        //定义五个HashMap，用来存储性别，学历， 部门，职称，年龄\r\n        Map<String, PieChartVO> empEducationMap = new HashMap();\r\n        Map<String, PieChartVO> empGenderMap = new HashMap();\r\n        Map<String, PieChartVO> empDeptMap = new HashMap();\r\n        Map<String, PieChartVO> empTitleMap = new HashMap<>();\r\n        Map<String, PieChartVO> empAgeMap = new HashMap<>();\r\n        String[] ageRangeArry = {\"30以下\", \"30-40\", \"40-50\", \"50-60\", \"60以上\"};\r\n        List<Employee> empList = employeeMapper.selectEmployeeByEmployeeInfoVO(employeeInfoVO);\r\n\r\n        if (empList != null && empList.size() > 0) {\r\n            for (int i = 0; i < empList.size(); i++) {\r\n                Employee emp = empList.get(i);\r\n                //处理学历数据，PieChartVO（name,value）分别存储“学历”和数量，每次循环取出学历记录，封装在PieChartVO中，将PieChartVO对象\r\n                //集合存储在Map中，学历名作为map的KEY,\r\n                String empEdu = emp.getEmpEducation();\r\n                putMap(empEducationMap, empEdu);\r\n\r\n                //处理性别数据\r\n                String empGender = emp.getEmpGender();\r\n                putMap(empGenderMap, empGender);\r\n\r\n                //处理部门数据\r\n                String empDept = emp.getEmpDeptName();\r\n                putMap(empDeptMap, empDept);\r\n\r\n                //处理职称数据\r\n                String empTitle = emp.getEmpTitle();\r\n                putMap(empTitleMap, empTitle);\r\n\r\n                //处理年龄数据\r\n                Integer empAge = emp.getEmpAge();\r\n                String empAgeKey = null;\r\n                if (empAge < 30) {\r\n                    empAgeKey = ageRangeArry[0];\r\n                } else if (empAge <= 40) {\r\n                    empAgeKey = ageRangeArry[1];\r\n                } else if (empAge <= 50) {\r\n                    empAgeKey = ageRangeArry[2];\r\n                } else if (empAge <= 60) {\r\n                    empAgeKey = ageRangeArry[3];\r\n                } else {\r\n                    empAgeKey = ageRangeArry[4];\r\n                }\r\n                putMap(empAgeMap, empAgeKey);\r\n            }\r\n\r\n            empMap.put(\"educationSet\", empEducationMap.values());\r\n            empMap.put(\"genderSet\", empGenderMap.values());\r\n            empMap.put(\"deptSet\", empDeptMap.values());\r\n            empMap.put(\"titleSet\", empTitleMap.values());\r\n            empMap.put(\"ageSet\", empAgeMap.values());\r\n        }\r\n\r\n        return empMap;\r\n    }\r\n\r\n    @Override\r\n    public List<EmpNameCardVO> selectEmpNameAndCard(EmployeeInfoVO employeeInfoVO) {\r\n        return employeeMapper.selectEmpNameAndCard(employeeInfoVO);\r\n    }\r\n\r\n    @Override\r\n    public void downloadExcel(HttpServletResponse response) {\r\n\r\n        InputStream inputStream = null;\r\n        try {\r\n            ClassPathResource classPathResource = new ClassPathResource(\"static/data.xlsx\");\r\n            inputStream = classPathResource.getInputStream();\r\n            ExcelUtil.downLoadExcel(\"data\", response, WorkbookFactory.create(inputStream));\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        } finally {\r\n            if (inputStream != null) {\r\n                try {\r\n                    inputStream.close();\r\n                } catch (IOException e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void downloadExcelTemplate(HttpServletResponse response) {\r\n        InputStream inputStream = null;\r\n        try {\r\n            ClassPathResource classPathResource = new ClassPathResource(\"static/empTemplate.xlsx\");\r\n            inputStream = classPathResource.getInputStream();\r\n            ExcelUtil.downLoadExcel(\"empTemplate\", response, WorkbookFactory.create(inputStream));\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        } finally {\r\n            if (inputStream != null) {\r\n                try {\r\n                    inputStream.close();\r\n                } catch (IOException e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    @Override\r\n    public void downloadFileTemplate(HttpServletResponse response) {\r\n//        try {\r\n//            ResourceLoader resourceLoader = new DefaultResourceLoader();\r\n//            Resource resource = resourceLoader.getResource(\"classpath:static/template.rar\");\r\n//            InputStream inputStream = resource.getInputStream();\r\n//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();\r\n//            byte[] buffer = new byte[1024];\r\n//            int length;\r\n//            if ((length = inputStream.read(buffer)) > 0) {\r\n//                outputStream.write(buffer, 0, length);\r\n//            }\r\n//            genRarFile(response, outputStream.toByteArray());\r\n//        } catch (IOException e) {\r\n//            e.printStackTrace();\r\n//        }\r\n        try {\r\n            ResourceLoader resourceLoader = new DefaultResourceLoader();\r\n            Resource resource = resourceLoader.getResource(\"classpath:static/template.rar\");\r\n            InputStream fis = resource.getInputStream();\r\n\r\n//            File file = new File(filePath);\r\n//            FileInputStream fis = new FileInputStream(file);\r\n            OutputStream out = response.getOutputStream();\r\n\r\n            // 设置响应头信息\r\n            response.reset();\r\n            response.setContentType(\"application/octet-stream\");\r\n            response.setHeader(\"Content-Disposition\", \"attachment; filename=\\\"template.rar\\\"\");\r\n\r\n            // 将文件写入响应输出流\r\n            byte[] buffer = new byte[1024];\r\n            int bytesRead;\r\n            while ((bytesRead = fis.read(buffer)) != -1) {\r\n                out.write(buffer, 0, bytesRead);\r\n            }\r\n\r\n            fis.close();\r\n            out.flush();\r\n            out.close();\r\n        } catch (IOException e) {\r\n            e.printStackTrace();\r\n            // 处理异常\r\n        }\r\n\r\n\r\n    }\r\n\r\n    @Override\r\n    public void downloadEmployeeFileInfosFile(HttpServletResponse response, EmpFileVO empFile) {\r\n\r\n        List<Long> empIds = empFile.getEmpIds();\r\n\r\n        if (CollectionUtils.isEmpty(empIds)) {\r\n            empIds = employeeMapper.findAllEmployees().stream().map(Employee::getEmpId).collect(Collectors.toList());\r\n        }\r\n\r\n        List<Employee> employees = employeeMapper.selectEmployeeInfosByIds(empIds);\r\n        List<EmpDocument> empDocuments = empDocumentMapper.findDocInfosByEmpIdsAndTypes(empIds, empFile.getFileType());\r\n        Map<Long, List<EmpDocument>> empDocMap = empDocuments.stream().collect(Collectors.groupingBy(EmpDocument::getDocEmpId));\r\n        File rootDir = new File(\"员工证件信息\");\r\n        if (!rootDir.exists()) {\r\n            rootDir.mkdirs();\r\n        }\r\n        for (Employee employee : employees) {\r\n            String empIdCard = employee.getEmpIdcard();\r\n            File subDir = new File(rootDir, empIdCard);\r\n            if (!subDir.exists()) {\r\n                subDir.mkdirs();\r\n            }\r\n            List<EmpDocument> documents = empDocMap.get(employee.getEmpId());\r\n            if (!CollectionUtils.isEmpty(documents)) {\r\n                Map<String, List<EmpDocument>> subDocMap = documents.stream().collect(Collectors.groupingBy(EmpDocument::getDocType));\r\n                for (String docType : subDocMap.keySet()) {\r\n                    String docTypeName = null;\r\n                    if (EmpDocTypeEnum.ONE.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.ONE.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.TWO.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.TWO.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.THREE.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.THREE.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.FOUR.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.FOUR.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.FIVE.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.FIVE.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.SIX.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.SIX.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.SEVEN.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.SEVEN.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.EIGHT.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.EIGHT.getValue();\r\n                    }\r\n                    List<EmpDocument> subEmpDocList = subDocMap.get(docType);\r\n                    writeFileToDir(subDir, docTypeName, subEmpDocList);\r\n                }\r\n            }\r\n        }\r\n        FileUtils.writeCompressedFileToResponse(response, rootDir);\r\n        FileUtils.deleteFolder(rootDir);\r\n    }\r\n\r\n    @Override\r\n    public Boolean matchEmpFileInfosWithinTemplate(MultipartFile file, Long userId) {\r\n\r\n        empImportHistoryMapper.removeInfoByCreateId(userId);\r\n        ExcelImportResult<EmpExcelSimpleVO> excelImportResult = getExcelDateForEmpExcel(file, EmpExcelSimpleVO.class);\r\n        if (excelImportResult == null) {\r\n            return false;\r\n        }\r\n        List<EmpExcelSimpleVO> dataList = excelImportResult.getList();\r\n        List<EmpImportHistory> empImportHistoryList = new ArrayList<>();\r\n        for (EmpExcelSimpleVO empExcelSimple : dataList) {\r\n            EmpImportHistory empImportHistory = new EmpImportHistory();\r\n            Employee existEmployee = employeeMapper.findInfoByEmpIdCard(empExcelSimple.getIdCard());\r\n            if (existEmployee == null) {\r\n                empImportHistory.setStatus(MatchResultEnum.NO.getKey());\r\n            } else {\r\n                empImportHistory.setStatus(MatchResultEnum.YES.getKey());\r\n                empImportHistory.setEmpId(existEmployee.getEmpId());\r\n            }\r\n            empImportHistory.setEmpName(empExcelSimple.getEmpName());\r\n            empImportHistory.setIdCard(empExcelSimple.getIdCard());\r\n            empImportHistory.setDisabled(false);\r\n            empImportHistory.setCreateBy(userId);\r\n            empImportHistory.setCreateTime(new Date());\r\n            empImportHistoryList.add(empImportHistory);\r\n        }\r\n        empImportHistoryMapper.batchInsertInfos(empImportHistoryList);\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public List<EmpImportHistoryVO> selectMatchTemplateList(MatchSearchVO matchSearch, Long userId) {\r\n\r\n        String keyword = matchSearch.getKeyword();\r\n        String regex = \"\\\\d{17}[0-9Xx]\";\r\n        if (keyword != null) {\r\n            if (keyword.matches(regex)) {\r\n                matchSearch.setEmpIdCard(keyword);\r\n            } else {\r\n                matchSearch.setEmpName(keyword);\r\n            }\r\n        }\r\n        return empImportHistoryMapper.selectMatchInfos(matchSearch, userId);\r\n    }\r\n\r\n    @Override\r\n    public Boolean updateMatchTemplateInfo(MatchUpdateVO matchUpdate, Long userId) {\r\n\r\n        EmpImportHistory empImportHistory = new EmpImportHistory();\r\n        String empIdCard = matchUpdate.getEmpIdCard();\r\n        Employee existEmployee = employeeMapper.findInfoByEmpIdCard(empIdCard);\r\n        if (existEmployee == null) {\r\n            empImportHistory.setStatus(MatchResultEnum.NO.getKey());\r\n        } else {\r\n            empImportHistory.setStatus(MatchResultEnum.YES.getKey());\r\n            empImportHistory.setEmpId(existEmployee.getEmpId());\r\n        }\r\n        empImportHistory.setIdCard(empIdCard);\r\n        empImportHistory.setUpdateBy(userId);\r\n        empImportHistory.setUpdateTime(new Date());\r\n        empImportHistoryMapper.updateEmpImportHistory(empImportHistory);\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public Boolean removeMatchTemplateInfos(List<Long> idList) {\r\n        empImportHistoryMapper.removeInfosByIds(idList);\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public MatchResultVO findMatchTemplateNums(Long userId) {\r\n\r\n        Long totalNums = empImportHistoryMapper.findTotalNums(userId);\r\n        Long unMatchNums = empImportHistoryMapper.findUnmatchedNums(userId);\r\n        MatchResultVO matchResult = new MatchResultVO();\r\n        matchResult.setTotalNums(totalNums);\r\n        matchResult.setUnMatchNums(unMatchNums);\r\n        return matchResult;\r\n    }\r\n\r\n    @Override\r\n    public void downloadEmpFileInfosWithinTemplate(MultipartFile file, HttpServletResponse response) {\r\n\r\n        ExcelImportResult<EmpExcelSimpleVO> excelImportResult = getExcelDateForEmpExcel(file, EmpExcelSimpleVO.class);\r\n        if (excelImportResult == null) {\r\n            return;\r\n        }\r\n        List<EmpExcelSimpleVO> dataList = excelImportResult.getList();\r\n        Map<String, List<EmpExcelSimpleVO>> dataMap = new HashMap<>(16);\r\n        if (!CollectionUtils.isEmpty(dataList)) {\r\n            dataMap = dataList.stream().collect(Collectors.groupingBy(EmpExcelSimpleVO::getIdCard));\r\n        }\r\n        if (CollectionUtils.isEmpty(dataMap)) {\r\n            return;\r\n        }\r\n        downloadEmpFileInfos(dataMap, response);\r\n    }\r\n\r\n    private void downloadEmpFileInfos(Map<String, List<EmpExcelSimpleVO>> dataMap, HttpServletResponse response) {\r\n\r\n        File rootDir = new File(\"员工证件信息\");\r\n        if (!rootDir.exists()) {\r\n            rootDir.mkdirs();\r\n        }\r\n        for (String empIdCard : dataMap.keySet()) {\r\n            File subDir = new File(rootDir, empIdCard);\r\n            if (!subDir.exists()) {\r\n                subDir.mkdirs();\r\n            }\r\n            Employee employee = employeeMapper.findInfoByEmpIdCard(empIdCard);\r\n            if (employee == null) {\r\n                continue;\r\n            }\r\n            //  List<String> fileTypes = dataMap.get(empIdCard).stream().map(EmpExcelSimpleVO::getFileType).collect(Collectors.toList());\r\n            List<String> docTypes = new ArrayList<>();\r\n            docTypes.add(EmpDocTypeEnum.ONE.getKey());\r\n            docTypes.add(EmpDocTypeEnum.TWO.getKey());\r\n            docTypes.add(EmpDocTypeEnum.THREE.getKey());\r\n            docTypes.add(EmpDocTypeEnum.FOUR.getKey());\r\n//            for (String fileType : fileTypes) {\r\n//                if (EmpDocTypeEnum.ONE.getValue().equals(fileType)) {\r\n//                    docTypes.add(EmpDocTypeEnum.ONE.getKey());\r\n//                }\r\n//                if (EmpDocTypeEnum.TWO.getValue().equals(fileType)) {\r\n//                    docTypes.add(EmpDocTypeEnum.TWO.getKey());\r\n//                }\r\n//                if (EmpDocTypeEnum.THREE.getValue().equals(fileType)) {\r\n//                    docTypes.add(EmpDocTypeEnum.THREE.getKey());\r\n//                }\r\n//                if (EmpDocTypeEnum.FOUR.getValue().equals(fileType)) {\r\n//                    docTypes.add(EmpDocTypeEnum.FOUR.getKey());\r\n//                }\r\n//            }\r\n            List<EmpDocument> documents = new ArrayList<>();\r\n            if (!CollectionUtils.isEmpty(docTypes)) {\r\n                documents = empDocumentMapper.findDocInfosByEmpIdAndTypes(employee.getEmpId(), docTypes);\r\n            }\r\n            if (!CollectionUtils.isEmpty(documents)) {\r\n                Map<String, List<EmpDocument>> subDocMap = documents.stream().collect(Collectors.groupingBy(EmpDocument::getDocType));\r\n                for (String docType : subDocMap.keySet()) {\r\n                    String docTypeName = null;\r\n                    if (EmpDocTypeEnum.ONE.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.ONE.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.TWO.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.TWO.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.THREE.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.THREE.getValue();\r\n                    }\r\n                    if (EmpDocTypeEnum.FOUR.getKey().equals(docType)) {\r\n                        docTypeName = EmpDocTypeEnum.FOUR.getValue();\r\n                    }\r\n                    List<EmpDocument> subEmpDocList = subDocMap.get(docType);\r\n                    writeFileToDir(subDir, docTypeName, subEmpDocList);\r\n                }\r\n            }\r\n        }\r\n        FileUtils.writeCompressedFileToResponse(response, rootDir);\r\n        FileUtils.deleteFolder(rootDir);\r\n    }\r\n\r\n    private ExcelImportResult<EmpExcelSimpleVO> getExcelDateForEmpExcel(MultipartFile file, Class<EmpExcelSimpleVO> empExcelSimpleClass) {\r\n\r\n        ExcelImportResult<EmpExcelSimpleVO> excelImportResult = null;\r\n        try {\r\n            ImportParams params = new ImportParams();\r\n            params.setHeadRows(1);\r\n            params.setTitleRows(0);\r\n            excelImportResult = ExcelImportUtil.importExcelMore(file.getInputStream(), empExcelSimpleClass, params);\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n        return excelImportResult;\r\n    }\r\n\r\n\r\n    @Value(\"${ruoyi.profile}\")\r\n    private String basePath;\r\n\r\n\r\n    private void writeFileToDir(File subDir, String docTypeName, List<EmpDocument> subEmpDocList) {\r\n\r\n        try {\r\n            File docTypeDir = new File(subDir, docTypeName);\r\n            if (!docTypeDir.exists()) {\r\n                docTypeDir.mkdirs();\r\n            }\r\n            for (EmpDocument document : subEmpDocList) {\r\n                File file = new File(docTypeDir, document.getDocName());\r\n                if (!file.exists()) {\r\n                    file.createNewFile();\r\n                }\r\n                File sourceFile = new File(basePath + document.getDocAnnexPath());\r\n                org.apache.commons.io.FileUtils.copyFile(sourceFile, file);\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n\r\n//    private void zipDirectory(String sourceFolder, String parentFolder, ZipOutputStream zos) throws IOException {\r\n//        File folder = new File(sourceFolder);\r\n//        if (!folder.exists()) {\r\n//            return;\r\n//        }\r\n//        String[] fileList = folder.list();\r\n//        for (String fileName : fileList) {\r\n//            File file = new File(folder, fileName);\r\n//            if (file.isDirectory()) {\r\n//\r\n//                zipDirectory(file.getAbsolutePath(), parentFolder + file.getName() + \"/\", zos);\r\n//            } else {\r\n//                byte[] buffer = new byte[1024];\r\n//                FileInputStream fis = new FileInputStream(file);\r\n//                zos.putNextEntry(new ZipEntry(parentFolder + file.getName()));\r\n//                int length;\r\n//                while ((length = fis.read(buffer)) > 0) {\r\n//                    zos.write(buffer, 0, length);\r\n//                }\r\n//                zos.flush();\r\n//                zos.closeEntry();\r\n//                fis.close();\r\n//            }\r\n//        }\r\n//    }\r\n//\r\n//\r\n//    private void addPhotosToDirectories(String rootFolder, String[] subFolders) throws IOException {\r\n//\r\n//        ResourceLoader resourceLoader = new DefaultResourceLoader();\r\n//        Resource resource = resourceLoader.getResource(\"classpath:static/photo.jpg\");\r\n//\r\n//        File photoFile = resource.getFile();\r\n//        if (!photoFile.exists()) {\r\n//            System.out.println(\"照片文件不存在！\");\r\n//            return;\r\n//        }\r\n//\r\n//        for (String subFolder : subFolders) {\r\n//            BufferedImage image = ImageIO.read(photoFile);\r\n//            if (image == null) {\r\n//                System.out.println(\"无法读取照片文件！\");\r\n//                return;\r\n//            }\r\n//\r\n//            File subDir = new File(rootFolder + File.separator + subFolder);\r\n//            if (!subDir.exists()) {\r\n//                subDir.mkdir();\r\n//            }\r\n//\r\n//            File destFile = new File(subDir, \"photo.jpg\");\r\n//            ImageIO.write(image, \"jpg\", destFile);\r\n//        }\r\n//\r\n//        System.out.println(\"照片添加成功！\");\r\n//    }\r\n\r\n    @Override\r\n    public ImportResultVO uploadEmployeeInfosFile(MultipartFile multipartFile, Long userId, String username) {\r\n\r\n        Date now = new Date();\r\n        FileImportRecord fileImportRecord = new FileImportRecord();\r\n        fileImportRecord.setSuccessCount(0);\r\n        fileImportRecord.setFailureCount(0);\r\n        fileImportRecord.setTotalCount(0);\r\n        fileImportRecord.setDisabled(false);\r\n        fileImportRecord.setFileType(ImportFileTypeEnum.ONE.getKey());\r\n        fileImportRecord.setImportStatus(FileImportStatusEnum.DURING.getKey());\r\n        fileImportRecord.setCreatorId(userId);\r\n        fileImportRecord.setCreatedTime(now);\r\n        fileImportRecordMapper.insertFileImportRecord(fileImportRecord);\r\n\r\n        SimpleDateFormat dateFormat = new SimpleDateFormat(\"yyyy-MM-dd*HH:mm:ss\");\r\n\r\n        String nowStr = dateFormat.format(now);\r\n        ExcelImportResult<EmpImportVO> excelDate = getExcelDate(multipartFile, EmpImportVO.class);\r\n        List<ErrorForm> failReport = excelDate.getFailList().stream()\r\n                .map(entity -> {\r\n                    int line = entity.getRowNum() == null ? 0 : entity.getRowNum() + 1;\r\n                    return new ErrorForm(line, entity.getErrorMsg());\r\n                }).collect(Collectors.toList());\r\n        if (!CollectionUtils.isEmpty(excelDate.getList())) {\r\n            batchInsertEmployeeInfos(userId, excelDate.getList());\r\n        }\r\n\r\n        int successCount = CollectionUtils.isEmpty(excelDate.getList()) ? 0 : excelDate.getList().size();\r\n        int errorCount = CollectionUtils.isEmpty(failReport) ? 0 : failReport.size();\r\n\r\n        Long failFileId = null;\r\n        String failFileUrl = null;\r\n        fileImportRecord.setImportStatus(FileImportStatusEnum.FINISHED.getKey());\r\n        if (errorCount != 0) {\r\n            Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(\"错误信息\", \"Sheet1\", ExcelType.XSSF),\r\n                    ErrorForm.class, failReport);\r\n            MultipartFile file = FileUtils.workbookToCommonsMultipartFile(workbook, multipartFile.getOriginalFilename() + \"错误信息\" + nowStr + \".xlsx\");\r\n            if (file != null) {\r\n                FileVO failFileInfo = fileService.upLoadEmpFile(FileTypeEnum.EMP_FAIL_INFO.getKey(), \"employee\", file, username);\r\n                failFileId = failFileInfo.getFileId();\r\n                failFileUrl = failFileInfo.getFileUrl();\r\n            }\r\n            if (successCount == 0) {\r\n                fileImportRecord.setImportStatus(FileImportStatusEnum.FAIL.getKey());\r\n            }\r\n        }\r\n        Long empInfoFileId = fileService.upLoadEmpFile(FileTypeEnum.EMP_INFO.getKey(), \"employee\", multipartFile, username).getFileId();\r\n\r\n        fileImportRecord.setSuccessCount(successCount);\r\n        fileImportRecord.setFailureCount(errorCount);\r\n        fileImportRecord.setTotalCount(successCount + errorCount);\r\n        fileImportRecord.setOriginFileId(empInfoFileId);\r\n        fileImportRecord.setFailFileId(failFileId);\r\n        fileImportRecordMapper.updateFileImportRecord(fileImportRecord);\r\n\r\n        ImportResultVO importResult = new ImportResultVO();\r\n        importResult.setTotalCount(successCount + errorCount);\r\n        importResult.setSuccessCount(successCount);\r\n        importResult.setErrorCount(errorCount);\r\n        importResult.setFailFileId(failFileId);\r\n        importResult.setFailFileUrl(failFileUrl);\r\n        return importResult;\r\n    }\r\n\r\n    @Override\r\n    public ImportResultVO uploadEmployeeFileInfosFile(MultipartFile multipartFile, String username, Long userId) {\r\n\r\n        ImportResultVO importResult = new ImportResultVO();\r\n        Integer totalCount = 0;\r\n        Integer errorCount = 0;\r\n        Integer successCount = 0;\r\n        List<ErrorImportForm> errorImportForms = new ArrayList<>();\r\n\r\n        Date now = new Date();\r\n        FileImportRecord fileImportRecord = new FileImportRecord();\r\n        fileImportRecord.setSuccessCount(0);\r\n        fileImportRecord.setFailureCount(0);\r\n        fileImportRecord.setTotalCount(0);\r\n        fileImportRecord.setDisabled(false);\r\n        fileImportRecord.setFileType(ImportFileTypeEnum.ONE.getKey());\r\n        fileImportRecord.setImportStatus(FileImportStatusEnum.DURING.getKey());\r\n        fileImportRecord.setCreatorId(userId);\r\n        fileImportRecord.setCreatedTime(now);\r\n        fileImportRecordMapper.insertFileImportRecord(fileImportRecord);\r\n\r\n        String fileName = multipartFile.getOriginalFilename();\r\n        String suffixName = fileName.substring(fileName.lastIndexOf(\".\") + 1);  // 后缀名\r\n        if (!(\"rar\".equals(suffixName) || \"7z\".equals(suffixName) || \"zip\".equals(suffixName))) {\r\n            throw new ServiceException(\"压缩文件格式不正确\");\r\n        }\r\n        String destDir = \"test\";\r\n        extractCompressFile(multipartFile, destDir);\r\n        File file = new File(destDir);\r\n        String regex = \"\\\\d{17}[\\\\dXx]\";\r\n        List<String> nameIdStringInfos = getNameIdInfos(file, regex);\r\n        List<String> idInfos = nameIdStringInfos.stream().map(s -> {\r\n            String[] split = s.split(\"-\");\r\n            return split[1];\r\n        }).collect(Collectors.toList());\r\n        List<String> existIdInfos = employeeMapper.findInfoByIdCards(idInfos).stream().map(Employee::getEmpIdcard).collect(Collectors.toList());\r\n        totalCount = nameIdStringInfos.size();\r\n        successCount = existIdInfos.size();\r\n        errorCount = totalCount - successCount;\r\n        if (errorCount != 0) {\r\n            for (String nameIdStringInfo : nameIdStringInfos) {\r\n                String[] split = nameIdStringInfo.split(\"-\");\r\n                String idStr = split[1];\r\n                if (!existIdInfos.contains(idStr)) {\r\n                    ErrorImportForm errorImport = new ErrorImportForm();\r\n                    errorImport.setEmpName(split[0]);\r\n                    errorImport.setIdCard(split[1]);\r\n                    errorImport.setReason(\"与系统中的员工数据未匹配成功\");\r\n                    errorImportForms.add(errorImport);\r\n                }\r\n            }\r\n        }\r\n\r\n        saveEmpFileInfos(file, username);\r\n        FileUtils.deleteFolder(file);\r\n        FileVO errorInfo = new FileVO();\r\n        if (!CollectionUtils.isEmpty(errorImportForms)) {\r\n            ExcelUtil<ErrorImportForm> excelUtil = new ExcelUtil<ErrorImportForm>(ErrorImportForm.class);\r\n            excelUtil.init(errorImportForms, \"错误信息\", \"员工文件导入错误信息\", Excel.Type.EXPORT);\r\n            excelUtil.writeSheet();\r\n            Workbook wb = excelUtil.getWb();\r\n            MultipartFile errorFile = FileUtils.workbookToCommonsMultipartFile(wb, \"员工文件导入错误信息\");\r\n            if (errorFile != null) {\r\n                errorInfo = fileService.upLoadEmpFile(FileTypeEnum.EMP_PAPER_FAIL_INFO.getKey(), \"employee\", errorFile, username);\r\n            }\r\n        }\r\n        Long empPaperFileId = fileService.upLoadEmpFile(FileTypeEnum.EMP_PAPER_INFO.getKey(), \"employee\", multipartFile, username).getFileId();\r\n\r\n        fileImportRecord.setSuccessCount(successCount);\r\n        fileImportRecord.setFailureCount(errorCount);\r\n        fileImportRecord.setTotalCount(totalCount);\r\n        fileImportRecord.setOriginFileId(empPaperFileId);\r\n        fileImportRecord.setFailFileId(errorInfo.getFileId());\r\n        fileImportRecordMapper.updateFileImportRecord(fileImportRecord);\r\n\r\n        importResult.setTotalCount(totalCount);\r\n        importResult.setSuccessCount(successCount);\r\n        importResult.setErrorCount(errorCount);\r\n        importResult.setFailFileId(errorInfo.getFileId());\r\n        importResult.setFailFileUrl(errorInfo.getFileUrl());\r\n\r\n        return importResult;\r\n    }\r\n\r\n    public List<String> getNameIdInfos(File folder, String regex) {\r\n        List<String> idCardList = new ArrayList<>();\r\n        if (folder.isDirectory()) {\r\n            File[] files = folder.listFiles();\r\n            for (File file : files) {\r\n                if (file.isDirectory()) {\r\n                    String fileName = file.getName();\r\n                    if (fileName.matches(regex)) {\r\n                        String parentName = file.getParentFile().getName();\r\n                        idCardList.add(parentName + \"-\" + fileName);\r\n                    } else {\r\n                        idCardList.addAll(getNameIdInfos(file, regex)); // 递归获取子文件夹内的文件身份证\r\n                    }\r\n                }\r\n            }\r\n        }\r\n        return idCardList;\r\n    }\r\n\r\n\r\n    private void saveEmpFileInfos(File file, String username) {\r\n        String regex = \"\\\\d{17}[\\\\dXx]\";\r\n        if (file.isDirectory()) {\r\n            if (file.getName().matches(regex)) {\r\n                savaEmpInfosToDB(file, file.getName(), username);\r\n            } else {\r\n                File[] files = file.listFiles();\r\n                for (File subFile : files) {\r\n                    saveEmpFileInfos(subFile, username);\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    private void savaEmpInfosToDB(File file, String idCard, String username) {\r\n\r\n        Employee employee = employeeMapper.findInfoByEmpIdCard(idCard);\r\n        if (employee != null) {\r\n            File[] files = file.listFiles();\r\n            for (File subFile : files) {\r\n                String subFileName = subFile.getName();\r\n                if (!(\"个人照片\".equals(subFileName) || \"身份证照片\".equals(subFileName) || \"学历照片\".equals(subFileName)\r\n                        || \"最高职称证书照片\".equals(subFileName))) {\r\n                    throw new ServiceException(\"文件目录名称不符合规范\");\r\n                }\r\n                String fileType = null;\r\n                if (\"个人照片\".equals(subFileName)) {\r\n                    fileType = EmpDocTypeEnum.ONE.getKey();\r\n                }\r\n                if (\"身份证照片\".equals(subFileName)) {\r\n                    fileType = EmpDocTypeEnum.TWO.getKey();\r\n                }\r\n                if (\"最高职称证书照片\".equals(subFileName)) {\r\n                    fileType = EmpDocTypeEnum.THREE.getKey();\r\n                }\r\n                if (\"学历照片\".equals(subFileName)) {\r\n                    fileType = EmpDocTypeEnum.FOUR.getKey();\r\n                }\r\n                File[] photoFiles = subFile.listFiles();\r\n                List<Long> docIds = new ArrayList<>();\r\n                for (File photoFile : photoFiles) {\r\n                    if (photoFile.isFile() && fileType != null) {\r\n                        EmpDocument document = fileService.uploadUnCompressFile(fileType, \"employee\", photoFile, username);\r\n                        docIds.add(document.getDocId());\r\n                    }\r\n                }\r\n                List<String> docTypes = Collections.singletonList(fileType);\r\n                empDocumentMapper.removeInfoByEmpIdsAndDocTypes(Collections.singletonList(employee.getEmpId()), docTypes);\r\n                empDocumentMapper.bindEmpInfos(employee.getEmpId(), docIds);\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    //解压压缩文件\r\n    public void extractCompressFile(MultipartFile sevenFile, String destDir) {\r\n        RandomAccessFile randomAccessFile = null;\r\n        IInArchive inArchive = null;\r\n        File file = new File(\"testInfo\" + File.separator + \"test.rar\");\r\n        try {\r\n            if (!file.exists()) {\r\n                file.getParentFile().mkdirs();\r\n                file.createNewFile();\r\n            }\r\n            //sevenFile.transferTo(file);\r\n            org.apache.commons.io.FileUtils.copyInputStreamToFile(sevenFile.getInputStream(), file);\r\n            randomAccessFile = new RandomAccessFile(file, \"r\");\r\n            inArchive = SevenZip.openInArchive(null, new RandomAccessFileInStream(randomAccessFile));\r\n            ISimpleInArchive simpleInArchive = inArchive.getSimpleInterface();\r\n            for (ISimpleInArchiveItem item : simpleInArchive.getArchiveItems()) {\r\n                if (!item.isFolder()) {\r\n                    File outputFile = new File(destDir, item.getPath());\r\n                    outputFile.getParentFile().mkdirs();\r\n                    FileOutputStream outputStream = new FileOutputStream(outputFile);\r\n                    MySequentialOutStream mySequentialOutStream = new MySequentialOutStream(outputStream);\r\n                    item.extractSlow(mySequentialOutStream); // 使用自定义的 ISequentialOutStream 实现类\r\n                    mySequentialOutStream.close();\r\n                    outputStream.close();\r\n                }\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        } finally {\r\n            FileUtils.deleteFolder(file);\r\n            if (randomAccessFile != null) {\r\n                try {\r\n                    randomAccessFile.close();\r\n                } catch (Exception e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n            if (inArchive != null) {\r\n                try {\r\n                    inArchive.close();\r\n                } catch (Exception e) {\r\n                    e.printStackTrace();\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    @Override\r\n    public List<FamilyRelations> searchEmpFamilyInfos(Long employeeId) {\r\n\r\n        return familyRelationsMapper.findFamilyInfoByEmpId(employeeId);\r\n    }\r\n\r\n    @Override\r\n    public EmpSimpleInfoVO countEmpNum() {\r\n\r\n        int attendJobNum = employeeMapper.findAttendJobNumWithCurrentMonth();\r\n        int resignNum = employeeMapper.findResignNumWithCurrentMonth();\r\n        int fireNum = employeeMapper.findFireNumWithCurrentMonth();\r\n        int soonExpiredNum = employeeMapper.findSoonExpiredNumWithCurrentMonth();\r\n        int ExpiredNum = employeeMapper.findExpiredNumWithCurrentMonth();\r\n        EmpSimpleInfoVO empSimpleInfo = new EmpSimpleInfoVO();\r\n        empSimpleInfo.setAttendJobNum(attendJobNum);\r\n        empSimpleInfo.setResignNum(resignNum);\r\n        empSimpleInfo.setFireNum(fireNum);\r\n        empSimpleInfo.setSoonExpiredNum(soonExpiredNum);\r\n        empSimpleInfo.setExpiredNum(ExpiredNum);\r\n        return empSimpleInfo;\r\n    }\r\n\r\n    @Override\r\n    public Boolean batchFireEmployees(EmpChangeStatusVO empChangeStatus) {\r\n        List<Long> empIds = empChangeStatus.getEmpIds();\r\n        String empStatus = empChangeStatus.getEmpStatus();\r\n        Date now = new Date();\r\n        employeeMapper.changeEmpStatusByEmpIdsAndEmpStatus(empIds, empStatus, now);\r\n        return true;\r\n    }\r\n\r\n\r\n    private void batchInsertEmployeeInfos(Long userId, List<EmpImportVO> empImportInfos) {\r\n\r\n        for (EmpImportVO empImportInfo : empImportInfos) {\r\n            EmpAddVO empAdd = transformEmpImportInfoToEmpAdd(empImportInfo);\r\n            insertEmployee(empAdd, userId);\r\n        }\r\n    }\r\n\r\n    private EmpAddVO transformEmpImportInfoToEmpAdd(EmpImportVO empImportInfo) {\r\n\r\n        EmpAddVO empAdd = new EmpAddVO();\r\n        BeanUtils.copyProperties(empImportInfo, empAdd);\r\n        for (EmpTypeEnum value : EmpTypeEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpType())) {\r\n                empAdd.setEmpType(value.getKey());\r\n            }\r\n        }\r\n        for (EmpStatusEnum value : EmpStatusEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpStatus())) {\r\n                empAdd.setEmpStatus(value.getKey());\r\n            }\r\n        }\r\n        for (EmpSalaryEnum value : EmpSalaryEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpSalaryLevel())) {\r\n                empAdd.setEmpSalaryLevel(value.getKey());\r\n            }\r\n        }\r\n        for (EmpPostLevelEnum value : EmpPostLevelEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpPosition())) {\r\n                empAdd.setEmpPositionLevel(value.getKey());\r\n            }\r\n        }\r\n        for (EmpPoliticalEnum value : EmpPoliticalEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpPoliticalStatus())) {\r\n                empAdd.setEmpPoliticalStatus(value.getKey());\r\n            }\r\n        }\r\n        for (EmpEducationEnum value : EmpEducationEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpEducation())) {\r\n                empAdd.setEmpEducation(value.getKey());\r\n            }\r\n        }\r\n        for (EmpCategoryEnum value : EmpCategoryEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpCategory())) {\r\n                empAdd.setEmpCategory(value.getKey());\r\n            }\r\n        }\r\n        for (EmpTitleEnum value : EmpTitleEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpTitle())) {\r\n                empAdd.setEmpTitle(value.getKey());\r\n            }\r\n        }\r\n\r\n        for (EmpPostLevelEnum value : EmpPostLevelEnum.values()) {\r\n            if (value.getValue().equals(empImportInfo.getEmpPositionLevel())) {\r\n                empAdd.setEmpPositionLevel(value.getKey());\r\n            }\r\n        }\r\n\r\n        String empUnitDeptName = empImportInfo.getEmpDeptName();\r\n        String[] split = empUnitDeptName.split(\"-\");\r\n        String empUnit = split[0];\r\n        String empDept = split[1];\r\n        Department department = departmentMapper.findDepartmentInfoByUnitAndDeptName(empUnit, empDept);\r\n        if (department != null) {\r\n            empAdd.setEmpDeptId(department.getDeptId());\r\n            empAdd.setEmpDeptName(department.getDeptName());\r\n        }\r\n        return empAdd;\r\n    }\r\n\r\n\r\n    private ExcelImportResult<EmpImportVO> getExcelDate(MultipartFile file, Class<EmpImportVO> empImportClass) {\r\n\r\n        try {\r\n            ImportParams params = new ImportParams();\r\n            params.setHeadRows(1);\r\n            params.setTitleRows(0);\r\n            params.setNeedVerify(true);\r\n            params.setVerifyHandler(employeeExcelImportVerifyHandler);\r\n            return ExcelImportUtil.importExcelMore(file.getInputStream(), empImportClass, params);\r\n        } catch (Exception e) {\r\n            log.error(\"获取excel数据失败\", e);\r\n            throw new ServiceException(\"获取excel数据失败\");\r\n        } finally {\r\n            // 清除threadLocal 防止内存泄漏\r\n            ThreadLocal<List<IdCheckVO>> threadLocal = employeeExcelImportVerifyHandler.getThreadLocal();\r\n            if (threadLocal != null) {\r\n                threadLocal.remove();\r\n            }\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Map内，对象计数的方法，如果第一次key入map,数量记1，如果非第一次，数量累加\r\n     *\r\n     * @param map\r\n     * @param mapKey\r\n     */\r\n    public void putMap(Map<String, PieChartVO> map, String mapKey) {\r\n        if (mapKey != null && mapKey.length() > 0) {\r\n            if (map.containsKey(mapKey)) {\r\n                map.put(mapKey, new PieChartVO(mapKey, map.get(mapKey).getValue() + 1));\r\n            } else {\r\n                map.put(mapKey, new PieChartVO(mapKey, 1));\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/EmployeeServiceImpl.java b/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/EmployeeServiceImpl.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/EmployeeServiceImpl.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/EmployeeServiceImpl.java	(date 1697183281668)
+@@ -1131,6 +1131,7 @@
+                     int line = entity.getRowNum() == null ? 0 : entity.getRowNum() + 1;
+                     return new ErrorForm(line, entity.getErrorMsg());
+                 }).collect(Collectors.toList());
++        //没有重复就开始把数据增加到数据库
+         if (!CollectionUtils.isEmpty(excelDate.getList())) {
+             batchInsertEmployeeInfos(userId, excelDate.getList());
+         }
+Index: laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.framework.config;\r\n\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.http.HttpMethod;\r\nimport org.springframework.security.authentication.AuthenticationManager;\r\nimport org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;\r\nimport org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;\r\nimport org.springframework.security.config.annotation.web.builders.HttpSecurity;\r\nimport org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;\r\nimport org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;\r\nimport org.springframework.security.config.http.SessionCreationPolicy;\r\nimport org.springframework.security.core.userdetails.UserDetailsService;\r\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\nimport org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;\r\nimport org.springframework.security.web.authentication.logout.LogoutFilter;\r\nimport org.springframework.web.filter.CorsFilter;\r\nimport com.yuantu.framework.config.properties.PermitAllUrlProperties;\r\nimport com.yuantu.framework.security.filter.JwtAuthenticationTokenFilter;\r\nimport com.yuantu.framework.security.handle.AuthenticationEntryPointImpl;\r\nimport com.yuantu.framework.security.handle.LogoutSuccessHandlerImpl;\r\n\r\n/**\r\n * spring security配置\r\n * \r\n * @author ruoyi\r\n */\r\n@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)\r\npublic class SecurityConfig extends WebSecurityConfigurerAdapter\r\n{\r\n    /**\r\n     * 自定义用户认证逻辑\r\n     */\r\n    @Autowired\r\n    private UserDetailsService userDetailsService;\r\n    \r\n    /**\r\n     * 认证失败处理类\r\n     */\r\n    @Autowired\r\n    private AuthenticationEntryPointImpl unauthorizedHandler;\r\n\r\n    /**\r\n     * 退出处理类\r\n     */\r\n    @Autowired\r\n    private LogoutSuccessHandlerImpl logoutSuccessHandler;\r\n\r\n    /**\r\n     * token认证过滤器\r\n     */\r\n    @Autowired\r\n    private JwtAuthenticationTokenFilter authenticationTokenFilter;\r\n    \r\n    /**\r\n     * 跨域过滤器\r\n     */\r\n    @Autowired\r\n    private CorsFilter corsFilter;\r\n\r\n    /**\r\n     * 允许匿名访问的地址\r\n     */\r\n    @Autowired\r\n    private PermitAllUrlProperties permitAllUrl;\r\n\r\n    /**\r\n     * 解决 无法直接注入 AuthenticationManager\r\n     *\r\n     * @return\r\n     * @throws Exception\r\n     */\r\n    @Bean\r\n    @Override\r\n    public AuthenticationManager authenticationManagerBean() throws Exception\r\n    {\r\n        return super.authenticationManagerBean();\r\n    }\r\n\r\n    /**\r\n     * anyRequest          |   匹配所有请求路径\r\n     * access              |   SpringEl表达式结果为true时可以访问\r\n     * anonymous           |   匿名可以访问\r\n     * denyAll             |   用户不能访问\r\n     * fullyAuthenticated  |   用户完全认证可以访问（非remember-me下自动登录）\r\n     * hasAnyAuthority     |   如果有参数，参数表示权限，则其中任何一个权限可以访问\r\n     * hasAnyRole          |   如果有参数，参数表示角色，则其中任何一个角色可以访问\r\n     * hasAuthority        |   如果有参数，参数表示权限，则其权限可以访问\r\n     * hasIpAddress        |   如果有参数，参数表示IP地址，如果用户IP和参数匹配，则可以访问\r\n     * hasRole             |   如果有参数，参数表示角色，则其角色可以访问\r\n     * permitAll           |   用户可以任意访问\r\n     * rememberMe          |   允许通过remember-me登录的用户访问\r\n     * authenticated       |   用户登录后可访问\r\n     */\r\n    @Override\r\n    protected void configure(HttpSecurity httpSecurity) throws Exception\r\n    {\r\n        // 注解标记允许匿名访问的url\r\n        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity.authorizeRequests();\r\n        permitAllUrl.getUrls().forEach(url -> registry.antMatchers(url).permitAll());\r\n\r\n        httpSecurity\r\n                // CSRF禁用，因为不使用session\r\n                .csrf().disable()\r\n                // 禁用HTTP响应标头\r\n                .headers().cacheControl().disable().and()\r\n                // 认证失败处理类\r\n                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()\r\n                // 基于token，所以不需要session\r\n                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()\r\n                // 过滤请求\r\n                .authorizeRequests()\r\n                // 对于登录login 注册register 验证码captchaImage 允许匿名访问\r\n                .antMatchers(\"/login\", \"/register\", \"/captchaImage\").permitAll()\r\n                // 静态资源，可匿名访问\r\n                .antMatchers(HttpMethod.GET, \"/\", \"/*.html\", \"/**/*.html\", \"/**/*.css\", \"/**/*.js\", \"/profile/**\").permitAll()\r\n                .antMatchers(\"/swagger-ui.html\", \"/swagger-resources/**\", \"/webjars/**\", \"/*/api-docs\", \"/druid/**\").permitAll()\r\n              //  .antMatchers(\"/labor/**\").permitAll()\r\n                // 除上面外的所有请求全部需要鉴权认证\r\n                .anyRequest().authenticated()\r\n                .and()\r\n                .headers().frameOptions().disable();\r\n        // 添加Logout filter\r\n        httpSecurity.logout().logoutUrl(\"/logout\").logoutSuccessHandler(logoutSuccessHandler);\r\n        // 添加JWT filter\r\n        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);\r\n        // 添加CORS filter\r\n        httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);\r\n        httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);\r\n    }\r\n\r\n    /**\r\n     * 强散列哈希加密实现\r\n     */\r\n    @Bean\r\n    public BCryptPasswordEncoder bCryptPasswordEncoder()\r\n    {\r\n        return new BCryptPasswordEncoder();\r\n    }\r\n\r\n    /**\r\n     * 身份认证接口\r\n     */\r\n    @Override\r\n    protected void configure(AuthenticationManagerBuilder auth) throws Exception\r\n    {\r\n        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java b/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java
+--- a/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java	(date 1697162988382)
+@@ -117,6 +117,18 @@
+                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
+               //  .antMatchers("/labor/**").permitAll()
+                 // 除上面外的所有请求全部需要鉴权认证
++                .antMatchers("/labor/dir/**").permitAll()
++                .antMatchers("/labor/worker/**").permitAll()
++                .antMatchers("/labor/materials/**").permitAll()
++                .antMatchers("/labor/expert/**").permitAll()
++                .antMatchers("/labor/resume/**").permitAll()
++                .antMatchers("/labor/train/**").permitAll()
++                .antMatchers("/labor/project/**").permitAll()
++                .antMatchers("/labor/result/**").permitAll()
++                .antMatchers("/labor/salaryconf/**").permitAll()
++                .antMatchers("/labor/salary/**").permitAll()
++                .antMatchers("/labor/salaryhis/**").permitAll()
++                .antMatchers("/labor/budget/**").permitAll()
+                 .anyRequest().authenticated()
+                 .and()
+                 .headers().frameOptions().disable();
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectImportVO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectImportVO.java b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectImportVO.java
+new file mode 100644
+--- /dev/null	(date 1697178463051)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectImportVO.java	(date 1697178463051)
+@@ -0,0 +1,98 @@
++package com.yuantu.labor.vo;
++
++import cn.afterturn.easypoi.handler.inter.IExcelDataModel;
++import cn.afterturn.easypoi.handler.inter.IExcelModel;
++import com.yuantu.common.annotation.Excel;
++import lombok.Data;
++
++import javax.validation.constraints.NotBlank;
++import java.util.Objects;
++
++@Data
++public class TrainProjectImportVO implements IExcelDataModel, IExcelModel {
++
++    /** 培训项目名称 */
++    @Excel(name = "培训项目名称")
++    @NotBlank(message = "不能为空")
++    private String projectName;
++
++    /** 主要培训内容/课程 */
++    @Excel(name = "主要培训内容/课程")
++    @NotBlank(message = "不能为空")
++    private String projectContent;
++
++    /** 年度 */
++    @Excel(name = "年度")
++    @NotBlank(message = "不能为空")
++    private String projectYear;
++
++      /** 责任部门名称 */
++    @Excel(name = "责任部门")
++    @NotBlank(message = "不能为空")
++    private String projectDeptName;
++
++    /** 培训性质(1=管理，2=技能，3=技术） */
++    @Excel(name = "培训性质")
++    @NotBlank(message = "不能为空")
++    private String projectNature;
++
++    /** 培训方式(1=内培, 2=外培) */
++    @Excel(name = "培训方式")
++    private String projectMethod;
++
++    /** 项目分类(1=一类，2=二类，3=三类) */
++    @Excel(name = "项目分类")
++    private String projectClassify;
++
++    /** 是否完成 */
++    @Excel(name = "是否完成")
++    private String projectIsfinish;
++
++     /**
++     * 行号
++     */
++    private int rowNum;
++
++    /**
++     * 错误消息
++     */
++    private String errorMsg;
++
++    @Override
++    public Integer getRowNum() {
++        return this.rowNum;
++    }
++
++    @Override
++    public void setRowNum(Integer rowNum) {
++        this.rowNum = rowNum;
++    }
++
++    @Override
++    public String getErrorMsg() {
++        return this.errorMsg;
++    }
++
++    @Override
++    public void setErrorMsg(String errorMsg) {
++        this.errorMsg = errorMsg;
++    }
++
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) {
++            return true;
++        }
++        if (o == null || getClass() != o.getClass()) {
++            return false;
++        }
++        TrainProjectImportVO that = (TrainProjectImportVO) o;
++        return Objects.equals(projectName, that.projectName)&&Objects.equals(projectYear,that.projectYear);
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(projectName);
++    }
++}
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/cenum/FileTypeEnum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.cenum;\r\n\r\nimport lombok.AllArgsConstructor;\r\nimport lombok.Getter;\r\n\r\n/**\r\n * @Author : wj\r\n * @create 2023/3/17 11:18\r\n */\r\n@Getter\r\n@AllArgsConstructor\r\npublic enum FileTypeEnum {\r\n\r\n    PHOTO(\"1\", \"照片\"),\r\n\r\n    ID_CARD(\"2\", \"身份证\"),\r\n\r\n    PAPER(\"3\", \"最高职称证书\"),\r\n\r\n    EDUCATION(\"4\", \"最高学历\"),\r\n\r\n    EMP_INFO(\"9\", \"员工信息导入文件\"),\r\n\r\n    EMP_FAIL_INFO(\"10\", \"员工信息导入错误文件\"),\r\n\r\n    EMP_PAPER_INFO(\"12\", \"员工证件信息导入文件\"),\r\n\r\n    EMP_PAPER_FAIL_INFO(\"13\", \"员工证件错误信息导入文件\");\r\n\r\n    private String key;\r\n\r\n    private String value;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/FileTypeEnum.java b/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/FileTypeEnum.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/FileTypeEnum.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/FileTypeEnum.java	(date 1697176959588)
+@@ -25,7 +25,21 @@
+ 
+     EMP_PAPER_INFO("12", "员工证件信息导入文件"),
+ 
+-    EMP_PAPER_FAIL_INFO("13", "员工证件错误信息导入文件");
++    EMP_PAPER_FAIL_INFO("13", "员工证件错误信息导入文件"),
++
++    TRAIN_PROJECT_INFO("14","培训项目信息导入文件"),
++
++    TRAIN_PROJECT_FAIL_INFO("15","培训项目信息导入错误文件"),
++
++    EMP_TRAIN_INFO("16","培训记录信息导入文件"),
++
++    EMP_TRAIN_FAIL_INFO("17","培训记录信息导入错误文件"),
++
++    TRAIN_RESULT_INFO("18","培训成果信息导入文件"),
++
++    TRAIN_RESULT_FAIL_INFO("19","培训成果信息导入错误文件");
++
++
+ 
+     private String key;
+ 
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectCheckVO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectCheckVO.java b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectCheckVO.java
+new file mode 100644
+--- /dev/null	(date 1697179960460)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/TrainProjectCheckVO.java	(date 1697179960460)
+@@ -0,0 +1,14 @@
++package com.yuantu.labor.vo;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@NoArgsConstructor
++@AllArgsConstructor
++public class TrainProjectCheckVO {
++    private String trainProjectName;
++    private String trainProjectYear;
++    private Integer rowNum;
++}
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/handler/TrainProjectExcelImportVerifyHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/handler/TrainProjectExcelImportVerifyHandler.java b/laborBackend-labor/src/main/java/com/yuantu/labor/handler/TrainProjectExcelImportVerifyHandler.java
+new file mode 100644
+--- /dev/null	(date 1697184361969)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/handler/TrainProjectExcelImportVerifyHandler.java	(date 1697184361969)
+@@ -0,0 +1,78 @@
++package com.yuantu.labor.handler;
++
++import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHandlerResult;
++import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
++import com.yuantu.labor.domain.Department;
++import com.yuantu.labor.domain.EmployingUnits;
++import com.yuantu.labor.mapper.DepartmentMapper;
++import com.yuantu.labor.mapper.EmployingUnitsMapper;
++import com.yuantu.labor.vo.TrainProjectCheckVO;
++import com.yuantu.labor.vo.TrainProjectImportVO;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Component;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.StringJoiner;
++
++@Component
++public class TrainProjectExcelImportVerifyHandler implements IExcelVerifyHandler<TrainProjectImportVO> {
++
++    private final ThreadLocal<List<TrainProjectCheckVO>> threadLocal = new ThreadLocal<>();
++
++    @Autowired
++    private DepartmentMapper departmentMapper;
++
++    @Autowired
++    private EmployingUnitsMapper employingUnitsMapper;
++
++    @Override
++    public ExcelVerifyHandlerResult verifyHandler(TrainProjectImportVO projectImport) {
++        StringJoiner joiner = new StringJoiner(",");
++        //验证部门是否格式正确，及在数据库里是否存在
++        String empUnitDeptName = projectImport.getProjectDeptName();
++        String regex = "^([\\u4E00-\\u9FA5-])+-([\\u4E00-\\u9FA5-])+$";
++        if (!empUnitDeptName.matches(regex)) {
++            joiner.add("单位名称-部门名称单元格数据不符合规范");
++        }
++        String[] split = empUnitDeptName.split("-");
++        String empDept = split[1];
++        Department department = departmentMapper.findDepartmentInfoByName(empDept);
++
++        if (department == null) {
++            joiner.add("系统不存在该部门名称");
++        }
++
++        String empUnit = split[0];
++        EmployingUnits unit = employingUnitsMapper.findUnitInfoByName(empUnit);
++
++        if (unit == null) {
++            joiner.add("系统不存在该单位名称");
++        }
++        //验证Excel重复行
++        List<TrainProjectCheckVO> threadLocalVal = threadLocal.get();
++        if (threadLocalVal == null) {
++            threadLocalVal = new ArrayList<>();
++        }
++
++        threadLocalVal.forEach(e -> {
++            if (e.getTrainProjectName().equals(projectImport.getProjectName()) && e.getTrainProjectYear().equals(projectImport.getProjectYear())) {
++                int lineNumber = e.getRowNum() + 1;
++                joiner.add("年度和培训项目名称与第" + lineNumber + "行重复");
++            }
++        });
++
++        // 添加本行数据对象到ThreadLocal中
++        threadLocalVal.add(new TrainProjectCheckVO(projectImport.getProjectName(), projectImport.getProjectYear() ,projectImport.getRowNum()));
++        threadLocal.set(threadLocalVal);
++
++        if (joiner.length() != 0) {
++            return new ExcelVerifyHandlerResult(false, joiner.toString());
++        }
++        return new ExcelVerifyHandlerResult(true);
++    }
++
++    public ThreadLocal<List<TrainProjectCheckVO>> getThreadLocal() {
++        return threadLocal;
++    }
++}
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/domain/TrainProject.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.domain;\r\n\r\nimport java.util.Date;\r\nimport com.fasterxml.jackson.annotation.JsonFormat;\r\nimport lombok.Data;\r\nimport org.apache.commons.lang3.builder.ToStringBuilder;\r\nimport org.apache.commons.lang3.builder.ToStringStyle;\r\nimport com.yuantu.common.annotation.Excel;\r\nimport com.yuantu.common.core.domain.BaseEntity;\r\n\r\n/**\r\n * 培训项目对象 train_project\r\n * \r\n * @author ruoyi\r\n * @date 2023-09-14\r\n */\r\n@Data\r\npublic class TrainProject extends BaseEntity\r\n{\r\n    private static final long serialVersionUID = 1L;\r\n\r\n    /** 培训项目id */\r\n    private Integer projectId;\r\n\r\n    /** 培训项目名称 */\r\n    @Excel(name = \"培训项目名称\")\r\n    private String projectName;\r\n\r\n    /** 主要培训内容/课程 */\r\n    @Excel(name = \"主要培训内容/课程\")\r\n    private String projectContent;\r\n\r\n    /** 年度 */\r\n    @Excel(name = \"年度\")\r\n    private String projectYear;\r\n\r\n    /** 责任部门 */\r\n    @Excel(name = \"责任部门\")\r\n    private Integer projectDeptId;\r\n\r\n    /** 责任部门名称 */\r\n    @Excel(name = \"责任部门名称\")\r\n    private String projectDeptName;\r\n\r\n    /** 培训性质(1=管理，2=技能，3=技术） */\r\n    @Excel(name = \"培训性质(1=管理，2=技能，3=技术）\",readConverterExp=\"1=管理,2=技能,3=技术\")\r\n    private String projectNature;\r\n\r\n    /** 培训方式(1=内培, 2=外培) */\r\n    @Excel(name = \"培训方式(1=内培, 2=外培)\",readConverterExp=\"1=内培,2=外培\")\r\n    private String projectMethod;\r\n\r\n    /** 项目分类(1=一类，2=二类，3=三类) */\r\n    @Excel(name = \"项目分类(1=一类，2=二类，3=三类)\",readConverterExp = \"1=一类,2=二类,3=三类\")\r\n    private String projectClassify;\r\n\r\n    /** 是否完成 */\r\n    @Excel(name = \"是否完成\",readConverterExp = \"0=是,1=否\")\r\n    private String projectIsfinish;\r\n\r\n    /** 修改时间 */\r\n    @JsonFormat(pattern = \"yyyy-MM-dd\")\r\n    @Excel(name = \"修改时间\", width = 30, dateFormat = \"yyyy-MM-dd\")\r\n    private Date projectUpdateTime;\r\n    /**\r\n     * 项目id集合\r\n     */\r\n    private Integer[] projectIds;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/domain/TrainProject.java b/laborBackend-labor/src/main/java/com/yuantu/labor/domain/TrainProject.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/domain/TrainProject.java	(revision e313a64888620cc1e19ccda1a00b07ed8739ffb0)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/domain/TrainProject.java	(date 1697178026319)
+@@ -23,7 +23,7 @@
+     private Integer projectId;
+ 
+     /** 培训项目名称 */
+-    @Excel(name = "培训项目名称")
++    @Excel(name = "培训项目")
+     private String projectName;
+ 
+     /** 主要培训内容/课程 */
+@@ -35,23 +35,23 @@
+     private String projectYear;
+ 
+     /** 责任部门 */
+-    @Excel(name = "责任部门")
++    //@Excel(name = "责任部门ID")
+     private Integer projectDeptId;
+ 
+     /** 责任部门名称 */
+-    @Excel(name = "责任部门名称")
++    @Excel(name = "责任部门")
+     private String projectDeptName;
+ 
+     /** 培训性质(1=管理，2=技能，3=技术） */
+-    @Excel(name = "培训性质(1=管理，2=技能，3=技术）",readConverterExp="1=管理,2=技能,3=技术")
++    @Excel(name = "培训性质",readConverterExp="1=管理,2=技能,3=技术")
+     private String projectNature;
+ 
+     /** 培训方式(1=内培, 2=外培) */
+-    @Excel(name = "培训方式(1=内培, 2=外培)",readConverterExp="1=内培,2=外培")
++    @Excel(name = "培训方式",readConverterExp="1=内培,2=外培")
+     private String projectMethod;
+ 
+     /** 项目分类(1=一类，2=二类，3=三类) */
+-    @Excel(name = "项目分类(1=一类，2=二类，3=三类)",readConverterExp = "1=一类,2=二类,3=三类")
++    @Excel(name = "项目分类",readConverterExp = "1=一类,2=二类,3=三类")
+     private String projectClassify;
+ 
+     /** 是否完成 */

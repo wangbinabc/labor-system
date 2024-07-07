@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.DeptValueMapper">
+
+    <resultMap id="BaseResultMap" type="com.yuantu.labor.domain.DeptValue">
+        <id property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="valueYear" column="value_year"/>
+        <result property="sumValue" column="sum_value"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="disabled" column="disabled"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,dept_id,value_year,
+        sum_value, disabled
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dept_value
+        where id = #{id} and disabled = 0
+    </select>
+    <select id="findDeptValueInfos" resultType="com.yuantu.labor.domain.DeptValue">
+        select
+        <include refid="Base_Column_List"/>
+        from dept_value
+        where disabled = 0
+        <if test="deptId != null">
+            and dept_id = #{deptId}
+        </if>
+        <if test="valueYear != null and valueYear != ''">
+            and value_year = #{valueYear}
+        </if>
+        <if test="sumValue != null and sumValue != ''">
+            and sum_value like concat('%', #{sumValue}, '%')
+        </if>
+    </select>
+    <select id="findInfoByDeptIdAndValueYear" resultType="com.yuantu.labor.domain.DeptValue">
+        select
+        <include refid="Base_Column_List"/>
+        from dept_value
+        where dept_id = #{deptId} and value_year = #{valueYear} and disabled = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from dept_value
+        where id = #{id}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.yuantu.labor.domain.DeptValue"
+            useGeneratedKeys="true">
+        insert into dept_value
+        ( dept_id, value_year
+        , sum_value, create_by, create_time, update_by, update_time, disabled)
+        values ( #{deptId}, #{valueYear}
+               , #{sumValue}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{disabled})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.yuantu.labor.domain.DeptValue"
+            useGeneratedKeys="true">
+        insert into dept_value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">dept_id,</if>
+            <if test="valueYear != null and valueYear != ''">value_year,</if>
+            <if test="sumValue != null and sumValue != ''">sum_value,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="disabled != null">disabled,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">#{deptId},</if>
+            <if test="valueYear != null and valueYear != ''">#{valueYear},</if>
+            <if test="sumValue != null and sumValue != ''">#{sumValue},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="disabled != null">#{disabled},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yuantu.labor.domain.DeptValue">
+        update dept_value
+        <set>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="valueYear != null and valueYear != ''">
+                value_year = #{valueYear},
+            </if>
+            <if test="sumValue != null and sumValue != ''">
+                sum_value = #{sumValue},
+            </if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yuantu.labor.domain.DeptValue">
+        update dept_value
+        set dept_id     = #{deptId},
+            value_year  = #{valueYear},
+            sum_value   = #{sumValue},
+            update_by   = #{updateBy},
+            update_time = #{updateTime}
+        where id = #{id}
+    </update>
+    <update id="removeDeptValueInfos">
+        update dept_value set disabled = 1 where id in
+        <foreach collection="deptValueIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

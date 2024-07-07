@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpExpertMapper">
+
+    <resultMap type="com.yuantu.labor.domain.EmpExpert" id="EmpExpertResult">
+        <result property="expertId" column="expert_id"/>
+        <result property="expertLevel" column="expert_level"/>
+        <result property="expertTitle" column="expert_title"/>
+        <result property="expertGrantTime" column="expert_grant_time"/>
+        <result property="expertDismissTime" column="expert_dismiss_time"/>
+        <result property="expertPeriod" column="expert_period"/>
+        <result property="expertEmpId" column="expert_emp_id"/>
+        <result property="expertEmpName" column="expert_emp_name"/>
+        <result property="expertEmpIdcard" column="expert_emp_idcard"/>
+        <result property="expertUpdateTime" column="expert_update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <resultMap id="empExpertListResult" type="com.yuantu.labor.vo.ExpertListVO">
+        <result property="expertId" column="expert_id"/>
+        <result property="expertLevel" column="expert_level"/>
+        <result property="expertTitle" column="expert_title"/>
+        <result property="expertGrantTime" column="expert_grant_time"/>
+        <result property="expertDismissTime" column="expert_dismiss_time"/>
+        <result property="expertPeriod" column="expert_period"/>
+        <result property="expertEmpId" column="expert_emp_id"/>
+        <result property="expertEmpName" column="expert_emp_name"/>
+        <result property="expertEmpIdcard" column="expert_emp_idcard"/>
+        <result property="expertUpdateTime" column="expert_update_time"/>
+        <result property="empAge" column="emp_age"/>
+        <result property="empGender" column="emp_gender"/>
+        <result property="expertUpdateTime" column="expert_update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectEmpExpertVo">
+        select expert_id,
+               expert_level,
+               expert_title,
+               expert_grant_time,
+               expert_dismiss_time,
+               expert_period,
+               expert_emp_id,
+               expert_emp_name,
+               expert_emp_idcard,
+               expert_update_time,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from emp_expert
+    </sql>
+
+    <select id="selectEmpExpertList" parameterType="EmpExpert" resultMap="EmpExpertResult">
+        <include refid="selectEmpExpertVo"/>
+        <where>
+            <if test="expertLevel != null  and expertLevel != ''">and expert_level = #{expertLevel}</if>
+            <if test="expertTitle != null  and expertTitle != ''">and expert_title = #{expertTitle}</if>
+            <if test="expertGrantTime != null ">and expert_grant_time = #{expertGrantTime}</if>
+            <if test="expertDismissTime != null ">and expert_dismiss_time = #{expertDismissTime}</if>
+            <if test="expertPeriod != null  and expertPeriod != ''">and expert_period = #{expertPeriod}</if>
+            <if test="expertEmpId != null ">and expert_emp_id = #{expertEmpId}</if>
+            <if test="expertEmpName != null  and expertEmpName != ''">and expert_emp_name like concat('%',
+                #{expertEmpName}, '%')
+            </if>
+            <if test="expertEmpIdcard != null  and expertEmpIdcard != ''">and expert_emp_idcard = #{expertEmpIdcard}
+            </if>
+            <if test="expertUpdateTime != null ">and expert_update_time = #{expertUpdateTime}</if>
+            and disabled = 0
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+
+    </select>
+
+    <select id="selectEmpExpertByExpertId" parameterType="Integer" resultMap="EmpExpertResult">
+        <include refid="selectEmpExpertVo"/>
+        where expert_id = #{expertId}
+    </select>
+
+    <insert id="insertEmpExpert" parameterType="EmpExpert" useGeneratedKeys="true" keyProperty="expertId">
+        insert into emp_expert
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="expertLevel != null">expert_level,</if>
+            <if test="expertTitle != null">expert_title,</if>
+            <if test="expertGrantTime != null">expert_grant_time,</if>
+            <if test="expertDismissTime != null">expert_dismiss_time,</if>
+            <if test="expertPeriod != null">expert_period,</if>
+            <if test="expertEmpId != null">expert_emp_id,</if>
+            <if test="expertEmpName != null">expert_emp_name,</if>
+            <if test="expertEmpIdcard != null">expert_emp_idcard,</if>
+            <if test="expertUpdateTime != null">expert_update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="expertLevel != null">#{expertLevel},</if>
+            <if test="expertTitle != null">#{expertTitle},</if>
+            <if test="expertGrantTime != null">#{expertGrantTime},</if>
+            <if test="expertDismissTime != null">#{expertDismissTime},</if>
+            <if test="expertPeriod != null">#{expertPeriod},</if>
+            <if test="expertEmpId != null">#{expertEmpId},</if>
+            <if test="expertEmpName != null">#{expertEmpName},</if>
+            <if test="expertEmpIdcard != null">#{expertEmpIdcard},</if>
+            <if test="expertUpdateTime != null">#{expertUpdateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+
+    </insert>
+    <insert id="batchInsertEmpExperts">
+        insert into emp_expert (
+        expert_level,
+        expert_title,
+        expert_grant_time,
+        expert_dismiss_time,
+        expert_period,
+        expert_emp_id,
+        expert_emp_name,
+        expert_emp_idcard,
+        expert_update_time,
+        create_by,
+        create_time)
+        values
+        <foreach collection="empExports" item="empExport" separator=",">
+            (#{empExport.expertLevel}, #{empExport.expertTitle}, #{empExport.expertGrantTime},
+            #{empExport.expertDismissTime},
+            #{empExport.expertPeriod}, #{empExport.expertEmpId}, #{empExport.expertEmpName},
+            #{empExport.expertEmpIdcard},
+            #{empExport.expertUpdateTime}, #{empExport.createBy}, #{empExport.createTime})
+        </foreach>
+    </insert>
+
+    <update id="updateEmpExpert" parameterType="EmpExpert">
+        update emp_expert
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="expertLevel != null">expert_level = #{expertLevel},</if>
+            <if test="expertTitle != null">expert_title = #{expertTitle},</if>
+            <if test="expertGrantTime != null">expert_grant_time = #{expertGrantTime},</if>
+            <if test="expertDismissTime != null">expert_dismiss_time = #{expertDismissTime},</if>
+            <if test="expertPeriod != null">expert_period = #{expertPeriod},</if>
+            <if test="expertEmpId != null">expert_emp_id = #{expertEmpId},</if>
+            <if test="expertEmpName != null">expert_emp_name = #{expertEmpName},</if>
+            <if test="expertEmpIdcard != null">expert_emp_idcard = #{expertEmpIdcard},</if>
+            <if test="expertUpdateTime != null">expert_update_time = #{expertUpdateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where expert_id = #{expertId}
+    </update>
+
+    <delete id="deleteEmpExpertByExpertId" parameterType="Integer">
+        update emp_expert
+        set disabled = 1
+        where expert_id = #{expertId}
+    </delete>
+
+    <delete id="deleteEmpExpertByExpertIds" parameterType="String">
+        update emp_expert set disabled = 1 where expert_id in
+        <foreach item="expertId" collection="array" open="(" separator="," close=")">
+            #{expertId}
+        </foreach>
+    </delete>
+
+    <select id="selectEmpExpertListByWhere" parameterType="com.yuantu.labor.vo.EmpExpertQueryVO"
+            resultMap="empExpertListResult">
+        select expert_id, expert_level, expert_title, expert_grant_time, expert_dismiss_time, expert_period,
+        expert_emp_id, emp_name as expert_emp_name, CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as expert_emp_idcard,
+        expert_update_time,emp_age,emp_gender,expert_update_time,
+        emp_expert.create_by, emp_expert.create_time, emp_expert.update_by, emp_expert.update_time
+        from emp_expert
+        LEFT JOIN employee ON emp_expert.expert_emp_id = employee.emp_id
+        <where>
+            <if test="empName != null  and empName != ''">and (emp_name like concat('%', #{empName}, '%') or
+                CAST(SP_DECRYPT(emp_idcard) AS CHAR(128))
+                like concat('%', #{empName}, '%'))
+            </if>
+            <if test="expertIds !=null">
+                and expert_id in
+                <foreach item="expertId" collection="expertIds" open="(" separator="," close=")">
+                    #{expertId}
+                </foreach>
+            </if>
+            <if test="empAgeMin != null">
+                and emp_age >= #{empAgeMin}
+            </if>
+            <if test="empAgeMax != null">
+                and emp_age &lt;= #{empAgeMax}
+            </if>
+            <if test="empGender != null">
+                and emp_gender = #{empGender}
+            </if>
+            <if test="expertLevel != null and expertLevel != ''">
+                and expert_level = #{expertLevel}
+            </if>
+            <if test="expertTitle != null and expertTitle != ''">
+                and expert_title like concat('%', #{expertTitle}, '%')
+            </if>
+            <if test="expertGrantTimeStart != null">
+                and expert_grant_time &gt;= #{expertGrantTimeStart}
+            </if>
+            <if test="expertGrantTimeEnd != null">
+                and expert_grant_time &lt;= #{expertGrantTimeEnd}
+            </if>
+            <if test="expertDismissTimeStart != null">
+                and expert_dismiss_time &gt;= #{expertDismissTimeStart}
+            </if>
+            <if test="expertDismissTimeEnd != null">
+                and expert_dismiss_time &lt;= #{expertDismissTimeEnd}
+            </if>
+            <if test="expertPeriod != null and expertPeriod != ''">
+                and expert_period = #{expertPeriod}
+            </if>
+            <if test="expertUpdateTimeStart != null">
+                and expert_update_time &gt;= #{expertUpdateTimeStart}
+            </if>
+            <if test="expertUpdateTimeEnd != null">
+                and expert_update_time &lt;= #{expertUpdateTimeEnd}
+            </if>
+            <if test="deptId!=null">
+                and emp_dept_id = #{deptId}
+            </if>
+            <if test="isRelated !=null and isRelated == 1 ">and employee.disabled= 1</if>
+
+            and emp_expert.disabled = 0
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+
+    </select>
+
+    <select id="countByTitle" resultType="com.yuantu.labor.vo.PieChartVO">
+        select count(*) as value, expert_level as name
+        from emp_expert
+        where disabled = 0
+        GROUP BY expert_level
+    </select>
+
+    <select id="countByDept" resultType="com.yuantu.labor.vo.PieChartVO">
+        select dept_id as id, dept_name as name, count(*) as value
+        from emp_expert LEFT JOIN employee
+        on emp_expert.expert_emp_id = employee.emp_id
+            LEFT JOIN department on dept_id = emp_dept_id
+        where emp_expert.disabled = 0 and emp_dept_id is not null
+        GROUP BY dept_id
+    </select>
+
+    <select id="findExpertInfoByEmpIds" resultType="com.yuantu.labor.vo.ExpertExportListVO">
+        select expert_id, expert_level, expert_title, expert_grant_time, expert_dismiss_time, expert_period,
+        expert_emp_id, emp_name as expert_emp_name, CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as expert_emp_idcard,
+        expert_update_time,emp_age,emp_gender,expert_update_time,
+        emp_expert.create_by, emp_expert.create_time, emp_expert.update_by, emp_expert.update_time
+        from emp_expert LEFT JOIN employee ON emp_expert.expert_emp_id = employee.emp_id
+        where emp_expert.disabled = 0
+        <if test="empIds != null and empIds.size() > 0">
+            and emp_expert.expert_emp_id in
+            <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+                #{empId}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

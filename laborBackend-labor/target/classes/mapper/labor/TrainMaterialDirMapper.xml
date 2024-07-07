@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.TrainMaterialDirMapper">
+
+    <resultMap type="com.yuantu.labor.domain.TrainMaterialDir" id="TrainMaterialDirResult">
+        <result property="dirId" column="dir_id"/>
+        <result property="dirName" column="dir_name"/>
+        <result property="dirLevel" column="dir_level"/>
+        <result property="dirParentId" column="dir_parent_id"/>
+        <result property="dirUpdateTime" column="dir_update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="fileNum" column="file_nums"/>
+    </resultMap>
+
+    <sql id="selectTrainMaterialDirVo">
+        select dir_id,
+               dir_name,
+               dir_level,
+               dir_parent_id,
+               dir_update_time,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from train_material_dir
+    </sql>
+
+    <select id="selectTrainMaterialDirList" parameterType="com.yuantu.labor.domain.TrainMaterialDir"
+            resultMap="TrainMaterialDirResult">
+        select dir_id, dir_name, dir_level, dir_parent_id, dir_update_time, create_by, create_time, update_by,
+        update_time,file_nums
+        from train_material_dir t6 JOIN
+        (
+        select sum(file_num) as file_nums,d1 as dirId from(
+        select dir_id,count(mat_id) as file_num,dir_id as d1 from train_material_dir
+        left JOIN train_materials on train_material_dir.dir_id = train_materials.mat_directory_id
+        <where>
+            and train_material_dir.disabled= 0
+            <if test="dirName != null  and dirName != ''">and dir_name like concat('%', #{dirName}, '%')</if>
+        </where>
+        group by dir_id
+        union
+        select t1.dir_id,count(t3.mat_id) as file_num,t1.dir_parent_id as d1 from train_material_dir t1
+        LEFT JOIN train_material_dir t2 on t1.dir_parent_id = t2.dir_id
+        left JOIN train_materials t3 on t1.dir_id = t3.mat_directory_id
+        <where>
+            and t1.disabled= 0 and t2.disabled= 0
+            <if test="dirName != null  and dirName != ''">and t2.dir_name like concat('%', #{dirName}, '%')</if>
+        </where>
+        group by t1.dir_id )t4 GROUP BY dirId
+        )t5 on t6.dir_id = t5.dirId
+        UNION
+        select t7.dir_id, t7.dir_name, t7.dir_level, t7.dir_parent_id, t7.dir_update_time, t7.create_by, t7.create_time,
+        t7.update_by, t7.update_time,count(mat_id) as file_nums
+        from train_material_dir t7
+        LEFT JOIN train_material_dir t8 on t7.dir_parent_id = t8.dir_id
+        left JOIN train_materials on t7.dir_id = mat_directory_id
+        <where>
+            and t7.dir_level='2' and t7.disabled=0 and t7.disabled=0
+            <if test="dirName != null  and dirName != ''">and t8.dir_name like concat('%', #{dirName}, '%')</if>
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        GROUP BY t7.dir_id
+    </select>
+
+    <select id="selectTrainMaterialDirByDirId" parameterType="Integer" resultMap="TrainMaterialDirResult">
+        <include refid="selectTrainMaterialDirVo"/>
+        where dir_id = #{dirId}
+    </select>
+    <select id = "selectDirAndParentById" parameterType="Integer" resultMap="TrainMaterialDirResult">
+        SELECT dir_id, dir_parent_id, dir_name
+        FROM train_material_dir
+        WHERE dir_id = #{dirId}
+        UNION ALL
+        SELECT t.dir_id, t.dir_parent_id, t.dir_name
+        FROM train_material_dir t
+                 INNER JOIN
+             train_material_dir s ON t.dir_id = s.dir_parent_id
+        WHERE s.dir_id = #{dirId};
+    </select>
+</mapper>
