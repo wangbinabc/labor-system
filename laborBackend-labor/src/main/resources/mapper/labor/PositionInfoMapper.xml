@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.PositionInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.yuantu.labor.domain.PositionInfo">
+        <id property="id" column="id"/>
+        <result property="positionName" column="position_name"/>
+        <result property="positionCategory" column="position_category"/>
+        <result property="positionLevel" column="position_level"/>
+        <result property="positionSort" column="position_sort"/>
+        <result property="salaryLow" column="salary_low"/>
+        <result property="salaryHigh" column="salary_high"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,position_name,position_category,
+        position_level,position_sort,salary_low,
+        salary_high,remark
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from position_info
+        where id = #{id}
+    </select>
+    <select id="findInfoByReferenceParams" resultType="com.yuantu.labor.domain.PositionInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from position_info
+        where position_name = #{positionName} and position_level = #{positionLevel} and position_category =
+        #{positionCategory} limit 1
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from position_info
+        where id = #{id}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.yuantu.labor.domain.PositionInfo"
+            useGeneratedKeys="true">
+        insert into position_info
+        ( position_name, position_category
+        , position_level, position_sort, salary_low
+        , salary_high, remark)
+        values ( #{positionName}, #{positionCategory}
+               , #{positionLevel}, #{positionSort}, #{salaryLow}
+               , #{salaryHigh}, #{remark})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.yuantu.labor.domain.PositionInfo"
+            useGeneratedKeys="true">
+        insert into position_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="positionName != null">position_name,</if>
+            <if test="positionCategory != null">position_category,</if>
+            <if test="positionLevel != null">position_level,</if>
+            <if test="positionSort != null">position_sort,</if>
+            <if test="salaryLow != null">salary_low,</if>
+            <if test="salaryHigh != null">salary_high,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="positionName != null">#{positionName},</if>
+            <if test="positionCategory != null">#{positionCategory},</if>
+            <if test="positionLevel != null">#{positionLevel},</if>
+            <if test="positionSort != null">#{positionSort},</if>
+            <if test="salaryLow != null">#{salaryLow},</if>
+            <if test="salaryHigh != null">#{salaryHigh},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yuantu.labor.domain.PositionInfo">
+        update position_info
+        <set>
+            <if test="positionName != null">
+                position_name = #{positionName},
+            </if>
+            <if test="positionCategory != null">
+                position_category = #{positionCategory},
+            </if>
+            <if test="positionLevel != null">
+                position_level = #{positionLevel},
+            </if>
+            <if test="positionSort != null">
+                position_sort = #{positionSort},
+            </if>
+            <if test="salaryLow != null">
+                salary_low = #{salaryLow},
+            </if>
+            <if test="salaryHigh != null">
+                salary_high = #{salaryHigh},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yuantu.labor.domain.PositionInfo">
+        update position_info
+        set position_name     = #{positionName},
+            position_category = #{positionCategory},
+            position_level    = #{positionLevel},
+            position_sort     = #{positionSort},
+            salary_low        = #{salaryLow},
+            salary_high       = #{salaryHigh},
+            remark            = #{remark}
+        where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpEfficiencyMapper">
+
+    <resultMap type="EmpEfficiency" id="EmpEfficiencyResult">
+        <result property="id" column="id"/>
+        <result property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="profit" column="profit"/>
+        <result property="attendRatio" column="attend_ratio"/>
+        <result property="performRatio" column="perform_ratio"/>
+        <result property="costRatio" column="cost_ratio"/>
+        <result property="effectRatio" column="effect_ratio"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectEmpEfficiencyVo">
+        select id,
+               emp_id,
+               emp_name,
+               profit,
+               attend_ratio,
+               perform_ratio,
+               cost_ratio,
+               effect_ratio,
+               create_time
+        from emp_efficiency
+    </sql>
+
+    <select id="selectEmpEfficiencyList" parameterType="EmpEfficiency" resultMap="EmpEfficiencyResult">
+        <include refid="selectEmpEfficiencyVo"/>
+        <where>
+            <if test="empId != null ">and emp_id = #{empId}</if>
+            <if test="empName != null  and empName != ''">and emp_name like concat('%', #{empName}, '%')</if>
+            <if test="profit != null  and profit != ''">and profit = #{profit}</if>
+            <if test="attendRatio != null  and attendRatio != ''">and attend_ratio = #{attendRatio}</if>
+            <if test="performRatio != null  and performRatio != ''">and perform_ratio = #{performRatio}</if>
+            <if test="costRatio != null  and costRatio != ''">and cost_ratio = #{costRatio}</if>
+            <if test="effectRatio != null  and effectRatio != ''">and effect_ratio = #{effectRatio}</if>
+        </where>
+    </select>
+
+    <select id="selectEmpEfficiencyById" parameterType="Long" resultMap="EmpEfficiencyResult">
+        <include refid="selectEmpEfficiencyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEmpEfficiency" parameterType="EmpEfficiency">
+        insert into emp_efficiency
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="empId != null">emp_id,</if>
+            <if test="empName != null">emp_name,</if>
+            <if test="profit != null">profit,</if>
+            <if test="attendRatio != null">attend_ratio,</if>
+            <if test="performRatio != null">perform_ratio,</if>
+            <if test="costRatio != null">cost_ratio,</if>
+            <if test="effectRatio != null">effect_ratio,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="empId != null">#{empId},</if>
+            <if test="empName != null">#{empName},</if>
+            <if test="profit != null">#{profit},</if>
+            <if test="attendRatio != null">#{attendRatio},</if>
+            <if test="performRatio != null">#{performRatio},</if>
+            <if test="costRatio != null">#{costRatio},</if>
+            <if test="effectRatio != null">#{effectRatio},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+    <insert id="insertEmpEfficiencyInfos">
+        insert into emp_efficiency (emp_id,emp_name,profit,attend_ratio,perform_ratio,cost_ratio,effect_ratio,create_time)
+        values
+         <foreach collection="empEfficiencyInfos" item="item" separator=",">
+           (#{item.empId},#{item.empName},#{item.profit},#{item.attendRatio},#{item.performRatio}, #{item.costRatio},#{item.effectRatio},#{item.createTime})
+         </foreach>
+    </insert>
+
+    <update id="updateEmpEfficiency" parameterType="EmpEfficiency">
+        update emp_efficiency
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">emp_id = #{empId},</if>
+            <if test="empName != null">emp_name = #{empName},</if>
+            <if test="profit != null">profit = #{profit},</if>
+            <if test="attendRatio != null">attend_ratio = #{attendRatio},</if>
+            <if test="performRatio != null">perform_ratio = #{performRatio},</if>
+            <if test="costRatio != null">cost_ratio = #{costRatio},</if>
+            <if test="effectRatio != null">effect_ratio = #{effectRatio},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmpEfficiencyById" parameterType="Long">
+        delete
+        from emp_efficiency
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteEmpEfficiencyByIds" parameterType="String">
+        delete from emp_efficiency where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="removeCurrentMonthInfos">
+        delete
+        from emp_efficiency
+        where DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+    </delete>
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.AttendCountMapper">
+
+    <resultMap type="AttendCount" id="AttendCountResult">
+        <result property="id" column="id"/>
+        <result property="empId" column="emp_id"/>
+        <result property="currentYear" column="current_year"/>
+        <result property="totalDays" column="total_days"/>
+        <result property="linkDays" column="link_days"/>
+        <result property="businessDays" column="business_days"/>
+        <result property="overTimeDays" column="over_time_days"/>
+        <result property="holidayDays" column="holiday_days"/>
+    </resultMap>
+
+    <sql id="selectAttendCountVo">
+        select id,
+               emp_id,
+               current_year,
+               total_days,
+               link_days,
+               business_days,
+               over_time_days,
+               holiday_days
+        from attend_count
+    </sql>
+
+    <select id="selectAttendCountList" parameterType="AttendCount" resultMap="AttendCountResult">
+        <include refid="selectAttendCountVo"/>
+        <where>
+            <if test="empId != null ">and emp_id = #{empId}</if>
+            <if test="currentYear != null  and currentYear != ''">and current_year = #{currentYear}</if>
+            <if test="totalDays != null ">and total_days = #{totalDays}</if>
+            <if test="linkDays != null ">and link_days = #{linkDays}</if>
+            <if test="businessDays != null ">and business_days = #{businessDays}</if>
+            <if test="overTimeDays != null ">and over_time_days = #{overTimeDays}</if>
+            <if test="holidayDays != null ">and holiday_days = #{holidayDays}</if>
+        </where>
+    </select>
+
+    <select id="selectAttendCountById" parameterType="Long" resultMap="AttendCountResult">
+        <include refid="selectAttendCountVo"/>
+        where id = #{id}
+    </select>
+    <select id="findInfoByReferenceParams" resultType="com.yuantu.labor.domain.AttendCount">
+        select id,
+        attend_count.emp_id,
+        current_year,
+        total_days,
+        link_days,
+        business_days,
+        over_time_days,
+        holiday_days
+        from attend_count
+        left join employee on attend_count.emp_id = employee.emp_id
+        where 1 = 1
+        <if test="keyword != null and keyword != ''">
+            and (employee.emp_name like concat ('%', #{keyword}, '%') or CAST(SP_DECRYPT(employee.emp_idcard) AS
+            CHAR(128)) like concat
+            ('%', #{keyword}, '%'))
+        </if>
+        <if test="yearNum != null and yearNum != ''">
+            and current_year = #{yearNum}
+        </if>
+    </select>
+
+    <insert id="insertAttendCount" parameterType="AttendCount" useGeneratedKeys="true" keyProperty="id">
+        insert into attend_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">emp_id,</if>
+            <if test="currentYear != null and currentYear != ''">current_year,</if>
+            <if test="totalDays != null">total_days,</if>
+            <if test="linkDays != null">link_days,</if>
+            <if test="businessDays != null">business_days,</if>
+            <if test="overTimeDays != null">over_time_days,</if>
+            <if test="holidayDays != null">holiday_days,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">#{empId},</if>
+            <if test="currentYear != null and currentYear != ''">#{currentYear},</if>
+            <if test="totalDays != null">#{totalDays},</if>
+            <if test="linkDays != null">#{linkDays},</if>
+            <if test="businessDays != null">#{businessDays},</if>
+            <if test="overTimeDays != null">#{overTimeDays},</if>
+            <if test="holidayDays != null">#{holidayDays},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsertInfos">
+        insert into attend_count(emp_id,
+        current_year,
+        total_days,
+        link_days,
+        business_days,
+        over_time_days,
+        holiday_days) values
+        <foreach collection="attendCounts" item="item" separator=",">
+            (#{item.empId}, #{item.currentYear}, #{item.totalDays}, #{item.linkDays},
+            #{item.businessDays}, #{item.overTimeDays}, #{item.holidayDays})
+        </foreach>
+    </insert>
+
+    <update id="updateAttendCount" parameterType="AttendCount">
+        update attend_count
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">emp_id = #{empId},</if>
+            <if test="currentYear != null and currentYear != ''">current_year = #{currentYear},</if>
+            <if test="totalDays != null">total_days = #{totalDays},</if>
+            <if test="linkDays != null">link_days = #{linkDays},</if>
+            <if test="businessDays != null">business_days = #{businessDays},</if>
+            <if test="overTimeDays != null">over_time_days = #{overTimeDays},</if>
+            <if test="holidayDays != null">holiday_days = #{holidayDays},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAttendCountById" parameterType="Long">
+        delete
+        from attend_count
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAttendCountByIds" parameterType="String">
+        delete from attend_count where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteAllInfos">
+        delete
+        from attend_count
+    </delete>
+</mapper>

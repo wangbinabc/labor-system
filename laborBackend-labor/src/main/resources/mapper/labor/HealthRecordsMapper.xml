@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.HealthRecordsMapper">
+
+    <resultMap type="HealthRecords" id="HealthRecordsResult">
+        <result property="healthId" column="health_id"/>
+        <result property="healthEmpId" column="health_emp_id"/>
+        <result property="healthEmpName" column="health_emp_name"/>
+        <result property="healthEmpIdcard" column="health_emp_idcard"/>
+        <result property="healthYear" column="health_year"/>
+        <result property="healthMedical" column="health_medical"/>
+        <result property="healthDate" column="health_date"/>
+        <result property="healthConclusion" column="health_conclusion"/>
+        <result property="annexPath" column="annex_path"/>
+        <result property="disabled" column="disabled"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectHealthRecordsVo">
+        select health_id,
+               health_emp_id,
+               health_emp_name,
+               INSERT(SP_DECRYPT(employee.emp_idcard),5,10,'**********') as health_emp_idcard,
+               health_year,
+               health_medical,
+               health_date,
+               health_conclusion,
+               annex_path,
+               health_records.disabled,
+               health_records.create_by,
+               health_records.create_time,
+               health_records.update_by,
+               health_records.update_time
+        from health_records
+        left join employee on health_emp_id = employee.emp_id and employee.disabled = 0
+    </sql>
+
+    <select id="findExportInfos" resultType="com.yuantu.labor.domain.HealthRecords">
+        <include refid="selectHealthRecordsVo"/>
+        where health_records.disabled = 0
+        <if test="export.ids != null and export.ids.size() > 0 ">
+            and health_id in
+            <foreach collection="export.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectHealthRecordsList" parameterType="com.yuantu.labor.vo.HealthRecordsVO"
+            resultMap="HealthRecordsResult">
+        <include refid="selectHealthRecordsVo"/>
+        <where>
+            <if test="healthEmpName != null  and healthEmpName != ''">and (health_emp_name like concat('%',
+                #{healthEmpName}, '%') or CAST(SP_DECRYPT(health_emp_idcard) AS CHAR(128)) like concat('%', #{healthEmpName}, '%'))
+            </if>
+            <if test="healthEmpIdcard != null  and healthEmpIdcard != ''">and (CAST(SP_DECRYPT(health_emp_idcard) AS CHAR(128)) like concat('%',
+                #{healthEmpIdcard}, '%') or health_emp_name like concat('%', #{healthEmpIdcard}, '%'))
+            </if>
+            <if test="healthEmpId != null  and healthEmpId != ''">and health_emp_id = #{healthEmpId}</if>
+            <if test="healthYear != null  and healthYear != ''">and health_year = #{healthYear}</if>
+            <if test="healthMedical != null  and healthMedical != ''">and health_medical = #{healthMedical}</if>
+            <if test="healthDate != null ">and health_date = #{healthDate}</if>
+            <if test="healthConclusion != null  and healthConclusion != ''">and health_conclusion =
+                #{healthConclusion}
+            </if>
+            <if test="annexPath != null ">and annex_path = #{annexPath}</if>
+            and health_records.disabled = 0
+        </where>
+    </select>
+
+    <select id="selectHealthRecordsByHealthId" parameterType="Long" resultMap="HealthRecordsResult">
+        <include refid="selectHealthRecordsVo"/>
+        where health_id = #{healthId} and health_records.disabled = 0
+    </select>
+
+    <insert id="insertHealthRecords" parameterType="HealthRecords" useGeneratedKeys="true"
+            keyProperty="healthId">
+        insert into health_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="healthId != null">health_id,</if>
+            <if test="healthEmpId != null">health_emp_id,</if>
+            <if test="healthEmpName != null">health_emp_name,</if>
+            <if test="healthEmpIdcard != null">health_emp_idcard,</if>
+            <if test="healthYear != null">health_year,</if>
+            <if test="healthMedical != null">health_medical,</if>
+            <if test="healthDate != null">health_date,</if>
+            <if test="healthConclusion != null">health_conclusion,</if>
+            <if test="annexPath != null">annex_path,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="healthId != null">#{healthId},</if>
+            <if test="healthEmpId != null">#{healthEmpId},</if>
+            <if test="healthEmpName != null">#{healthEmpName},</if>
+            <if test="healthEmpIdcard != null">SP_ENCRYPT(#{healthEmpIdcard}),</if>
+            <if test="healthYear != null">#{healthYear},</if>
+            <if test="healthMedical != null">#{healthMedical},</if>
+            <if test="healthDate != null">#{healthDate},</if>
+            <if test="healthConclusion != null">#{healthConclusion},</if>
+            <if test="annexPath != null">#{annexPath},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHealthRecords" parameterType="HealthRecords">
+        update health_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="healthEmpId != null">health_emp_id = #{healthEmpId},</if>
+            <if test="healthEmpName != null">health_emp_name = #{healthEmpName},</if>
+            <if test="healthEmpIdcard != null">health_emp_idcard = #{healthEmpIdcard},</if>
+            <if test="healthYear != null">health_year = #{healthYear},</if>
+            <if test="healthMedical != null">health_medical = #{healthMedical},</if>
+            <if test="healthDate != null">health_date = #{healthDate},</if>
+            <if test="healthConclusion != null">health_conclusion = #{healthConclusion},</if>
+            <if test="annexPath != null">annex_path = #{annexPath},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where health_id = #{healthId}
+    </update>
+
+    <delete id="deleteHealthRecordsByHealthId" parameterType="Long">
+        update health_records
+        set disabled = 1
+        where health_id = #{healthId}
+    </delete>
+
+    <delete id="deleteHealthRecordsByHealthIds" parameterType="String">
+        update health_records set disabled = 1 where health_id in
+        <foreach item="healthId" collection="array" open="(" separator="," close=")">
+            #{healthId}
+        </foreach>
+    </delete>
+</mapper>

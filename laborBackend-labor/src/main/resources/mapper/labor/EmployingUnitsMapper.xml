@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmployingUnitsMapper">
+
+    <resultMap type="EmployingUnits" id="EmployingUnitsResult">
+        <result property="unitId" column="unit_id"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="unitType" column="unit_type"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="EmployingUnits" id="UnitDeptsResult">
+        <result property="unitId" column="unit_id"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="unitType" column="unit_type"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <collection property="departments" ofType="com.yuantu.labor.domain.Department">
+            <id property="deptId" column="dept_id"></id>
+            <result property="deptName" column="dept_name"></result>
+            <result property="deptType" column="dept_type"></result>
+        </collection>
+    </resultMap>
+
+    
+
+
+    <sql id="selectEmployingUnitsVo">
+        select unit_id, unit_name, unit_type, create_by, create_time, update_by, update_time
+        from employing_units
+    </sql>
+
+    <select id="selectEmployingUnitAndDeptsList" parameterType="EmployingUnits" resultMap="UnitDeptsResult">
+        select eu.unit_id,eu.unit_name,d.dept_id,d.dept_type,d.dept_name from employing_units eu
+        LEFT JOIN department d on d.dept_unit_id = eu.unit_id
+        <where>
+            and eu.disabled = 0 and d.disabled = 0
+            <if test="unitId != null ">and eu.unit_id = #{unitId}</if>
+            <if test="unitName != null  and unitName != ''">and eu.unit_name like concat('%', #{unitName}, '%')</if>
+            <if test="unitType != null ">and eu.unit_type = #{unitType}</if>
+        </where>
+    </select>
+
+
+    <select id="selectEmployingUnitsList" parameterType="EmployingUnits" resultMap="EmployingUnitsResult">
+        <include refid="selectEmployingUnitsVo"/>
+        <where>
+            and disabled = 0
+            <if test="unitId != null ">and unit_id = #{unitId}</if>
+            <if test="unitName != null  and unitName != ''">and unit_name like concat('%', #{unitName}, '%')</if>
+            <if test="unitType != null ">and unit_type = #{unitType}</if>
+        </where>
+    </select>
+    
+    
+
+    <select id="selectEmployingUnitsByUnitId" parameterType="Long" resultMap="EmployingUnitsResult">
+        <include refid="selectEmployingUnitsVo"/>
+        where unit_id = #{unitId} and disabled = 0
+    </select>
+    <select id="findAllInfo" resultType="com.yuantu.labor.domain.EmployingUnits">
+        <include refid="selectEmployingUnitsVo"/>
+        where disabled = 0
+    </select>
+    <select id="findUnitInfoByName" resultType="com.yuantu.labor.domain.EmployingUnits">
+        <include refid="selectEmployingUnitsVo"/>
+        where unit_name = #{name} and disabled = 0 limit 1
+    </select>
+    <select id="findUnitInfoByNames" resultType="com.yuantu.labor.domain.EmployingUnits">
+        <include refid="selectEmployingUnitsVo"/>
+        where disabled = 0 and unit_name in
+        <foreach collection="names" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+    <select id="findUnitInfoByUnitIds" resultType="com.yuantu.labor.domain.EmployingUnits">
+        <include refid="selectEmployingUnitsVo"/>
+        where disabled = 0 and unit_id in
+        <foreach collection="unitIds" item="unitId" open="(" separator="," close=")">
+            #{unitId}
+        </foreach>
+    </select>
+
+    <insert id="insertEmployingUnits" parameterType="EmployingUnits">
+        insert into employing_units
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="unitId != null">unit_id,</if>
+            <if test="unitName != null">unit_name,</if>
+            <if test="unitType != null">unit_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="unitId != null">#{unitId},</if>
+            <if test="unitName != null">#{unitName},</if>
+            <if test="unitType != null">#{unitType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEmployingUnits" parameterType="EmployingUnits">
+        update employing_units
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitName != null">unit_name = #{unitName},</if>
+            <if test="unitType != null">unit_type = #{unitType},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where unit_id = #{unitId}
+    </update>
+
+    <delete id="deleteEmployingUnitsByUnitId" parameterType="Long">
+        update employing_units
+        set disabled = 1
+        where unit_id = #{unitId}
+    </delete>
+
+    <delete id="deleteEmployingUnitsByUnitIds" parameterType="String">
+        update employing_units set disabled = 1 where unit_id in
+        <foreach item="unitId" collection="array" open="(" separator="," close=")">
+            #{unitId}
+        </foreach>
+    </delete>
+</mapper>

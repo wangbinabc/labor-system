@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.FamilyRelationsMapper">
+
+    <resultMap type="FamilyRelations" id="FamilyRelationsResult">
+        <result property="famId" column="fam_id"/>
+        <result property="famAppellation" column="fam_appellation"/>
+        <result property="famName" column="fam_name"/>
+        <result property="famAge" column="fam_age"/>
+        <result property="famUnitPost" column="fam_unit_post"/>
+        <result property="famEmpId" column="fam_emp_id"/>
+        <result property="famEmpName" column="fam_emp_name"/>
+        <result property="famEmpSort" column="fam_emp_sort"/>
+        <result property="famContactPhone" column="fam_contact_phone"/>
+    </resultMap>
+
+    <sql id="selectFamilyRelationsVo">
+        select fam_id,
+               fam_appellation,
+               fam_name,
+               fam_age,
+               fam_unit_post,
+               fam_emp_id,
+               fam_emp_name,
+               fam_emp_sort,
+               fam_contact_phone
+        from family_relations
+    </sql>
+
+    <select id="selectFamilyRelationsList" parameterType="FamilyRelations" resultMap="FamilyRelationsResult">
+        <include refid="selectFamilyRelationsVo"/>
+        <where>
+            <if test="famAppellation != null  and famAppellation != ''">and fam_appellation = #{famAppellation}</if>
+            <if test="famName != null  and famName != ''">and fam_name like concat('%', #{famName}, '%')</if>
+            <if test="famAge != null ">and fam_age = #{famAge}</if>
+            <if test="famUnitPost != null  and famUnitPost != ''">and fam_unit_post = #{famUnitPost}</if>
+            <if test="famEmpId != null ">and fam_emp_id = #{famEmpId}</if>
+            <if test="famEmpName != null  and famEmpName != ''">and fam_emp_name like concat('%', #{famEmpName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFamilyRelationsByFamId" parameterType="Long" resultMap="FamilyRelationsResult">
+        <include refid="selectFamilyRelationsVo"/>
+        where fam_id = #{famId}
+    </select>
+    <select id="findFamilyInfoByEmpId" resultType="com.yuantu.labor.domain.FamilyRelations">
+        <include refid="selectFamilyRelationsVo"/>
+        where fam_emp_id = #{empId}
+    </select>
+    <select id="selectFamilyInfosByEmpIds" resultType="com.yuantu.labor.domain.FamilyRelations">
+        <include refid="selectFamilyRelationsVo"/>
+        where fam_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+
+    <insert id="insertFamilyRelations" parameterType="FamilyRelations" useGeneratedKeys="true" keyProperty="famId">
+        insert into family_relations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="famAppellation != null">fam_appellation,</if>
+            <if test="famName != null">fam_name,</if>
+            <if test="famAge != null">fam_age,</if>
+            <if test="famUnitPost != null">fam_unit_post,</if>
+            <if test="famEmpId != null">fam_emp_id,</if>
+            <if test="famEmpName != null">fam_emp_name,</if>
+            <if test="famEmpSort != null">fam_emp_sort,</if>
+            <if test="famContactPhone != null">fam_contact_phone,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="famAppellation != null">#{famAppellation},</if>
+            <if test="famName != null">#{famName},</if>
+            <if test="famAge != null">#{famAge},</if>
+            <if test="famUnitPost != null">#{famUnitPost},</if>
+            <if test="famEmpId != null">#{famEmpId},</if>
+            <if test="famEmpName != null">#{famEmpName},</if>
+            <if test="famEmpSort != null">#{famEmpSort},</if>
+            <if test="famContactPhone != null">#{famContactPhone},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsertFamilyInfos">
+        insert into family_relations
+        (fam_appellation, fam_name, fam_age, fam_unit_post, fam_emp_id, fam_emp_name, fam_emp_sort, fam_contact_phone)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.famAppellation}, #{item.famName}, #{item.famAge}, #{item.famUnitPost}, #{item.famEmpId},
+            #{item.famEmpName}, #{item.famEmpSort}, #{item.famContactPhone})
+        </foreach>
+    </insert>
+
+    <update id="updateFamilyRelations" parameterType="FamilyRelations">
+        update family_relations
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="famAppellation != null">fam_appellation = #{famAppellation},</if>
+            <if test="famName != null">fam_name = #{famName},</if>
+            <if test="famAge != null">fam_age = #{famAge},</if>
+            <if test="famUnitPost != null">fam_unit_post = #{famUnitPost},</if>
+            <if test="famEmpId != null">fam_emp_id = #{famEmpId},</if>
+            <if test="famEmpName != null">fam_emp_name = #{famEmpName},</if>
+            <if test="famEmpSort != null">fam_emp_sort = #{famEmpSort},</if>
+            <if test="famContactPhone != null">fam_contact_phone = #{famContactPhone},</if>
+        </trim>
+        where fam_id = #{famId}
+    </update>
+
+
+    <delete id="deleteFamilyRelationsByFamId" parameterType="Long">
+        delete
+        from family_relations
+        where fam_id = #{famId}
+    </delete>
+
+    <delete id="deleteFamilyRelationsByFamIds" parameterType="String">
+        delete from family_relations where fam_id in
+        <foreach item="famId" collection="array" open="(" separator="," close=")">
+            #{famId}
+        </foreach>
+    </delete>
+    <delete id="removeInfoByEmpId">
+        delete
+        from family_relations
+        where fam_emp_id = #{empId}
+    </delete>
+
+    <select id="searchFamilyInfo" parameterType="com.yuantu.labor.vo.EmpSearchVO" resultMap="FamilyRelationsResult">
+        <include refid="selectFamilyRelationsVo"/>
+        <where>
+            <if test="contactPhone1 != null  and contactPhone1 != ''"> and (fam_emp_sort = 1 and fam_contact_phone like concat('%', #{contactPhone1}, '%')) </if>
+            <if test="contactPhone2 != null  and contactPhone2 != ''"> and (fam_emp_sort = 2 and fam_contact_phone like concat('%', #{contactPhone2}, '%')) </if>
+            <if test="famAppellation1 != null  and famAppellation1 != ''"> and (fam_emp_sort = 1 and fam_appellation = #{famAppellation1}) </if>
+            <if test="famAppellation2 != null  and famAppellation2 != ''"> and (fam_emp_sort = 2 and fam_appellation = #{famAppellation2}) </if>
+        </where>
+    </select>
+</mapper>

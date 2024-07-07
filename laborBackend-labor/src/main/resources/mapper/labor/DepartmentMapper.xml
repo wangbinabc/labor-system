@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.DepartmentMapper">
+
+    <resultMap type="com.yuantu.labor.domain.Department" id="DepartmentResult">
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="deptType" column="dept_type"/>
+        <result property="deptUnitId" column="dept_unit_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="com.yuantu.labor.vo.DepartmentVO" id="DepartmentVOResult">
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="deptType" column="dept_type"/>
+        <result property="deptUnitId" column="dept_unit_id"/>
+        <result property="deptUnitName" column="unit_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectDepartmentVo">
+        select dept_id,
+               dept_name,
+               dept_type,
+               dept_unit_id,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from department
+    </sql>
+
+    <select id="selectDepartmentVOList" parameterType="Department" resultMap="DepartmentVOResult">
+        select a.dept_id, a.dept_name, a.dept_type, a.dept_unit_id,b.unit_name, a.create_by, a.create_time, a.update_by,
+        a.update_time
+        from department a,employing_units b
+        <where>
+            and b.unit_id = a.dept_unit_id and a.disabled = 0
+            <if test="deptName != null  and deptName != ''">and a.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="deptType != null  and deptType != ''">and a.dept_type = #{deptType}</if>
+            <if test="deptUnitId != null ">and a.dept_unit_id = #{deptUnitId}</if>
+        </where>
+    </select>
+
+    <select id="selectDepartmentVOByDeptId" parameterType="Long" resultMap="DepartmentVOResult">
+        select a.dept_id,
+               a.dept_name,
+               a.dept_type,
+               a.dept_unit_id,
+               b.unit_name,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time
+        from department a,
+             employing_units b
+        where b.unit_id = a.dept_unit_id
+          and a.dept_id = #{deptId}
+          and a.disabled = 0
+    </select>
+
+    <select id="selectDepartmentList" parameterType="Department" resultMap="DepartmentResult">
+        <include refid="selectDepartmentVo"/>
+        <where>
+            and disabled = 0
+            <if test="deptName != null  and deptName != ''">and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="deptType != null  and deptType != ''">and dept_type = #{deptType}</if>
+            <if test="deptUnitId != null ">and dept_unit_id = #{deptUnitId}</if>
+        </where>
+    </select>
+
+    <select id="selectDepartmentByDeptId" parameterType="Long" resultMap="DepartmentResult">
+        <include refid="selectDepartmentVo"/>
+        where dept_id = #{deptId} and disabled = 0
+    </select>
+
+    <select id="findDepartmentInfosByUnitIds" resultType="com.yuantu.labor.domain.Department">
+        <include refid="selectDepartmentVo"/>
+        where disabled = 0 and
+        dept_unit_id in
+        <foreach collection="list" item="unitId" open="(" separator="," close=")">
+            #{unitId}
+        </foreach>
+    </select>
+
+
+    <insert id="insertDepartment" parameterType="Department" useGeneratedKeys="true" keyProperty="deptId">
+        insert into department
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptName != null">dept_name,</if>
+            <if test="deptType != null">dept_type,</if>
+            <if test="deptUnitId != null">dept_unit_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptName != null">#{deptName},</if>
+            <if test="deptType != null">#{deptType},</if>
+            <if test="deptUnitId != null">#{deptUnitId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDepartment" parameterType="Department">
+        update department
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="deptType != null">dept_type = #{deptType},</if>
+            <if test="deptUnitId != null">dept_unit_id = #{deptUnitId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where dept_id = #{deptId}
+    </update>
+
+    <update id="deleteDepartmentByDeptId" parameterType="Long">
+        update department
+        set disabled = 1
+        where dept_id = #{deptId}
+    </update>
+
+    <update id="deleteDepartmentByDeptIds" parameterType="String">
+        update department set disabled = 1 where dept_id in
+        <foreach item="deptId" collection="array" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </update>
+    <select id="selectDepartmentListByDept" parameterType="com.yuantu.labor.domain.Department"
+            resultMap="DepartmentResult">
+        <include refid="selectDepartmentVo"/>
+        <where>
+            <if test="deptName != null  and deptName != ''">and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="deptType != null  and deptType != ''">and dept_type = #{deptType}</if>
+            <if test="deptUnitId != null ">and dept_unit_id = #{deptUnitId}</if>
+            and disabled = 0
+        </where>
+    </select>
+    <select id="findDepartmentInfoByName" resultType="com.yuantu.labor.domain.Department">
+        <include refid="selectDepartmentVo"/>
+        where dept_name = #{name} and disabled = 0 limit 1
+    </select>
+
+
+    <select id="findDepartmentInfoByUnitAndDeptName" resultType="com.yuantu.labor.domain.Department">
+        <include refid="selectDepartmentVo"/>
+        where dept_name = #{empDept} and
+        dept_unit_id = (select unit_id from employing_units where unit_name = #{empUnit} and disabled = 0 limit 1) and
+        disabled = 0 limit 1
+    </select>
+
+
+    <select id="findDepartmentInfoByNames" resultType="com.yuantu.labor.domain.Department">
+        <include refid="selectDepartmentVo"/>
+        where disabled = 0 and dept_name in
+        <foreach collection="names" item="name" open="(" close=")" separator=",">
+            #{name}
+        </foreach>
+    </select>
+    <select id="findDeptInfosByDeptIds" resultType="com.yuantu.labor.domain.Department">
+        <include refid="selectDepartmentVo"/>
+        where disabled = 0 and dept_id in
+        <foreach collection="deptIds" item="deptId" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </select>
+    <select id="findAllDeptInfos" resultType="com.yuantu.labor.domain.Department">
+        <include refid="selectDepartmentVo"/>
+        where disabled = 0
+    </select>
+
+
+</mapper>

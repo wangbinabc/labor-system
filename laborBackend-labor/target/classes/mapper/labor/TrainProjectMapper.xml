@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.TrainProjectMapper">
+
+    <resultMap type="com.yuantu.labor.domain.TrainProject" id="TrainProjectResult">
+        <result property="projectId" column="project_id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="projectContent" column="project_content"/>
+        <result property="projectYear" column="project_year"/>
+        <result property="projectDeptId" column="project_dept_id"/>
+        <result property="projectDeptName" column="project_dept_name"/>
+        <result property="projectNature" column="project_nature"/>
+        <result property="projectMethod" column="project_method"/>
+        <result property="projectClassify" column="project_classify"/>
+        <result property="projectIsfinish" column="project_isfinish"/>
+        <result property="projectUpdateTime" column="project_update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectTrainProjectVo">
+        select project_id,
+               project_name,
+               project_content,
+               project_year,
+               project_dept_id,
+               project_dept_name,
+               project_nature,
+               project_method,
+               project_classify,
+               project_isfinish,
+               project_update_time,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from train_project
+    </sql>
+
+    <select id="selectTrainProjectList" parameterType="com.yuantu.labor.domain.TrainProject"
+            resultMap="TrainProjectResult">
+        <include refid="selectTrainProjectVo"/>
+        <where>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="projectContent != null  and projectContent != ''">and project_content = #{projectContent}</if>
+            <if test="projectYear != null  and projectYear != ''">and project_year = #{projectYear}</if>
+            <if test="projectDeptId != null ">and project_dept_id = #{projectDeptId}</if>
+            <if test="projectDeptName != null  and projectDeptName != ''">and project_dept_name like concat('%',
+                #{projectDeptName}, '%')
+            </if>
+            <if test="projectNature != null  and projectNature != ''">and project_nature = #{projectNature}</if>
+            <if test="projectMethod != null  and projectMethod != ''">and project_method = #{projectMethod}</if>
+            <if test="projectClassify != null  and projectClassify != ''">and project_classify = #{projectClassify}</if>
+            <if test="projectIsfinish != null  and projectIsfinish != ''">and project_isfinish = #{projectIsfinish}</if>
+            <if test="projectIds !=null">
+                and project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach>
+            </if>
+            and disabled = 0
+        </where>
+    </select>
+    <select id="selectTrainProjectListByQueryVO" parameterType="com.yuantu.labor.vo.TrainProjectQueryVO"
+            resultMap="TrainProjectResult">
+        <include refid="selectTrainProjectVo"/>
+        <where>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="projectContent != null  and projectContent != ''">and project_content like concat('%', #{projectContent},'%')</if>
+            <if test="projectYear != null  and projectYear != ''">and project_year = #{projectYear}</if>
+            <if test="projectDeptId != null ">and project_dept_id = #{projectDeptId}</if>
+            <if test="projectDeptName != null  and projectDeptName != ''">and project_dept_name like concat('%',
+                #{projectDeptName}, '%')
+            </if>
+            <if test="projectNature != null  and projectNature != ''">and project_nature = #{projectNature}</if>
+            <if test="projectMethod != null  and projectMethod != ''">and project_method = #{projectMethod}</if>
+            <if test="projectClassify != null  and projectClassify != ''">and project_classify = #{projectClassify}</if>
+            <if test="projectIsfinish != null  and projectIsfinish != ''">and project_isfinish = #{projectIsfinish}</if>
+            <if test="beginUpdateTime !=null" > and update_time &gt;= #{beginUpdateTime}</if>
+            <if test="endUpdateTime !=null"> and update_time &lt;= #{endUpdateTime}</if>
+            <if test="projectIds !=null">
+                and project_id in
+                <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+                    #{projectId}
+                </foreach>
+            </if>
+            and disabled = 0
+        </where>
+    </select>
+    <select id="selectTrainProjectListByMonth"  parameterType="com.yuantu.labor.vo.EmpTrainQueryVO"  resultMap="TrainProjectResult">
+        select DISTINCT project_id,
+                        project_name,
+                        project_content,
+                        project_year,
+                        project_dept_id,
+                        project_dept_name,
+                        project_nature,
+                        project_method,
+                        project_classify,
+                        project_isfinish,
+                        project_update_time,
+                        train_project.create_by,
+                        train_project.create_time,
+                        train_project.update_by,
+                        train_project.update_time
+        from train_project
+        left join emp_train on project_id = train_project_id
+        left join employee on emp_id = train_emp_id
+        <where>
+         <if test="trainStatus==null or trainStatus ==0">
+            and DATE_FORMAT(train_end_time,'%Y-%m') =#{month}
+         </if>
+        <if test="projectNature!=null and projectNature!=''">
+            and project_nature = #{projectNature}
+        </if>
+        <if test="deptId!=null">
+            and emp_dept_id = #{deptId}
+        </if>
+        <if test="trainStatus!=null and trainStatus ==1">
+           and train_begin_time &lt; DATE_FORMAT(DATE_ADD(STR_TO_DATE(concat(#{month}, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH), '%Y-%m-%d') and train_end_time>= DATE_FORMAT(DATE_ADD(STR_TO_DATE(concat(#{month}, '-01'), '%Y-%m-%d'), INTERVAL 1 MONTH), '%Y-%m-%d')
+        </if>
+           and emp_train.disabled =0
+        </where>
+    </select>
+
+    <select id="selectTrainProjectListByKeyword" parameterType="String"
+            resultMap="TrainProjectResult">
+        <include refid="selectTrainProjectVo"/>
+        <where>
+            and (project_name like concat('%', #{keyword},'%') or project_content like concat('%', #{keyword},'%') ) and disabled = 0
+        </where>
+    </select>
+
+
+    <select id="selectTrainProjectByProjectId" parameterType="Integer" resultMap="TrainProjectResult">
+        <include refid="selectTrainProjectVo"/>
+        where project_id = #{projectId}
+    </select>
+
+    <insert id="insertTrainProject" parameterType="com.yuantu.labor.domain.TrainProject" useGeneratedKeys="true"
+            keyProperty="projectId">
+        insert into train_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null">project_name,</if>
+            <if test="projectContent != null">project_content,</if>
+            <if test="projectYear != null">project_year,</if>
+            <if test="projectDeptId != null">project_dept_id,</if>
+            <if test="projectDeptName != null">project_dept_name,</if>
+            <if test="projectNature != null">project_nature,</if>
+            <if test="projectMethod != null">project_method,</if>
+            <if test="projectClassify != null">project_classify,</if>
+            <if test="projectIsfinish != null">project_isfinish,</if>
+            <if test="projectUpdateTime != null">project_update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null">#{projectName},</if>
+            <if test="projectContent != null">#{projectContent},</if>
+            <if test="projectYear != null">#{projectYear},</if>
+            <if test="projectDeptId != null">#{projectDeptId},</if>
+            <if test="projectDeptName != null">#{projectDeptName},</if>
+            <if test="projectNature != null">#{projectNature},</if>
+            <if test="projectMethod != null">#{projectMethod},</if>
+            <if test="projectClassify != null">#{projectClassify},</if>
+            <if test="projectIsfinish != null">#{projectIsfinish},</if>
+            <if test="projectUpdateTime != null">#{projectUpdateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTrainProject" parameterType="com.yuantu.labor.domain.TrainProject">
+        update train_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="projectContent != null">project_content = #{projectContent},</if>
+            <if test="projectYear != null">project_year = #{projectYear},</if>
+            <if test="projectDeptId != null">project_dept_id = #{projectDeptId},</if>
+            <if test="projectDeptName != null">project_dept_name = #{projectDeptName},</if>
+            <if test="projectNature != null">project_nature = #{projectNature},</if>
+            <if test="projectMethod != null">project_method = #{projectMethod},</if>
+            <if test="projectClassify != null">project_classify = #{projectClassify},</if>
+            <if test="projectIsfinish != null">project_isfinish = #{projectIsfinish},</if>
+            <if test="projectUpdateTime != null">project_update_time = #{projectUpdateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteTrainProjectByProjectId" parameterType="Integer">
+        update train_project
+        set disabled = 1
+        where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteTrainProjectByProjectIds" parameterType="String">
+        update train_project set disabled = 1 where project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    <select id="checkProjectUnique" parameterType="com.yuantu.labor.domain.TrainProject" resultType="Integer">
+        select count(*)
+        from train_project
+        <where>
+            <if test="projectId!=null"> and  project_id != #{projectId} </if>
+            and project_name = #{projectName}
+            and disabled = 0
+        </where>
+    </select>
+    <select id="findTrainProjectByNames"  resultMap="TrainProjectResult">
+        <include refid="selectTrainProjectVo"></include>
+        where disabled = 0 and project_name in
+        <foreach collection="projectNames" item="name" open="(" close=")" separator=",">
+            #{name}
+        </foreach>
+    </select>
+    <select id="selectTrainProjectByProjectName" parameterType="String" resultMap="TrainProjectResult">
+        <include refid="selectTrainProjectVo"/>
+        <where>
+            and project_name = #{projectName} and disabled = 0
+
+        </where>
+    </select>
+</mapper>

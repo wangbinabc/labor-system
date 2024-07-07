@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.FileImportRecordMapper">
+
+    <resultMap type="FileImportRecord" id="FileImportRecordResult">
+        <result property="id" column="id"/>
+        <result property="successCount" column="success_count"/>
+        <result property="failureCount" column="failure_count"/>
+        <result property="originFileId" column="origin_file_id"/>
+        <result property="disabled" column="disabled"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="failFileId" column="fail_file_id"/>
+    </resultMap>
+
+    <sql id="selectFileImportRecordVo">
+        select id,
+               success_count,
+               failure_count,
+               total_count,
+               origin_file_id,
+               disabled,
+               file_type,
+               import_status,
+               created_time,
+               creator_id,
+               modified_time,
+               modifier_id,
+               fail_file_id
+        from file_import_record
+    </sql>
+
+    <select id="selectFileImportRecordList" parameterType="FileImportRecord" resultMap="FileImportRecordResult">
+        <include refid="selectFileImportRecordVo"/>
+        <where>
+            <if test="successCount != null ">and success_count = #{successCount}</if>
+            <if test="failureCount != null ">and failure_count = #{failureCount}</if>
+            <if test="totalCount != null ">and total_count = #{totalCount}</if>
+            <if test="originFileId != null ">and origin_file_id = #{originFileId}</if>
+            <if test="disabled != null ">and disabled = #{disabled}</if>
+            <if test="fileType != null ">and file_type = #{fileType}</if>
+            <if test="importStatus != null ">and import_status = #{importStatus}</if>
+            <if test="createdTime != null ">and created_time = #{createdTime}</if>
+            <if test="creatorId != null ">and creator_id = #{creatorId}</if>
+            <if test="modifiedTime != null ">and modified_time = #{modifiedTime}</if>
+            <if test="modifierId != null ">and modifier_id = #{modifierId}</if>
+            <if test="failFileId != null ">and fail_file_id = #{failFileId}</if>
+        </where>
+    </select>
+
+    <select id="selectFileImportRecordById" parameterType="Long" resultMap="FileImportRecordResult">
+        <include refid="selectFileImportRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFileImportRecord" parameterType="FileImportRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into file_import_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="successCount != null">success_count,</if>
+            <if test="failureCount != null">failure_count,</if>
+            <if test="totalCount != null">total_count,</if>
+            <if test="originFileId != null">origin_file_id,</if>
+            <if test="disabled != null">disabled,</if>
+            <if test="fileType != null">file_type,</if>
+            <if test="importStatus != null">import_status,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="creatorId != null">creator_id,</if>
+            <if test="modifiedTime != null">modified_time,</if>
+            <if test="modifierId != null">modifier_id,</if>
+            <if test="failFileId != null">fail_file_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="successCount != null">#{successCount},</if>
+            <if test="failureCount != null">#{failureCount},</if>
+            <if test="totalCount != null">#{totalCount},</if>
+            <if test="originFileId != null">#{originFileId},</if>
+            <if test="disabled != null">#{disabled},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="importStatus != null">#{importStatus},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="creatorId != null">#{creatorId},</if>
+            <if test="modifiedTime != null">#{modifiedTime},</if>
+            <if test="modifierId != null">#{modifierId},</if>
+            <if test="failFileId != null">#{failFileId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFileImportRecord" parameterType="FileImportRecord">
+        update file_import_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="successCount != null">success_count = #{successCount},</if>
+            <if test="failureCount != null">failure_count = #{failureCount},</if>
+            <if test="totalCount != null">total_count = #{totalCount},</if>
+            <if test="originFileId != null">origin_file_id = #{originFileId},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="importStatus != null">import_status = #{importStatus},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="creatorId != null">creator_id = #{creatorId},</if>
+            <if test="modifiedTime != null">modified_time = #{modifiedTime},</if>
+            <if test="modifierId != null">modifier_id = #{modifierId},</if>
+            <if test="failFileId != null">fail_file_id = #{failFileId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFileImportRecordById" parameterType="Long">
+        delete
+        from file_import_record
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteFileImportRecordByIds" parameterType="String">
+        delete from file_import_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

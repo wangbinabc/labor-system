@@ -1,0 +1,1485 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmployeeMapper">
+
+    <resultMap type="Employee" id="EmployeeResult">
+        <result property="empId" column="emp_id"/>
+        <result property="empCode" column="emp_code"/>
+        <result property="empIdcard" column="emp_idcard"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empAge" column="emp_age"/>
+        <result property="empStatus" column="emp_status"/>
+        <result property="empPoliticalStatus" column="emp_political_status"/>
+        <result property="empGender" column="emp_gender"/>
+        <result property="empEducation" column="emp_education"/>
+        <result property="empSpeciality" column="emp_speciality"/>
+        <result property="empTitle" column="emp_title"/>
+        <result property="empCategory" column="emp_category"/>
+        <result property="empType" column="emp_type"/>
+        <result property="empDeptId" column="emp_dept_id"/>
+        <result property="empDeptName" column="emp_dept_name"/>
+        <result property="empEmployingUnits" column="emp_employing_units"/>
+        <result property="empHrCompany" column="emp_hr_company"/>
+        <result property="empPositionLevel" column="emp_position_level"/>
+        <result property="empPosition" column="emp_position"/>
+        <result property="empHiredate" column="emp_hiredate"/>
+        <result property="empSalaryLevel" column="emp_salary_level"/>
+        <result property="empRemark" column="emp_remark"/>
+        <result property="empEmergencyContact" column="emp_emergency_contact"/>
+        <result property="empEmergencyContactPhone" column="emp_emergency_contact_phone"/>
+        <result property="empTelephone" column="emp_telephone"/>
+        <result property="empHomeAddress" column="emp_home_address"/>
+        <result property="empReference" column="emp_reference"/>
+        <result property="empChangeType" column="emp_change_type"/>
+        <result property="empUpdateTime" column="emp_update_time"/>
+        <result property="empCreateTime" column="emp_create_time"/>
+        <result property="empCreateBy" column="emp_create_by"/>
+        <result property="empUpdateBy" column="emp_update_by"/>
+        <result property="empAvatarUrl" column="emp_avatar_url"/>
+        <result property="empExpireTime" column="emp_expire_time"/>
+    </resultMap>
+    <resultMap id="EmpNameCardResult" type="com.yuantu.labor.vo.EmpNameCardVO">
+        <result property="empId" column="emp_id"/>
+        <result property="empIdcard" column="emp_idcard"/>
+        <result property="empName" column="emp_name"/>
+    </resultMap>
+
+    <sql id="selectEmployeeVo">
+        select emp_id,
+               emp_code,
+               CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as emp_idcard,
+               emp_name,
+               emp_age,
+               birth_date,
+               emp_status,
+               emp_political_status,
+               emp_gender,
+               emp_education,
+               emp_speciality,
+               emp_title,
+               emp_category,
+               emp_type,
+               emp_dept_id,
+               emp_dept_name,
+               emp_employing_units,
+               emp_hr_company,
+               emp_position_level,
+               emp_position,
+               emp_hiredate,
+               emp_salary_level,
+               emp_remark,
+               emp_emergency_contact,
+               emp_emergency_contact_phone,
+               emp_telephone,
+               emp_home_address,
+               emp_reference,
+               emp_change_type,
+               emp_update_time,
+               emp_update_by,
+               emp_create_time,
+               emp_create_by,
+               emp_avatar_url,
+               emp_expire_time,
+               disabled,
+               emp_status_update_time,
+               invisible,
+               nation,
+               retire_reminder,
+               hire_limit_date,
+               dept_info_two,
+               dept_info_three,
+               emp_position_category,
+               native_place,
+               birth_place,
+               domicile_place,
+               school,
+               highest_education,
+               graduate_time,
+               acquire_time,
+               attend_time,
+               refuse_month,
+               accumulative_month,
+               contract_start_time,
+               contract_end_time,
+               work_phone,
+               on_job_time,
+               salary_level_min,
+               salary_level_max
+        from employee
+    </sql>
+
+    <select id="selectEmployeeList" parameterType="Employee" resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        <where>
+            <if test="empCode != null  and empCode != ''">and emp_code = #{empCode}</if>
+            <if test="empIdcard != null  and empIdcard != ''">and emp_idcard = #{empIdcard}</if>
+            <if test="empName != null  and empName != ''">and emp_name like concat('%', #{empName}, '%')</if>
+            <if test="empAge != null ">and emp_age = #{empAge}</if>
+            <if test="empStatus != null  and empStatus != ''">and emp_status = #{empStatus}</if>
+            <if test="empPoliticalStatus != null  and empPoliticalStatus != ''">and emp_political_status =
+                #{empPoliticalStatus}
+            </if>
+            <if test="empGender != null  and empGender != ''">and emp_gender = #{empGender}</if>
+            <if test="empEducation != null  and empEducation != ''">and emp_education = #{empEducation}</if>
+            <if test="empSpeciality != null  and empSpeciality != ''">and emp_speciality = #{empSpeciality}</if>
+            <if test="empTitle != null  and empTitle != ''">and emp_title = #{empTitle}</if>
+            <if test="empCategory != null  and empCategory != ''">and emp_category = #{empCategory}</if>
+            <if test="empType != null  and empType != ''">and emp_type = #{empType}</if>
+            <if test="empDeptId != null ">and emp_dept_id = #{empDeptId}</if>
+            <if test="empDeptName != null  and empDeptName != ''">and emp_dept_name like concat('%', #{empDeptName},
+                '%')
+            </if>
+            <if test="empEmployingUnits != null  and empEmployingUnits != ''">and emp_employing_units =
+                #{empEmployingUnits}
+            </if>
+            <if test="empHrCompany != null  and empHrCompany != ''">and emp_hr_company = #{empHrCompany}</if>
+            <if test="empPositionLevel != null  and empPositionLevel != ''">and emp_position_level =
+                #{empPositionLevel}
+            </if>
+            <if test="empPosition != null  and empPosition != ''">and emp_position = #{empPosition}</if>
+            <if test="empHiredate != null ">and emp_hiredate = #{empHiredate}</if>
+            <if test="empSalaryLevel != null  and empSalaryLevel != ''">and emp_salary_level = #{empSalaryLevel}</if>
+            <if test="empRemark != null  and empRemark != ''">and emp_remark = #{empRemark}</if>
+            <if test="empEmergencyContact != null  and empEmergencyContact != ''">and emp_emergency_contact =
+                #{empEmergencyContact}
+            </if>
+            <if test="empEmergencyContactPhone != null  and empEmergencyContactPhone != ''">and
+                emp_emergenc_contact_phone
+                = #{empEmergencContactPhone}
+            </if>
+            <if test="empTelephone != null  and empTelephone != ''">and emp_telephone = #{empTelephone}</if>
+            <if test="empHomeAddress != null  and empHomeAddress != ''">and emp_home_address = #{empHomeAddress}</if>
+            <if test="empReference != null  and empReference != ''">and emp_reference = #{empReference}</if>
+            <if test="empChangeType != null  and empChangeType != ''">and emp_change_type = #{empChangeType}</if>
+            <if test="empUpdateTime != null ">and emp_update_time = #{empUpdateTime}</if>
+            <if test="empExpireTime != null ">and emp_expire_time = #{empExpireTime}</if>
+            <if test="empAvatarUrl != null  and empAvatarUrl != ''">and emp_avatar_url = #{empAvatarUrl}</if>
+            <!--            <if test="disabled != null ">and disabled = #{disabled}</if>-->
+            disabled =0
+        </where>
+    </select>
+
+    <select id="selectEmployeeInfoList" resultType="com.yuantu.labor.domain.Employee"
+            parameterType="com.yuantu.labor.vo.EmpSearchVO">
+        <include refid="selectEmployeeVo"/>
+        where
+        disabled = 0 and invisible = 0
+        <if test="keyword != null and keyword != ''">
+            and (emp_name like concat ('%', #{keyword}, '%') or emp_idcard like concat ('%', #{keyword}, '%'))
+        </if>
+        <if test="month != null">
+            and DATE_FORMAT(emp_create_time, '%Y-%m') &lt;= DATE_FORMAT(#{month}, '%Y-%m')
+        </if>
+        <if test="empIdcard != null and empIdcard != '' ">
+            and emp_idcard = #{empIdcard}
+        </if>
+        <if test="empName != null and empName != '' ">
+            and emp_name like concat('%', #{empName}, '%')
+        </if>
+        <if test="minAge != null">
+            and emp_age &gt;= #{minAge}
+        </if>
+        <if test="maxAge != null">
+            and emp_age &lt;= #{maxAge}
+        </if>
+        <if test="empEmployingUnits != null and empEmployingUnits != '' ">
+            and emp_employing_units like concat('%', #{empEmployingUnits}, '%')
+        </if>
+        <if test="empDeptId != null">
+            and emp_dept_id = #{empDeptId}
+        </if>
+        <if test="empDeptName != null and empDeptName != '' ">
+            and emp_dept_name like concat('%', #{empDeptName}, '%')
+        </if>
+        <if test="empHrCompany != null and empHrCompany != '' ">
+            and emp_hr_company like concat('%', #{empHrCompany}, '%')
+        </if>
+        <if test="empPosition != null and empPosition != '' ">
+            and emp_position like concat('%', #{empPosition}, '%')
+        </if>
+        <if test="empSpeciality != null and empSpeciality != '' ">
+            and emp_speciality like concat('%', #{empSpeciality}, '%')
+        </if>
+        <if test="minEmpHireDate != null">
+            and DATE_FORMAT(emp_hiredate, '%Y-%m-%d') &gt;= DATE_FORMAT(#{minEmpHireDate}, '%Y-%m-%d')
+        </if>
+        <if test="maxEmpHireDate != null">
+            and DATE_FORMAT(emp_hiredate, '%Y-%m-%d') &lt;= DATE_FORMAT(#{maxEmpHireDate}, '%Y-%m-%d')
+        </if>
+        <if test="minEmpExpireTime != null">
+            and DATE_FORMAT(emp_expire_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{minEmpExpireTime},'%Y-%m-%d')
+        </if>
+        <if test="maxEmpExpireTime != null">
+            and DATE_FORMAT(emp_expire_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{maxEmpExpireTime},'%Y-%m-%d')
+        </if>
+        <if test="empStatus != null and empStatus != '' ">
+            and emp_status = #{empStatus}
+        </if>
+        <if test="empGender != null and empGender != '' ">
+            and emp_gender = #{empGender}
+        </if>
+        <if test="empPositionLevel != null and empPositionLevel != '' ">
+            and emp_position_level = #{empPositionLevel}
+        </if>
+        <if test="empSalaryLevel != null and empSalaryLevel != '' ">
+            and emp_salary_level = #{empSalaryLevel}
+        </if>
+        <if test="empPoliticalStatus != null and empPoliticalStatus != '' ">
+            and emp_political_status = #{empPoliticalStatus}
+        </if>
+        <if test="empEducation != null and empEducation != '' ">
+            and emp_education = #{empEducation}
+        </if>
+        <if test="empTitle != null and empTitle != '' ">
+            and emp_title = #{empTitle}
+        </if>
+        <if test="empType != null and empType != '' ">
+            and emp_type = #{empType}
+        </if>
+        <if test="empCategory != null and empCategory != '' ">
+            and emp_category = #{empCategory}
+        </if>
+    </select>
+
+    <select id="selectEmployees" resultType="com.yuantu.labor.domain.Employee"
+            parameterType="com.yuantu.labor.vo.EmpSearchVO">
+        <include refid="selectEmployeeVo"/>
+        where
+        disabled = 0 and invisible = 0
+        <if test="empIds != null and empIds.size() > 0">
+            and emp_id in
+            <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+                #{empId}
+            </foreach>
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and (emp_name like concat ('%', #{keyword}, '%') or CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) like concat
+            ('%', #{keyword}, '%'))
+        </if>
+        <if test="month != null">
+            and DATE_FORMAT(emp_create_time, '%Y-%m') &lt;= DATE_FORMAT(#{month}, '%Y-%m')
+        </if>
+        <if test="empIdcard != null and empIdcard != '' ">
+            and emp_idcard = #{empIdcard}
+        </if>
+        <if test="empName != null and empName != '' ">
+            and emp_name like concat('%', #{empName}, '%')
+        </if>
+        <if test="minAge != null and maxAge != null">
+            and emp_age &gt;= #{minAge} and emp_age &lt;= #{maxAge}
+        </if>
+        <if test="minAge != null and maxAge == null">
+            and emp_age &gt; #{minAge}
+        </if>
+        <if test="minAge == null and maxAge != null">
+            and emp_age &lt; #{maxAge}
+        </if>
+        <if test="empEmployingUnits != null and empEmployingUnits != '' ">
+            and emp_employing_units = #{empEmployingUnits}
+        </if>
+        <if test="empDeptId != null">
+            and emp_dept_id = #{empDeptId}
+        </if>
+        <if test="empDeptName != null and empDeptName != '' ">
+            and emp_dept_name like concat('%', #{empDeptName}, '%')
+        </if>
+        <if test="empHrCompany != null and empHrCompany != '' ">
+            and emp_hr_company = #{empHrCompany}
+        </if>
+        <if test="empPosition != null and empPosition != '' ">
+            and emp_position = #{empPosition}
+        </if>
+        <if test="empSpeciality != null and empSpeciality != '' ">
+            and emp_speciality like concat('%', #{empSpeciality}, '%')
+        </if>
+        <if test="minEmpHireDate != null">
+            and DATE_FORMAT(emp_hiredate, '%Y-%m-%d') &gt;= DATE_FORMAT(#{minEmpHireDate}, '%Y-%m-%d')
+        </if>
+        <if test="maxEmpHireDate != null">
+            and DATE_FORMAT(emp_hiredate, '%Y-%m-%d') &lt;= DATE_FORMAT(#{maxEmpHireDate}, '%Y-%m-%d')
+        </if>
+        <if test="minEmpExpireTime != null">
+            and DATE_FORMAT(emp_expire_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{minEmpExpireTime},'%Y-%m-%d')
+        </if>
+        <if test="maxEmpExpireTime != null">
+            and DATE_FORMAT(emp_expire_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{maxEmpExpireTime},'%Y-%m-%d')
+        </if>
+        <if test="empStatus != null and empStatus != '' ">
+            and emp_status = #{empStatus}
+        </if>
+        <if test="empGender != null and empGender != '' ">
+            and emp_gender = #{empGender}
+        </if>
+        <if test="empPositionLevel != null and empPositionLevel != '' ">
+            and emp_position_level = #{empPositionLevel}
+        </if>
+        <if test="empSalaryLevel != null and empSalaryLevel != '' ">
+            and emp_salary_level = #{empSalaryLevel}
+        </if>
+        <if test="empPoliticalStatus != null and empPoliticalStatus != '' ">
+            and emp_political_status = #{empPoliticalStatus}
+        </if>
+        <if test="empEducation != null and empEducation != '' ">
+            <if test="empEducation !=-1">
+                and emp_education = #{empEducation}
+            </if>
+            <if test="empEducation == -1">
+                and emp_education is null
+            </if>
+        </if>
+        <if test="empTitle != null and empTitle != '' ">
+            and emp_title = #{empTitle}
+        </if>
+        <if test="empType != null and empType != '' ">
+            and emp_type = #{empType}
+        </if>
+        <if test="empCategory != null and empCategory != '' ">
+            and emp_category = #{empCategory}
+        </if>
+        <if test="empRemark != null and empRemark != '' ">
+            and emp_remark = #{empRemark}
+        </if>
+        <if test="birthdayStart != null">
+            and DATE_FORMAT(birth_date, '%Y-%m-%d') &gt;= DATE_FORMAT(#{birthdayStart}, '%Y-%m-%d')
+        </if>
+        <if test="birthdayEnd != null">
+            and DATE_FORMAT(birth_date, '%Y-%m-%d') &lt;= DATE_FORMAT(#{birthdayEnd}, '%Y-%m-%d')
+        </if>
+        <if test="hireLimitDateStart != null">
+            and DATE_FORMAT(hire_limit_date, '%Y-%m-%d') &gt;= DATE_FORMAT(#{hireLimitDateStart}, '%Y-%m-%d')
+        </if>
+        <if test="hireLimitDateEnd != null">
+            and DATE_FORMAT(hire_limit_date, '%Y-%m-%d') &lt;= DATE_FORMAT(#{hireLimitDateEnd}, '%Y-%m-%d')
+        </if>
+        <if test="empCode != null and empCode != '' ">
+            and emp_code like concat('%', #{empCode}, '%')
+        </if>
+        <if test="deptInfoTwo != null and deptInfoTwo != '' ">
+            and dept_info_two like concat('%', #{deptInfoTwo}, '%')
+        </if>
+        <if test="deptInfoThree != null and deptInfoThree != '' ">
+            and dept_info_three like concat('%', #{deptInfoThree}, '%')
+        </if>
+        <if test="onJobTimeStart != null">
+            and DATE_FORMAT(on_job_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{onJobTimeStart}, '%Y-%m-%d')
+        </if>
+        <if test="onJobTimeEnd != null">
+            and DATE_FORMAT(on_job_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{onJobTimeEnd}, '%Y-%m-%d')
+        </if>
+        <if test="nativePlaceStr != null and nativePlaceStr != '' ">
+            and FIND_IN_SET(#{nativePlaceStr}, native_place) > 0
+        </if>
+        <if test="birthPlaceStr != null and birthPlaceStr != '' ">
+            and FIND_IN_SET(#{birthPlaceStr}, birth_place) > 0
+        </if>
+        <if test="school != null and school != '' ">
+            and school like concat('%', #{school}, '%')
+        </if>
+        <if test="graduateTimeStart != null">
+            and DATE_FORMAT(graduate_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{graduateTimeStart}, '%Y-%m-%d')
+        </if>
+        <if test="graduateTimeEnd != null">
+            and DATE_FORMAT(graduate_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{graduateTimeEnd}, '%Y-%m-%d')
+        </if>
+        <if test="attendTimeStart != null">
+            and DATE_FORMAT(attend_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{attendTimeStart}, '%Y-%m-%d')
+        </if>
+        <if test="attendTimeEnd != null">
+            and DATE_FORMAT(attend_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{attendTimeEnd}, '%Y-%m-%d')
+        </if>
+        <if test="refuseMonthMin != null">
+            and refuse_month &gt;= #{refuseMonthMin}
+        </if>
+        <if test="refuseMonthMax != null">
+            and refuse_month &lt;= #{refuseMonthMax}
+        </if>
+        <if test="accumulativeMonthMin != null">
+            and accumulative_month &gt;= #{accumulativeMonthMin}
+        </if>
+        <if test="accumulativeMonthMax != null">
+            and accumulative_month &lt;= #{accumulativeMonthMax}
+        </if>
+        <if test="contractTimeStart != null">
+            and DATE_FORMAT(contract_start_time, '%Y-%m-%d') &gt;= DATE_FORMAT(#{contractTimeStart}, '%Y-%m-%d')
+        </if>
+        <if test="contractTimeEnd != null">
+            and DATE_FORMAT(contract_end_time, '%Y-%m-%d') &lt;= DATE_FORMAT(#{contractTimeEnd}, '%Y-%m-%d')
+        </if>
+        <if test="empTelephone != null and empTelephone != '' ">
+            and emp_telephone like concat('%', #{empTelephone}, '%')
+        </if>
+        <if test="workPhone != null and workPhone != '' ">
+            and work_phone like concat('%', #{workPhone}, '%')
+        </if>
+        <if test="empReference != null and empReference != '' ">
+            and emp_reference like concat('%', #{empReference}, '%')
+        </if>
+        <if test="highestEducation != null and highestEducation != '' ">
+            and highest_education = #{highestEducation}
+        </if>
+    </select>
+
+
+    <select id="findEmpExportInfos" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id,
+        emp_code,
+        CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as emp_idcard,
+        emp_name,
+        emp_age,
+        birth_date,
+        emp_status,
+        emp_political_status,
+        emp_gender,
+        emp_education,
+        emp_speciality,
+        emp_title,
+        emp_category,
+        emp_type,
+        emp_dept_id,
+        department.dept_name as emp_dept_name,
+        emp_employing_units,
+        emp_hr_company,
+        emp_position_level,
+        emp_position,
+        emp_hiredate,
+        emp_salary_level,
+        emp_remark,
+        emp_emergency_contact,
+        emp_emergency_contact_phone,
+        emp_telephone,
+        emp_home_address,
+        emp_reference,
+        emp_change_type,
+        emp_update_time,
+        emp_update_by,
+        emp_create_time,
+        emp_create_by,
+        emp_avatar_url,
+        emp_expire_time,
+        employee.disabled,
+        emp_status_update_time,
+        invisible,
+        nation,
+        retire_reminder,
+        hire_limit_date,
+        dept_info_two,
+        dept_info_three,
+        emp_position_category,
+        native_place,
+        birth_place,
+        domicile_place,
+        school,
+        highest_education,
+        graduate_time,
+        acquire_time,
+        attend_time,
+        refuse_month,
+        accumulative_month,
+        contract_start_time,
+        contract_end_time,
+        work_phone,
+        on_job_time,
+        salary_level_min,
+        salary_level_max
+        from employee left join department on employee.emp_dept_id = department.dept_id and department.disabled = 0
+        where employee.disabled = 0
+        <if test="empExport.date != null">
+            and DATE_FORMAT(emp_create_time, '%Y-%m') &lt;= DATE_FORMAT(#{empExport.date} , '%Y-%m')
+        </if>
+        <if test="empExport.empIds != null and empExport.empIds.size() > 0 ">
+            and emp_id in
+            <foreach collection="empExport.empIds" item="empId" open="(" separator="," close=")">
+                #{empId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectEmployeeByEmpId" parameterType="Long" resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        where emp_id = #{empId} and disabled = 0
+    </select>
+
+    <insert id="insertEmployee" parameterType="Employee" useGeneratedKeys="true" keyProperty="empId">
+        insert into employee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empCode != null and empCode != ''">emp_code,</if>
+            <if test="empIdcard != null and empIdcard != '' ">emp_idcard,</if>
+            <if test="empName != null and empName != ''">emp_name,</if>
+            <if test="empAge != null">emp_age,</if>
+            <if test="empStatus != null and empStatus != ''">emp_status,</if>
+            <if test="empPoliticalStatus != null and empPoliticalStatus != ''">emp_political_status,</if>
+            <if test="empGender != null and empGender != '' ">emp_gender,</if>
+            <if test="empEducation != null and empEducation != ''">emp_education,</if>
+            <if test="empSpeciality != null and empSpeciality != ''">emp_speciality,</if>
+            <if test="empTitle != null and empTitle != ''">emp_title,</if>
+            <if test="empCategory != null and empCategory != ''">emp_category,</if>
+            <if test="empType != null and empType != ''">emp_type,</if>
+            <if test="empDeptId != null">emp_dept_id,</if>
+            <if test="empDeptName != null and empDeptName != ''">emp_dept_name,</if>
+            <if test="empEmployingUnits != null and empEmployingUnits != ''">emp_employing_units,</if>
+            <if test="empHrCompany != null and empHrCompany != ''">emp_hr_company,</if>
+            <if test="empPositionLevel != null and empPositionLevel != ''">emp_position_level,</if>
+            <if test="empPosition != null and empPosition != ''">emp_position,</if>
+            <if test="empHiredate != null">emp_hiredate,</if>
+            <if test="empSalaryLevel != null and empSalaryLevel != ''">emp_salary_level,</if>
+            <if test="empRemark != null and empRemark != ''">emp_remark,</if>
+            <if test="empEmergencyContact != null and empEmergencyContact != ''">emp_emergency_contact,</if>
+            <if test="empEmergencyContactPhone != null and empEmergencyContactPhone != ''">
+                emp_emergency_contact_phone,
+            </if>
+            <if test="empTelephone != null and empTelephone != ''">emp_telephone,</if>
+            <if test="empHomeAddress != null and empHomeAddress != ''">emp_home_address,</if>
+            <if test="empReference != null and empReference != ''">emp_reference,</if>
+            <if test="empChangeType != null and empChangeType != ''">emp_change_type,</if>
+            <if test="empUpdateTime != null">emp_update_time,</if>
+            <if test="empUpdateBy != null">emp_update_by,</if>
+            <if test="empCreateTime != null">emp_create_time,</if>
+            <if test="empCreateBy != null">emp_create_by,</if>
+            <if test="empAvatarUrl != null and empAvatarUrl != ''">emp_avatar_url,</if>
+            <if test="empExpireTime != null">emp_expire_time,</if>
+            <if test="disabled != null">disabled,</if>
+            <if test="nation != null and nation != ''">nation,</if>
+            <if test="retireReminder != null and retireReminder != ''">retire_reminder,</if>
+            <if test="hireLimitDate != null">hire_limit_date,</if>
+            <if test="deptInfoTwo != null and deptInfoTwo != ''">dept_info_two,</if>
+            <if test="deptInfoThree != null and deptInfoThree != ''">dept_info_three,</if>
+            <if test="empPositionCategory != null and empPositionCategory != ''">emp_position_category,</if>
+            <if test="nativePlace != null and nativePlace != ''">native_place,</if>
+            <if test="birthPlace != null and birthPlace != ''">birth_place,</if>
+            <if test="domicilePlace != null and domicilePlace != ''">domicile_place,</if>
+            <if test="school != null and school != ''">school,</if>
+            <if test="highestEducation != null and highestEducation != ''">highest_education,</if>
+            <if test="graduateTime != null">graduate_time,</if>
+            <if test="acquireTime != null">acquire_time,</if>
+            <if test="attendTime != null">attend_time,</if>
+            <if test="refuseMonth != null">refuse_month,</if>
+            <if test="accumulativeMonth != null">accumulative_month,</if>
+            <if test="contractStartTime != null">contract_start_time,</if>
+            <if test="contractEndTime != null">contract_end_time,</if>
+            <if test="workPhone != null and workPhone != ''">work_phone,</if>
+            <if test="onJobTime != null">on_job_time,</if>
+            <if test="birthDate != null">birth_date,</if>
+            <if test="salaryLevelMin != null and salaryLevelMin != ''">salary_level_min,</if>
+            <if test="salaryLevelMax != null and salaryLevelMax != ''">salary_level_max,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empCode != null and empCode != ''">#{empCode},</if>
+            <if test="empIdcard != null and empIdcard != '' ">SP_ENCRYPT(#{empIdcard}),</if>
+            <if test="empName != null and empName != ''">#{empName},</if>
+            <if test="empAge != null">#{empAge},</if>
+            <if test="empStatus != null and empStatus != ''">#{empStatus},</if>
+            <if test="empPoliticalStatus != null and empPoliticalStatus != ''">#{empPoliticalStatus},</if>
+            <if test="empGender != null and empGender != '' ">#{empGender},</if>
+            <if test="empEducation != null and empEducation != ''">#{empEducation},</if>
+            <if test="empSpeciality != null and empSpeciality != ''">#{empSpeciality},</if>
+            <if test="empTitle != null and empTitle != ''">#{empTitle},</if>
+            <if test="empCategory != null and empCategory != ''">#{empCategory},</if>
+            <if test="empType != null and empType != ''">#{empType},</if>
+            <if test="empDeptId != null">#{empDeptId},</if>
+            <if test="empDeptName != null and empDeptName != ''">#{empDeptName},</if>
+            <if test="empEmployingUnits != null and empEmployingUnits != ''">#{empEmployingUnits},</if>
+            <if test="empHrCompany != null and empHrCompany != ''">#{empHrCompany},</if>
+            <if test="empPositionLevel != null and empPositionLevel != ''">#{empPositionLevel},</if>
+            <if test="empPosition != null and empPosition != ''">#{empPosition},</if>
+            <if test="empHiredate != null">#{empHiredate},</if>
+            <if test="empSalaryLevel != null and empSalaryLevel != ''">#{empSalaryLevel},</if>
+            <if test="empRemark != null and empRemark != ''">#{empRemark},</if>
+            <if test="empEmergencyContact != null and empEmergencyContact != ''">#{empEmergencyContact},</if>
+            <if test="empEmergencyContactPhone != null and empEmergencyContactPhone != ''">
+                #{empEmergencyContactPhone},
+            </if>
+            <if test="empTelephone != null and empTelephone != ''">#{empTelephone},</if>
+            <if test="empHomeAddress != null and empHomeAddress != ''">#{empHomeAddress},</if>
+            <if test="empReference != null and empReference != ''">#{empReference},</if>
+            <if test="empChangeType != null and empChangeType != ''">#{empChangeType},</if>
+            <if test="empUpdateTime != null">#{empUpdateTime},</if>
+            <if test="empUpdateBy != null">#{empUpdateBy},</if>
+            <if test="empCreateTime != null">#{empCreateTime},</if>
+            <if test="empCreateBy != null">#{empCreateBy},</if>
+            <if test="empAvatarUrl != null and empAvatarUrl != ''">#{empAvatarUrl},</if>
+            <if test="empExpireTime != null">#{empExpireTime},</if>
+            <if test="disabled != null">#{disabled},</if>
+            <if test="nation != null and nation != ''">#{nation},</if>
+            <if test="retireReminder != null and retireReminder != ''">#{retireReminder},</if>
+            <if test="hireLimitDate != null">#{hireLimitDate},</if>
+            <if test="deptInfoTwo != null and deptInfoTwo != ''">#{deptInfoTwo},</if>
+            <if test="deptInfoThree != null and deptInfoThree != ''">#{deptInfoThree},</if>
+            <if test="empPositionCategory != null and empPositionCategory != ''">#{empPositionCategory},</if>
+            <if test="nativePlace != null and nativePlace != ''">#{nativePlace},</if>
+            <if test="birthPlace != null and birthPlace != ''">#{birthPlace},</if>
+            <if test="domicilePlace != null and domicilePlace != ''">#{domicilePlace},</if>
+            <if test="school != null and school != ''">#{school},</if>
+            <if test="highestEducation != null and highestEducation != ''">#{highestEducation},</if>
+            <if test="graduateTime != null">#{graduateTime},</if>
+            <if test="acquireTime != null">#{acquireTime},</if>
+            <if test="attendTime != null">#{attendTime},</if>
+            <if test="refuseMonth != null">#{refuseMonth},</if>
+            <if test="accumulativeMonth != null">#{accumulativeMonth},</if>
+            <if test="contractStartTime != null">#{contractStartTime},</if>
+            <if test="contractEndTime != null">#{contractEndTime},</if>
+            <if test="workPhone != null and workPhone != ''">#{workPhone},</if>
+            <if test="onJobTime != null">#{onJobTime},</if>
+            <if test="birthDate != null">#{birthDate},</if>
+            <if test="salaryLevelMin != null and salaryLevelMin != ''">#{salaryLevelMin},</if>
+            <if test="salaryLevelMax != null and salaryLevelMax != ''">#{salaryLevelMax},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEmployee" parameterType="Employee">
+        update employee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empCode != null">emp_code = #{empCode},</if>
+            <if test="empIdcard != null">emp_idcard = SP_ENCRYPT(#{empIdcard}),</if>
+            <if test="empName != null">emp_name = #{empName},</if>
+            <if test="empAge != null">emp_age = #{empAge},</if>
+            <if test="empStatus != null ">emp_status = #{empStatus},</if>
+            <if test="empPoliticalStatus != null">emp_political_status =
+                #{empPoliticalStatus},
+            </if>
+            <if test="empGender != null">emp_gender = #{empGender},</if>
+            <if test="empEducation != null">emp_education = #{empEducation},</if>
+            <if test="empSpeciality != null">emp_speciality = #{empSpeciality},</if>
+            <if test="empTitle != null">emp_title = #{empTitle},</if>
+            <if test="empCategory != null">emp_category = #{empCategory},</if>
+            <if test="empType != null">emp_type = #{empType},</if>
+            <if test="empDeptId != null">emp_dept_id = #{empDeptId},</if>
+            <if test="empDeptName != null">emp_dept_name = #{empDeptName},</if>
+            <if test="empEmployingUnits != null">emp_employing_units =
+                #{empEmployingUnits},
+            </if>
+            <if test="empHrCompany != null">emp_hr_company = #{empHrCompany},</if>
+            <if test="empPositionLevel != null">emp_position_level = #{empPositionLevel},
+            </if>
+            <if test="empPosition != null">emp_position = #{empPosition},</if>
+            <if test="empHiredate != null">emp_hiredate = #{empHiredate},</if>
+            <if test="empSalaryLevel != null">emp_salary_level = #{empSalaryLevel},</if>
+            <if test="empRemark != null">emp_remark = #{empRemark},</if>
+            <if test="empEmergencyContact != null">emp_emergency_contact =
+                #{empEmergencyContact},
+            </if>
+            <if test="empEmergencyContactPhone != null">emp_emergency_contact_phone =
+                #{empEmergencyContactPhone},
+            </if>
+            <if test="empTelephone != null">emp_telephone = #{empTelephone},</if>
+            <if test="empHomeAddress != null">emp_home_address = #{empHomeAddress},</if>
+            <if test="empReference != null">emp_reference = #{empReference},</if>
+            <if test="empChangeType != null">emp_change_type = #{empChangeType},</if>
+            <if test="empUpdateTime != null">emp_update_time = #{empUpdateTime},</if>
+            <if test="empUpdateBy != null">emp_update_by = #{empUpdateBy},</if>
+            <if test="empExpireTime != null">emp_expire_time = #{empExpireTime},</if>
+            <if test="empAvatarUrl != null">emp_avatar_url = #{empAvatarUrl},</if>
+            <if test="empStatusUpdateTime != null">emp_status_update_time = #{empStatusUpdateTime},</if>
+            <if test="nation != null">nation = #{nation},</if>
+            <if test="retireReminder != null">retire_reminder = #{retireReminder},</if>
+            <if test="hireLimitDate != null">hire_limit_date = #{hireLimitDate},</if>
+            <if test="deptInfoTwo != null">dept_info_two = #{deptInfoTwo},</if>
+            <if test="deptInfoThree != null">dept_info_three = #{deptInfoThree},</if>
+            <if test="empPositionCategory != null">emp_position_category =
+                #{empPositionCategory},
+            </if>
+            <if test="nativePlace != null">native_place = #{nativePlace},</if>
+            <if test="birthPlace != null">birth_place = #{birthPlace},</if>
+            <if test="domicilePlace != null">domicile_place = #{domicilePlace},</if>
+            <if test="school != null">school = #{school},</if>
+            <if test="highestEducation != null">highest_education = #{highestEducation},</if>
+            <if test="graduateTime != null">graduate_time = #{graduateTime},</if>
+            <if test="acquireTime != null">acquire_time = #{acquireTime},</if>
+            <if test="attendTime != null">attend_time = #{attendTime},</if>
+            <if test="refuseMonth != null">refuse_month = #{refuseMonth},</if>
+            <if test="accumulativeMonth != null">accumulative_month = #{accumulativeMonth},</if>
+            <if test="contractStartTime != null">contract_start_time = #{contractStartTime},</if>
+            <if test="contractEndTime != null">contract_end_time = #{contractEndTime},</if>
+            <if test="workPhone != null">work_phone = #{workPhone},</if>
+            <if test="onJobTime != null">on_job_time = #{onJobTime},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="salaryLevelMin != null">salary_level_min = #{salaryLevelMin},</if>
+            <if test="salaryLevelMax != null">salary_level_max = #{salaryLevelMax},</if>
+        </trim>
+        where emp_id = #{empId} and disabled = 0
+    </update>
+    <update id="updateRecoveryEmployee" parameterType="Employee">
+        update employee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empCode != null and empCode != ''">emp_code = #{empCode},</if>
+            <if test="empIdcard != null and empIdcard != ''">emp_idcard = SP_ENCRYPT(#{empIdcard}),</if>
+            <if test="empName != null and empName != ''">emp_name = #{empName},</if>
+            <if test="empAge != null">emp_age = #{empAge},</if>
+            <if test="empStatus != null and empStatus != ''">emp_status = #{empStatus},</if>
+            <if test="empPoliticalStatus != null and empPoliticalStatus != ''">emp_political_status =
+                #{empPoliticalStatus},
+            </if>
+            <if test="empGender != null and empGender != ''">emp_gender = #{empGender},</if>
+            <if test="empEducation != null and empEducation != null">emp_education = #{empEducation},</if>
+            <if test="empSpeciality != null and empSpeciality != null">emp_speciality = #{empSpeciality},</if>
+            <if test="empTitle != null and empTitle != ''">emp_title = #{empTitle},</if>
+            <if test="empCategory != null and empCategory != ''">emp_category = #{empCategory},</if>
+            <if test="empType != null and empType != ''">emp_type = #{empType},</if>
+            <if test="empDeptId != null">emp_dept_id = #{empDeptId},</if>
+            <if test="empDeptName != null and empDeptName != '' ">emp_dept_name = #{empDeptName},</if>
+            <if test="empEmployingUnits != null and empEmployingUnits != ''">emp_employing_units =
+                #{empEmployingUnits},
+            </if>
+            <if test="empHrCompany != null and empHrCompany != ''">emp_hr_company = #{empHrCompany},</if>
+            <if test="empPositionLevel != null and empPositionLevel != ''">emp_position_level = #{empPositionLevel},
+            </if>
+            <if test="empPosition != null and empPosition != ''">emp_position = #{empPosition},</if>
+            <if test="empHiredate != null">emp_hiredate = #{empHiredate},</if>
+            <if test="empSalaryLevel != null and empSalaryLevel != ''">emp_salary_level = #{empSalaryLevel},</if>
+            <if test="empRemark != null and empRemark != ''">emp_remark = #{empRemark},</if>
+            <if test="empEmergencyContact != null and empEmergencyContact != ''">emp_emergency_contact =
+                #{empEmergencyContact},
+            </if>
+            <if test="empEmergencyContactPhone != null and empEmergencyContactPhone != ''">emp_emergency_contact_phone =
+                #{empEmergencyContactPhone},
+            </if>
+            <if test="empTelephone != null and empTelephone != ''">emp_telephone = #{empTelephone},</if>
+            <if test="empHomeAddress != null and empHomeAddress != ''">emp_home_address = #{empHomeAddress},</if>
+            <if test="empReference != null and empReference != ''">emp_reference = #{empReference},</if>
+            <if test="empChangeType != null and empChangeType != ''">emp_change_type = #{empChangeType},</if>
+            <if test="empUpdateTime != null">emp_update_time = #{empUpdateTime},</if>
+            <if test="empUpdateBy != null">emp_update_by = #{empUpdateBy},</if>
+            <if test="empExpireTime != null">emp_expire_time = #{empExpireTime},</if>
+            <if test="empAvatarUrl != null and empAvatarUrl != ''">emp_avatar_url = #{empAvatarUrl},</if>
+            <if test="empStatusUpdateTime != null">emp_status_update_time = #{empStatusUpdateTime},</if>
+            <if test="nation != null and nation != ''">nation = #{nation},</if>
+            <if test="retireReminder != null and retireReminder != ''">retire_reminder = #{retireReminder},</if>
+            <if test="hireLimitDate != null">hire_limit_date = #{hireLimitDate},</if>
+            <if test="deptInfoTwo != null and deptInfoTwo != ''">dept_info_two = #{deptInfoTwo},</if>
+            <if test="deptInfoThree != null and deptInfoThree != ''">dept_info_three = #{deptInfoThree},</if>
+            <if test="empPositionCategory != null and empPositionCategory != ''">emp_position_category =
+                #{empPositionCategory},
+            </if>
+            <if test="nativePlace != null and nativePlace != ''">native_place = #{nativePlace},</if>
+            <if test="birthPlace != null and birthPlace != ''">birth_place = #{birthPlace},</if>
+            <if test="domicilePlace != null and domicilePlace != ''">domicile_place = #{domicilePlace},</if>
+            <if test="school != null and school != ''">school = #{school},</if>
+            <if test="highestEducation != null and highestEducation != ''">highest_education = #{highestEducation},</if>
+            <if test="graduateTime != null">graduate_time = #{graduateTime},</if>
+            <if test="acquireTime != null">acquire_time = #{acquireTime},</if>
+            <if test="attendTime != null">attend_time = #{attendTime},</if>
+            <if test="refuseMonth != null">refuse_month = #{refuseMonth},</if>
+            <if test="accumulativeMonth != null">accumulative_month = #{accumulativeMonth},</if>
+            <if test="contractStartTime != null">contract_start_time = #{contractStartTime},</if>
+            <if test="contractEndTime != null">contract_end_time = #{contractEndTime},</if>
+            <if test="workPhone != null and workPhone != ''">work_phone = #{workPhone},</if>
+            <if test="onJobTime != null">on_job_time = #{onJobTime},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="salaryLevelMin != null and salaryLevelMin != ''">salary_level_min = #{salaryLevelMin},</if>
+            <if test="salaryLevelMax != null and salaryLevelMax != ''">salary_level_max = #{salaryLevelMax},</if>
+            <if test="disabled !=null">disabled = 0</if>
+        </trim>
+        where emp_id = #{empId}
+    </update>
+
+    <update id="deleteEmployeeByEmpId" parameterType="Long">
+        update employee
+        set disabled = 1
+        where emp_id = #{empId}
+          and disabled = 0
+    </update>
+
+    <update id="deleteEmployeeByEmpIds" parameterType="String">
+        update employee set disabled = 1, emp_update_time = #{now}
+        where disabled = 0 and emp_id in
+        <foreach item="empId" collection="empIds" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </update>
+    <update id="updateEmpAvatarUrl">
+        update employee
+        set emp_avatar_url = #{empAvatarUrl}
+        where emp_id = #{empId}
+          and disabled = 0
+    </update>
+    <update id="changeEmpStatusByEmpIdsAndEmpStatus">
+        update employee
+        set emp_status = #{empStatus},
+        emp_status_update_time = #{now}
+        where emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+        and disabled = 0
+    </update>
+
+
+    <update id="changeEmpInvisibleByEmpIdsAndInvisible">
+        update employee
+        set invisible = #{invisible}
+        where emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+        and disabled = 0
+    </update>
+
+    <update id="updateExpireTimeByEmpId">
+        update employee
+        set emp_expire_time = #{expireTime}
+        where emp_id = #{empId}
+          and disabled = 0
+    </update>
+
+    <update id="updateHireLimitDateByEmpId">
+        update employee
+        set hire_limit_date = #{hireLimitDate}
+        where emp_id = #{empId}
+          and disabled = 0
+    </update>
+
+    <update id="updateRetireReminder">
+        update employee
+        set retire_reminder = #{retireReminder}
+        where emp_id = #{empId}
+          and disabled = 0
+    </update>
+
+    <update id="encodeEmployeeIdCardInfo">
+        update employee
+        set emp_idcard = SP_ENCRYPT(#{empIdcard})
+        where emp_id = #{empId}
+    </update>
+
+    <update id="decodeEmployeeIdCardInfo">
+        update employee
+        set emp_idcard = CAST(SP_DECRYPT(#{empIdcard}) AS CHAR(128))
+        where emp_id = #{empId}
+    </update>
+
+
+    <select id="selectEmployeeByEmployeeInfoVO" parameterType="com.yuantu.labor.vo.EmployeeInfoVO"
+            resultMap="EmployeeResult">
+        select emp_id,
+        emp_code,
+        emp_idcard,
+        emp_name,
+        emp_age,
+        emp_status,
+        emp_political_status,
+        emp_gender,
+        emp_education,
+        emp_speciality,
+        emp_title,
+        emp_category,
+        emp_type,
+        emp_dept_id,
+        dept_name as emp_dept_name,
+        emp_employing_units,
+        emp_hr_company,
+        emp_position_level,
+        emp_position,
+        emp_hiredate,
+        emp_salary_level,
+        emp_remark,
+        emp_emergency_contact,
+        emp_emergency_contact_phone,
+        emp_telephone,
+        emp_home_address,
+        emp_reference,
+        emp_change_type,
+        employee.emp_update_time,
+        employee.emp_update_by,
+        employee.emp_create_time,
+        employee.emp_create_by,
+        emp_avatar_url,
+        emp_expire_time,
+        employee.disabled,
+        emp_status_update_time
+        from employee
+        LEFT JOIN department on employee.emp_dept_id = department.dept_id
+        <where>
+            <if test="empDeptId != null ">and emp_dept_id = #{empDeptId}</if>
+            <if test="empEducation != null  and empEducation != ''">and emp_education = #{empEducation}</if>
+            <if test="empGender != null  and empGender != ''">and emp_gender = #{empGender}</if>
+            <if test="empTitle != null  and empTitle != ''">and emp_title = #{empTitle}</if>
+            <!--            <if test="empAgeInterval != null  and empAgeInterval != ''">-->
+            <!--                and emp_age &lt;= #{minAge} and emp_age >= #{maxAge}-->
+            <!--            </if>-->
+            <if test="minAge != null and maxAge != null">
+                and emp_age &gt;= #{minAge} and emp_age &lt;= #{maxAge}
+            </if>
+            <if test="minAge != null and maxAge == null">
+                and emp_age &gt; #{minAge}
+            </if>
+            <if test="minAge == null and maxAge != null">
+                and emp_age &lt; #{maxAge}
+            </if>
+            and employee.disabled = 0 and employee.invisible = 0
+        </where>
+    </select>
+    <select id="selectEmpNameAndCard" parameterType="com.yuantu.labor.vo.EmployeeInfoVO"
+            resultMap="EmpNameCardResult">
+        select emp_id, CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as emp_idcard, emp_name from employee
+        <where>
+            <if test="empStatusList!= null">
+                and emp_status in
+                <foreach close=")" collection="empStatusList" item="listItem" open="(" separator=",">
+                    #{listItem}
+                </foreach>
+            </if>
+            and disabled = 0
+        </where>
+    </select>
+    <select id="findInfoByEmpIdCard" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) = #{empIdCard} and disabled = 0
+    </select>
+
+    <select id="findInfoByHistoryEmpIdCard" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) = #{empIdCard}
+    </select>
+    <select id="findInfoByHistoryEmpName" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id,
+               emp_idcard,
+               emp_name,
+               emp_dept_id,
+               department.dept_name as emp_dept_name,
+               emp_position
+        from employee
+                 left join department on employee.emp_dept_id = department.dept_id
+        where emp_name = #{empName}
+          and employee.disabled = 0 limit 1
+    </select>
+    <select id="findCurrentInfos" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id,
+               emp_code,
+               emp_idcard,
+               emp_name,
+               emp_age,
+               birth_date,
+               emp_status,
+               emp_political_status,
+               emp_gender,
+               emp_education,
+               emp_speciality,
+               emp_title,
+               emp_category,
+               emp_type,
+               emp_dept_id,
+               emp_dept_name,
+               emp_employing_units,
+               emp_hr_company,
+               emp_position_level,
+               emp_position,
+               emp_hiredate,
+               emp_salary_level,
+               emp_remark,
+               emp_emergency_contact,
+               emp_emergency_contact_phone,
+               emp_telephone,
+               emp_home_address,
+               emp_reference,
+               emp_change_type,
+               emp_update_time,
+               emp_update_by,
+               emp_create_time,
+               emp_create_by,
+               emp_avatar_url,
+               emp_expire_time,
+               disabled,
+               emp_status_update_time,
+               invisible,
+               nation,
+               retire_reminder,
+               hire_limit_date,
+               dept_info_two,
+               dept_info_three,
+               emp_position_category,
+               native_place,
+               birth_place,
+               domicile_place,
+               school,
+               highest_education,
+               graduate_time,
+               acquire_time,
+               attend_time,
+               refuse_month,
+               accumulative_month,
+               contract_start_time,
+               contract_end_time,
+               work_phone,
+               on_job_time,
+               salary_level_min,
+               salary_level_max
+        from employee
+        where disabled = 0
+    </select>
+    <select id="selectEmployeeInfosByIds" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+        and disabled = 0
+    </select>
+
+    <select id="findCurrentMonthStatusNum" resultType="java.lang.Integer">
+        select count(emp_id)
+        from employee
+        where disabled = 0
+          and emp_status = #{empStatus}
+          and (DATE_FORMAT(emp_hiredate, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+            or DATE_FORMAT(emp_status_update_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m'))
+    </select>
+
+    <select id="findAttendJobNumWithCurrentMonth" resultType="java.lang.Integer">
+        select count(emp_id)
+        from employee
+        where disabled = 0
+          and emp_status = 2
+          and (DATE_FORMAT(emp_hiredate, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+            or DATE_FORMAT(emp_status_update_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m'))
+    </select>
+    <select id="findResignNumWithCurrentMonth" resultType="java.lang.Integer">
+        select count(emp_id)
+        from employee
+        where disabled = 0
+          and emp_status = 3
+          and (DATE_FORMAT(emp_create_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+            or DATE_FORMAT(emp_status_update_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m'))
+    </select>
+    <select id="findFireNumWithCurrentMonth" resultType="java.lang.Integer">
+        select count(emp_id)
+        from employee
+        where disabled = 0
+          and emp_status = 4
+          and (DATE_FORMAT(emp_create_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+            or DATE_FORMAT(emp_status_update_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m'))
+    </select>
+    <select id="findSoonExpiredNumWithCurrentMonth" resultType="java.lang.Integer">
+        select count(emp_id)
+        from employee
+        where disabled = 0
+          and emp_status = 5
+          and (DATE_FORMAT(emp_create_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+            or DATE_FORMAT(emp_status_update_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m'))
+    </select>
+    <select id="findExpiredNumWithCurrentMonth" resultType="java.lang.Integer">
+        select count(emp_id)
+        from employee
+        where disabled = 0
+          and emp_status = 6
+          and (DATE_FORMAT(emp_create_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+            or DATE_FORMAT(emp_status_update_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m'))
+    </select>
+
+    <select id="findReEmployNumWithCurrentMonth" resultType="java.lang.Integer">
+        select count(emp_id)
+        from employee
+        where disabled = 0
+          and emp_status = 7
+          and (DATE_FORMAT(emp_create_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m')
+            or DATE_FORMAT(emp_status_update_time, '%Y-%m') = DATE_FORMAT(now(), '%Y-%m'))
+    </select>
+
+    <select id="findAllEmployees" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where disabled = 0
+    </select>
+    <select id="findInfoByIdCards" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where disabled = 0
+        and CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) in
+        <foreach collection="idInfos" item="idInfo" open="(" close=")" separator=",">
+            #{idInfo}
+        </foreach>
+    </select>
+    <select id="findInfoEmpNames" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id,
+        CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as emp_idcard,
+        emp_name,
+        emp_dept_id
+        from employee
+        where disabled = 0
+        and emp_name in
+        <foreach collection="empNames" item="empName" open="(" close=")" separator=",">
+            #{empName}
+        </foreach>
+    </select>
+
+    <select id="findNamesByEmpNames" resultType="java.lang.String">
+        select
+        emp_name
+        from employee
+        where disabled = 0
+        and emp_name in
+        <foreach collection="empNames" item="empName" open="(" close=")" separator=",">
+            #{empName}
+        </foreach>
+    </select>
+
+
+
+    <select id="findEmpInfosByIdsWithoutDisabled" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where emp_id in
+        <foreach collection="empIds" item="empId" open="(" close=")" separator=",">
+            #{empId}
+        </foreach>
+    </select>
+    <select id="findEmpInfosByCreateTime" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where (DATE_FORMAT(emp_create_time, '%Y-%m') = #{currentTime} or DATE_FORMAT(emp_status_update_time, '%Y-%m') = #{currentTime}) and disabled = 0
+    </select>
+    <select id="findEmpInfosByEmpDeptIds" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where disabled = 0 and emp_dept_id in
+        <foreach collection="deptIds" item="deptId" open="(" close=")" separator=",">
+            #{deptId}
+        </foreach>
+    </select>
+    <select id="getDeptStabilityData" parameterType="com.yuantu.labor.vo.StabilityQueryVO"
+            resultType="com.yuantu.labor.vo.StabilityResultVO">
+        select dept_name,total_num,exit_num,age_num,ROUND((total_num-(exit_num+new_num)/2)/total_num*100,2) as
+        stability_index,new_num as
+        yearLessOne,yearOneToThree,yearThreeToFive,yearFiveToTen,yearTenToTwenty,yearGreatTwenty
+        from( select dept_id, dept_name as dept_name,sum(total_emp) as total_num,sum(exit_emp) as exit_num, sum(new_emp)
+        as
+        new_num,sum(age_num) as age_num,sum(year1_3) as yearOneToThree, sum(year3_5) as yearThreeToFive, sum(year5_10)
+        as yearFiveToTen,sum(year10_20) as yearTenToTwenty, sum(year20) as yearGreatTwenty
+        from (
+        select emp_dept_id ,count(*) as total_emp , 0 as exit_emp,0 as new_emp,0 as age_num,0 as year1_3,0 as year3_5,0
+        as year5_10,0 as year10_20,0 as year20 from employee where disabled
+        = 0 GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, count(*) as exit_emp,0 as new_emp,0 as age_num,0 as year1_3,0 as year3_5,0
+        as year5_10,0 as year10_20,0 as year20 from employee where
+        disabled = 0 and emp_status in (3,4) and emp_status_update_time >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'),
+        INTERVAL 11 MONTH) and emp_status_update_time &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 0 MONTH), INTERVAL 1 DAY)
+        GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, 0 as exit_emp, count(*) as new_emp,0 as age_num,0 as year1_3,0 as year3_5,0
+        as year5_10,0 as year10_20,0 as year20 from employee where
+        disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 11 MONTH) and emp_hiredate
+        &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 0 MONTH), INTERVAL 1 DAY) GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, 0 as exit_emp, 0 as new_emp, count(*) as age_num,0 as year1_3,0 as year3_5,0
+        as year5_10,0 as year10_20,0 as year20 from employee
+        where disabled = 0 and emp_status_update_time = 6 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'),
+        INTERVAL 11 MONTH) and emp_status_update_time
+        &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 0 MONTH), INTERVAL 1 DAY) GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, 0 as exit_emp, 0 as new_emp,0 as age_num,count(*) as year1_3,0 as year3_5,0
+        as year5_10,0 as year10_20,0 as year20 from employee where
+        disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 35 MONTH) and emp_hiredate
+        &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 12 MONTH), INTERVAL 1 DAY) GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, 0 as exit_emp, 0 as new_emp,0 as age_num,0 as year1_3,count(*) as year3_5,0
+        as year5_10,0 as year10_20,0 as year20 from employee where
+        disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 59 MONTH) and emp_hiredate
+        &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 36 MONTH), INTERVAL 1 DAY) GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, 0 as exit_emp, 0 as new_emp,0 as age_num,0 as year1_3,0 as year3_5,count(*)
+        as year5_10,0 as year10_20, 0 as year20 from employee where
+        disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 119 MONTH) and emp_hiredate
+        &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 60 MONTH), INTERVAL 1 DAY) GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, 0 as exit_emp, 0 as new_emp,0 as age_num ,0 as year1_3,0 as year3_5,0 as
+        year5_10,count(*) as year10_20, 0 as year20 from employee where
+        disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 239 MONTH) and emp_hiredate
+        &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 120 MONTH), INTERVAL 1 DAY) GROUP BY emp_dept_id
+        union all
+        select emp_dept_id ,0 as total_emp, 0 as exit_emp, 0 as new_emp,0 as age_num ,0 as year1_3,0 as year3_5,0 as
+        year5_10,count(*) as year10_20,count(*) as year20 from employee where
+        disabled = 0 and emp_hiredate &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 240 MONTH), INTERVAL 1 DAY) GROUP BY
+        emp_dept_id
+
+        )as countTable
+        left join department on department.dept_id = countTable.emp_dept_id
+        where countTable.emp_dept_id is not null
+        GROUP BY dept_name
+        ) as tempTable
+        <where>
+            <if test="deptName != null and deptName != ''">and dept_name like CONCAT('%',#{deptName},'%')</if>
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    <select id="getUnitStabilityData" parameterType="com.yuantu.labor.vo.StabilityQueryVO"
+            resultType="com.yuantu.labor.vo.StabilityResultVO">
+        select unit_name,total_num,exit_num,age_num,ROUND((total_num-(exit_num+new_num)/2)/total_num*100,2) as
+        stability_index,new_num as
+        yearLessOne,yearOneToThree,yearThreeToFive,yearFiveToTen,yearTenToTwenty,yearGreatTwenty
+        from(
+        select unit_name ,sum(total_emp) as total_num,sum(exit_emp) as exit_num, sum(new_emp) as
+        new_num,sum(age_emp) as age_num,sum(year1_3) as yearOneToThree, sum(year3_5) as yearThreeToFive, sum(year5_10)
+        as yearFiveToTen,sum(year10_20) as yearTenToTwenty, sum(year20) as yearGreatTwenty
+        from (
+        select unit_name ,count(*) as total_emp, 0 as exit_emp,0 as age_emp,0 as new_emp,0 as year1_3,0 as year3_5,0 as
+        year5_10,0 as year10_20,0 as year20 from employee left JOIN
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 GROUP BY unit_name
+        union all
+        select unit_name ,0 as total_emp, count(*) as exit_emp,0 as age_emp,0 as new_emp,0 as year1_3,0 as year3_5,0 as
+        year5_10,0 as year10_20,0 as year20 from employee left JOIN
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_status in (3,4) and emp_status_update_time >=DATE_SUB(DATE_FORMAT(NOW(),
+        '%Y-%m-01'), INTERVAL 11 MONTH) and emp_status_update_time &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 0 MONTH),
+        INTERVAL 1 DAY) GROUP BY unit_name
+        union all
+        select unit_name ,0 as total_emp, 0 as exit_emp,count(*) as age_emp,0 as new_emp,0 as year1_3,0 as year3_5,0 as
+        year5_10,0 as year10_20,0 as year20 from employee left JOIN
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_status = 6 and emp_status_update_time >=DATE_SUB(DATE_FORMAT(NOW(),
+        '%Y-%m-01'), INTERVAL 11 MONTH) and emp_status_update_time
+        &lt; DATE_ADD(LAST_DAY(NOW() - INTERVAL 0 MONTH), INTERVAL 1 DAY) GROUP BY unit_name
+        union all
+        select unit_name ,0 as total_emp, 0 as exit_emp,0 as age_emp,count(*) as new_emp,0 as year1_3,0 as year3_5,0 as
+        year5_10,0 as year10_20,0 as year20 from employee left JOIN
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 11 MONTH) and
+        emp_hiredate &lt;DATE_ADD(LAST_DAY(NOW() - INTERVAL 0 MONTH), INTERVAL 1 DAY) GROUP BY unit_name
+        union ALL
+        select unit_name ,0 as total_emp, 0 as exit_emp,0 as age_emp,0 as new_emp,count(*) as year1_3,0 as year3_5,0 as
+        year5_10,0 as year10_20,0 as year20 from employee left join
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 35 MONTH) and
+        emp_hiredate &lt;DATE_ADD(LAST_DAY(NOW() - INTERVAL 12 MONTH), INTERVAL 1 DAY) GROUP BY unit_name
+        union ALL
+        select unit_name ,0 as total_emp, 0 as exit_emp,0 as age_emp,0 as new_emp,0 as year1_3,count(*) as year3_5,0 as
+        year5_10,0 as year10_20,0 as year20 from employee left join
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 59 MONTH) and
+        emp_hiredate &lt;DATE_ADD(LAST_DAY(NOW() - INTERVAL 36 MONTH), INTERVAL 1 DAY) GROUP BY unit_name
+        union ALL
+        select unit_name ,0 as total_emp, 0 as exit_emp,0 as age_emp,0 as new_emp,0 as year1_3,0 as year3_5,count(*) as
+        year5_10,0 as year10_20, 0 as year20 from employee left join
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 119 MONTH) and
+        emp_hiredate &lt;DATE_ADD(LAST_DAY(NOW() - INTERVAL 60 MONTH), INTERVAL 1 DAY) GROUP BY unit_name
+        union ALL
+        select unit_name ,0 as total_emp, 0 as exit_emp,0 as age_emp,0 as new_emp,0 as year1_3,0 as year3_5,0 as
+        year5_10,count(*) as year10_20, 0 as year20 from employee left join
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_hiredate >=DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 239 MONTH) and
+        emp_hiredate &lt;DATE_ADD(LAST_DAY(NOW() - INTERVAL 120 MONTH), INTERVAL 1 DAY) GROUP BY unit_name
+        union ALL
+        select unit_name ,0 as total_emp, 0 as exit_emp,0 as age_emp,0 as new_emp,0 as year1_3,0 as year3_5,count(*) as
+        year5_10,0 as year10_20,count(*) as year20 from employee left join
+        department on dept_id = emp_dept_id LEFT JOIN employing_units on unit_id = dept_unit_id
+        where employee.disabled = 0 and emp_hiredate &lt;DATE_ADD(LAST_DAY(NOW() - INTERVAL 240 MONTH), INTERVAL 1 DAY)
+        GROUP BY unit_name
+        )as countTable where unit_name is not null
+        GROUP BY unit_name
+        ) as tempTable
+
+        <where>
+            <if test="unitName != null and unitName != ''">and unit_name like CONCAT('%',#{unitName},'%')</if>
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <select id="findEmpInfoByEmpName" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id,
+               emp_idcard,
+               emp_name,
+               emp_dept_id,
+               department.dept_name as emp_dept_name,
+               emp_code,
+               emp_age,
+               birth_date,
+               emp_status,
+               emp_political_status,
+               emp_gender,
+               emp_education,
+               emp_speciality,
+               emp_title,
+               emp_category,
+               emp_type,
+               emp_employing_units,
+               emp_hr_company,
+               emp_position_level,
+               emp_position,
+               emp_hiredate,
+               emp_salary_level,
+               emp_remark,
+               emp_emergency_contact,
+               emp_emergency_contact_phone,
+               emp_telephone,
+               emp_home_address,
+               emp_reference,
+               emp_change_type,
+               emp_update_time,
+               emp_update_by,
+               emp_create_time,
+               emp_create_by,
+               emp_avatar_url,
+               emp_expire_time,
+               employee.disabled,
+               emp_status_update_time,
+               invisible,
+               nation,
+               retire_reminder,
+               hire_limit_date,
+               dept_info_two,
+               dept_info_three,
+               emp_position_category,
+               native_place,
+               birth_place,
+               domicile_place,
+               school,
+               highest_education,
+               graduate_time,
+               acquire_time,
+               attend_time,
+               refuse_month,
+               accumulative_month,
+               contract_start_time,
+               contract_end_time,
+               work_phone,
+               on_job_time,
+               salary_level_min,
+               salary_level_max
+        from employee
+                 left join department on employee.emp_dept_id = department.dept_id
+        where emp_name = #{empName}
+          and employee.disabled = 0 limit 1
+    </select>
+    <select id="findDeletedEmpInfoByEmpName" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id,
+               emp_idcard,
+               emp_name,
+               emp_dept_id,
+               department.dept_name as emp_dept_name,
+               emp_code,
+               emp_age,
+               birth_date,
+               emp_status,
+               emp_political_status,
+               emp_gender,
+               emp_education,
+               emp_speciality,
+               emp_title,
+               emp_category,
+               emp_type,
+               emp_employing_units,
+               emp_hr_company,
+               emp_position_level,
+               emp_position,
+               emp_hiredate,
+               emp_salary_level,
+               emp_remark,
+               emp_emergency_contact,
+               emp_emergency_contact_phone,
+               emp_telephone,
+               emp_home_address,
+               emp_reference,
+               emp_change_type,
+               emp_update_time,
+               emp_update_by,
+               emp_create_time,
+               emp_create_by,
+               emp_avatar_url,
+               emp_expire_time,
+               employee.disabled,
+               emp_status_update_time,
+               invisible,
+               nation,
+               retire_reminder,
+               hire_limit_date,
+               dept_info_two,
+               dept_info_three,
+               emp_position_category,
+               native_place,
+               birth_place,
+               domicile_place,
+               school,
+               highest_education,
+               graduate_time,
+               acquire_time,
+               attend_time,
+               refuse_month,
+               accumulative_month,
+               contract_start_time,
+               contract_end_time,
+               work_phone,
+               on_job_time,
+               salary_level_min,
+               salary_level_max
+        from employee
+                 left join department on employee.emp_dept_id = department.dept_id
+        where emp_name = #{empName}
+          and employee.disabled = 1 limit 1
+    </select>
+
+
+    <select id="findEmpPicInfos" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id, emp_name, CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as emp_idcard, emp_dept_id, emp_dept_name
+        from employee
+        where disabled = 0
+        <if test="empInfo.keyword != null and empInfo.keyword != ''">
+            and (emp_name like concat ('%', #{empInfo.keyword}, '%') or CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) like
+            concat
+            ('%', #{empInfo.keyword}, '%'))
+        </if>
+        <if test="empInfo.departmentIds != null and empInfo.departmentIds.size() > 0 ">
+            and emp_dept_id in
+            <foreach collection="empInfo.departmentIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="findInfoByEmpIdCardOrName" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where emp_name like concat('%', #{empIdCard}, '%') or CAST(SP_DECRYPT(emp_idcard) AS CHAR(128))
+        like concat('%', #{empIdCard}, '%')
+    </select>
+    <select id="findEmployeeInfosByDeptIdWithStatus" resultType="com.yuantu.labor.domain.Employee">
+        <include refid="selectEmployeeVo"/>
+        where emp_dept_id = #{deptId} and year(emp_create_time) = #{valueYear}
+        and disabled = 0 and emp_status in (1,2,5,7)
+    </select>
+    <update id="updateEmpSalaryLevel" parameterType="com.yuantu.labor.domain.Employee">
+        update employee
+        set emp_salary_level = #{empSalaryLevel}
+        where emp_id = #{empId}
+    </update>
+    <select id="selectDeletedEmpByEmpName" parameterType="String" resultType="com.yuantu.labor.domain.Employee">
+        select emp_id,
+        emp_idcard,
+        emp_name
+        from employee
+        where disabled = 1 and emp_name =#{empName}
+        ORDER BY emp_update_time desc
+
+    </select>
+    <select id="findEmpIdsByParams" resultType="java.lang.Long">
+        select emp_id from employee
+        where 1 = 1
+        <if test="empName != null and empName != '' ">
+            and (emp_name like concat('%', #{empName}, '%') or
+            CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) like concat('%', #{empName}, '%'))
+        </if>
+        <if test="isRelated != null">
+            and disabled = #{isRelated}
+        </if>
+        <if test="isRelated == null">
+            and disabled = 0
+        </if>
+        <if test="empCategory != null and empCategory != '' ">
+             and emp_category = #{empCategory}
+        </if>
+        <if test="deptId != null">
+            and emp_dept_id = #{deptId}
+        </if>
+    </select>
+    <select id="findInfosByStatusInfos" resultType="java.lang.Long">
+        select emp_id from employee
+        where emp_status in
+        <foreach collection="statusInfos" item="statusInfo" open="(" close=")" separator=",">
+            #{statusInfo}
+        </foreach>
+        and disabled = 0
+    </select>
+    <update id="recoveryDeletedEmp"  parameterType="com.yuantu.labor.vo.EmployeeVO">
+        update employee
+        set disabled = 0, emp_update_time = #{empUpdateTime}
+        where emp_id = #{empId}
+    </update>
+
+
+</mapper>

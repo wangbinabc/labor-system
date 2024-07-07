@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.TrainMaterialsMapper">
+    
+    <resultMap type="com.yuantu.labor.domain.TrainMaterials" id="TrainMaterialsResult">
+        <result property="matId"    column="mat_id"    />
+        <result property="matName"    column="mat_name"    />
+        <result property="matProjectId"    column="mat_project_id"    />
+        <result property="matProjectName"    column="mat_project_name"    />
+        <result property="matAnnexPath"    column="mat_annex_path"    />
+        <result property="matDirectoryId"    column="mat_directory_id"    />
+        <result property="matUpdateTime"    column="mat_update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="fileVO" javaType="com.yuantu.labor.vo.FileVO" >
+            <result property="fileId"   column="doc_id" />
+            <result property="fileType"   column="doc_type" />
+            <result property="fileName"   column="doc_name" />
+            <result property="fileUrl"   column="doc_annex_path" />
+        </association>
+
+    </resultMap>
+
+    <sql id="selectTrainMaterialsVo">
+        select mat_id, mat_name, mat_project_id, mat_project_name, mat_annex_path, mat_directory_id, mat_update_time,
+               train_materials.create_by, train_materials.create_time, train_materials.update_by, train_materials.update_time,
+               doc_id,doc_type,doc_name,doc_annex_path
+        from train_materials
+                 left JOIN emp_document on train_materials.mat_id = emp_document.doc_emp_id and doc_type = 5 and emp_document.disabled=0
+    </sql>
+
+    <select id="selectTrainMaterialsList" parameterType="com.yuantu.labor.domain.TrainMaterials" resultMap="TrainMaterialsResult">
+        <include refid="selectTrainMaterialsVo"/>
+        <where>  
+            <if test="matName != null  and matName != ''"> and mat_name like concat('%', #{matName}, '%')</if>
+            <if test="matProjectId != null "> and mat_project_id = #{matProjectId}</if>
+            <if test="matProjectName != null  and matProjectName != ''"> and mat_project_name like concat('%', #{matProjectName}, '%')</if>
+            <if test="matAnnexPath != null  and matAnnexPath != ''"> and mat_annex_path = #{matAnnexPath}</if>
+            <if test="matDirectoryId != null "> and mat_directory_id = #{matDirectoryId}</if>
+            <if test="matIds !=null">
+                and mat_id in
+                <foreach item="matId" collection="matIds" open="(" separator="," close=")">
+                    #{matId}
+                </foreach>
+            </if>
+             and train_materials.disabled = 0
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+</mapper>

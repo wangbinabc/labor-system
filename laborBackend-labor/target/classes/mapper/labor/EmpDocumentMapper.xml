@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpDocumentMapper">
+
+    <resultMap type="EmpDocument" id="EmpDocumentResult">
+        <result property="docId" column="doc_id"/>
+        <result property="docType" column="doc_type"/>
+        <result property="docName" column="doc_name"/>
+        <result property="docAnnexPath" column="doc_annex_path"/>
+        <result property="docEmpId" column="doc_emp_id"/>
+        <result property="docUpdateTime" column="doc_update_time"/>
+        <result property="isCompress" column="is_compress"/>
+    </resultMap>
+
+    <sql id="selectEmpDocumentVo">
+        select doc_id,
+               doc_type,
+               doc_name,
+               doc_annex_path,
+               doc_emp_id,
+               doc_update_time,
+               disabled,
+               is_compress
+        from emp_document
+    </sql>
+
+    <select id="selectEmpDocumentList" parameterType="EmpDocument" resultMap="EmpDocumentResult">
+        <include refid="selectEmpDocumentVo"/>
+        <where>
+            and disabled = 0
+            <if test="docType != null  and docType != ''">and doc_type = #{docType}</if>
+            <if test="docName != null  and docName != ''">and doc_name like concat('%', #{docName}, '%')</if>
+            <if test="docAnnexPath != null  and docAnnexPath != ''">and doc_annex_path = #{docAnnexPath}</if>
+            <if test="docEmpId != null ">and doc_emp_id = #{docEmpId}</if>
+            <if test="docUpdateTime != null ">and doc_update_time = #{docUpdateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectEmpDocumentByDocId" parameterType="Long" resultMap="EmpDocumentResult">
+        <include refid="selectEmpDocumentVo"/>
+        where doc_id = #{docId} and disabled = 0
+    </select>
+
+    <select id="findDocInfosByEmpIdAndTypes" resultType="com.yuantu.labor.domain.EmpDocument">
+        <include refid="selectEmpDocumentVo"/>
+        where doc_emp_id = #{empId} and disabled = 0 and doc_type in
+        <foreach collection="docTypes" item="type" open="(" separator="," close=")">
+            #{type}
+        </foreach>
+    </select>
+    <select id="findDocInfosByEmpIdsAndTypes" resultType="com.yuantu.labor.domain.EmpDocument">
+        <include refid="selectEmpDocumentVo"/>
+        where doc_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+        and doc_type in
+        <foreach collection="docTypes" item="docType" open="(" separator="," close=")">
+            #{docType}
+        </foreach>
+        and disabled = 0
+    </select>
+
+    <insert id="insertEmpDocument" parameterType="EmpDocument" useGeneratedKeys="true" keyProperty="docId">
+        insert into emp_document
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="docType != null">doc_type,</if>
+            <if test="docName != null">doc_name,</if>
+            <if test="docAnnexPath != null">doc_annex_path,</if>
+            <if test="docEmpId != null">doc_emp_id,</if>
+            <if test="docUpdateTime != null">doc_update_time,</if>
+            <if test="createBy != null and createBy != '' ">create_by,</if>
+            <if test="disabled != null">disabled,</if>
+            <if test="isCompress != null">is_compress,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="docType != null">#{docType},</if>
+            <if test="docName != null">#{docName},</if>
+            <if test="docAnnexPath != null">#{docAnnexPath},</if>
+            <if test="docEmpId != null">#{docEmpId},</if>
+            <if test="docUpdateTime != null">#{docUpdateTime},</if>
+            <if test="createBy != null and createBy != '' ">#{createBy},</if>
+            <if test="disabled != null">#{disabled},</if>
+            <if test="isCompress != null">#{isCompress},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEmpDocument" parameterType="EmpDocument">
+        update emp_document
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="docType != null">doc_type = #{docType},</if>
+            <if test="docName != null">doc_name = #{docName},</if>
+            <if test="docAnnexPath != null">doc_annex_path = #{docAnnexPath},</if>
+            <if test="docEmpId != null">doc_emp_id = #{docEmpId},</if>
+            <if test="docUpdateTime != null">doc_update_time = #{docUpdateTime},</if>
+            <if test="isCompress != null">is_compress = #{isCompress},</if>
+        </trim>
+        where doc_id = #{docId} and disabled = 0
+    </update>
+    <update id="bindEmpInfos">
+        update emp_document
+        set doc_emp_id = #{empId}
+        where disabled = 0 and doc_id in
+        <foreach collection="docIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="removeInfoByEmpId">
+        update emp_document
+        set disabled = 1
+        where doc_emp_id = #{empId}
+          and doc_type in (1, 2, 3, 4)
+          and disabled = 0
+    </update>
+
+
+    <update id="removeInfoByDocId">
+        update emp_document
+        set disabled = 1
+        where doc_id = #{docId}
+          and disabled = 0
+    </update>
+
+    <update id="removeInfoByDocIds">
+        update emp_document
+        set disabled = 1
+        where doc_id in
+        <foreach item="docId" collection="array" open="(" separator="," close=")">
+            #{docId}
+        </foreach>
+    </update>
+
+
+    <update id="removeInfoByEmpIdsAndDocTypes">
+        update emp_document
+        set disabled = 1
+        where doc_emp_id in
+        <foreach collection="empIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and doc_type in
+        <foreach collection="docTypes" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and disabled = 0
+    </update>
+    <update id="removeInfoByDocIdList">
+        update emp_document
+        set disabled = 1
+        where doc_id in
+        <foreach collection="docIds" item="docId" open="(" separator="," close=")">
+            #{docId}
+        </foreach>
+        and disabled = 0
+    </update>
+
+
+    <delete id="deleteEmpDocumentByDocId" parameterType="Long">
+        delete
+        from emp_document
+        where doc_id = #{docId}
+    </delete>
+
+    <delete id="deleteEmpDocumentByDocIds" parameterType="String">
+        delete from emp_document where doc_id in
+        <foreach item="docId" collection="array" open="(" separator="," close=")">
+            #{docId}
+        </foreach>
+    </delete>
+
+</mapper>

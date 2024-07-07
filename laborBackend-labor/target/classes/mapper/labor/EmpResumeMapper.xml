@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpResumeMapper">
+
+    <resultMap type="com.yuantu.labor.domain.EmpResume" id="EmpResumeResult">
+        <result property="resuId" column="resu_id"/>
+        <result property="resuType" column="resu_type"/>
+        <result property="resuWorkUnitName" column="resu_work_unit_name"/>
+        <result property="resuBeginDate" column="resu_begin_date"/>
+        <result property="resuEndDate" column="resu_end_date"/>
+        <result property="resuDept" column="resu_dept"/>
+        <result property="resuPosition" column="resu_position"/>
+        <result property="resuContext" column="resu_context"/>
+        <result property="resuProjectName" column="resu_project_name"/>
+        <result property="resuProjectScale" column="resu_project_scale"/>
+        <result property="resuProjectType" column="resu_project_type"/>
+        <result property="resuProjectJob" column="resu_project_job"/>
+        <result property="resuProjectCertifier" column="resu_project_certifier"/>
+        <result property="resuEmpId" column="resu_emp_id"/>
+        <result property="resuEmpName" column="resu_emp_name"/>
+        <result property="resuEmpIdcard" column="resu_emp_idcard"/>
+        <result property="resuUpdateTime" column="resu_update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectEmpResumeVo">
+        select resu_id,
+               resu_type,
+               resu_work_unit_name,
+               resu_begin_date,
+               resu_end_date,
+               resu_dept,
+               resu_position,
+               resu_context,
+               resu_project_name,
+               resu_project_scale,
+               resu_project_type,
+               resu_project_job,
+               resu_project_certifier,
+               resu_emp_id,
+               resu_emp_name,
+               resu_emp_idcard,
+               resu_update_time,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from emp_resume
+    </sql>
+
+    <select id="selectEmpResumeList" parameterType="com.yuantu.labor.domain.EmpResume" resultMap="EmpResumeResult">
+        <include refid="selectEmpResumeVo"/>
+        <where>
+            <if test="resuType != null  and resuType != ''">and resu_type = #{resuType}</if>
+            <if test="resuWorkUnitName != null  and resuWorkUnitName != ''">and resu_work_unit_name like concat('%',
+                #{resuWorkUnitName}, '%')
+            </if>
+            <if test="resuBeginDate != null ">and resu_begin_date = #{resuBeginDate}</if>
+            <if test="resuEndDate != null ">and resu_end_date = #{resuEndDate}</if>
+            <if test="resuDept != null  and resuDept != ''">and resu_dept = #{resuDept}</if>
+            <if test="resuPosition != null  and resuPosition != ''">and resu_position = #{resuPosition}</if>
+            <if test="resuContext != null  and resuContext != ''">and resu_context = #{resuContext}</if>
+            <if test="resuProjectName != null  and resuProjectName != ''">and resu_project_name like concat('%',
+                #{resuProjectName}, '%')
+            </if>
+            <if test="resuProjectScale != null  and resuProjectScale != ''">and resu_project_scale =
+                #{resuProjectScale}
+            </if>
+            <if test="resuProjectType != null  and resuProjectType != ''">and resu_project_type = #{resuProjectType}
+            </if>
+            <if test="resuProjectJob != null  and resuProjectJob != ''">and resu_project_job = #{resuProjectJob}</if>
+            <if test="resuProjectCertifier != null  and resuProjectCertifier != ''">and resu_project_certifier =
+                #{resuProjectCertifier}
+            </if>
+            <if test="resuEmpId != null ">and resu_emp_id = #{resuEmpId}</if>
+            <if test="resuEmpName != null  and resuEmpName != ''">and resu_emp_name like concat('%', #{resuEmpName},
+                '%')
+            </if>
+            <if test="resuEmpIdcard != null  and resuEmpIdcard != ''">and resu_emp_idcard = #{resuEmpIdcard}</if>
+            and disabled = 0
+        </where>
+    </select>
+
+    <select id="selectEmpResumeByResuId" parameterType="Integer" resultMap="EmpResumeResult">
+        <include refid="selectEmpResumeVo"/>
+        where resu_id = #{resuId}
+    </select>
+
+    <insert id="insertEmpResume" parameterType="com.yuantu.labor.domain.EmpResume" useGeneratedKeys="true"
+            keyProperty="resuId">
+        insert into emp_resume
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="resuType != null">resu_type,</if>
+            <if test="resuWorkUnitName != null">resu_work_unit_name,</if>
+            <if test="resuBeginDate != null">resu_begin_date,</if>
+            <if test="resuEndDate != null">resu_end_date,</if>
+            <if test="resuDept != null">resu_dept,</if>
+            <if test="resuPosition != null">resu_position,</if>
+            <if test="resuContext != null">resu_context,</if>
+            <if test="resuProjectName != null">resu_project_name,</if>
+            <if test="resuProjectScale != null">resu_project_scale,</if>
+            <if test="resuProjectType != null">resu_project_type,</if>
+            <if test="resuProjectJob != null">resu_project_job,</if>
+            <if test="resuProjectCertifier != null">resu_project_certifier,</if>
+            <if test="resuEmpId != null">resu_emp_id,</if>
+            <if test="resuEmpName != null">resu_emp_name,</if>
+            <if test="resuEmpIdcard != null">resu_emp_idcard,</if>
+            <if test="resuUpdateTime != null">resu_update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="resuType != null">#{resuType},</if>
+            <if test="resuWorkUnitName != null">#{resuWorkUnitName},</if>
+            <if test="resuBeginDate != null">#{resuBeginDate},</if>
+            <if test="resuEndDate != null">#{resuEndDate},</if>
+            <if test="resuDept != null">#{resuDept},</if>
+            <if test="resuPosition != null">#{resuPosition},</if>
+            <if test="resuContext != null">#{resuContext},</if>
+            <if test="resuProjectName != null">#{resuProjectName},</if>
+            <if test="resuProjectScale != null">#{resuProjectScale},</if>
+            <if test="resuProjectType != null">#{resuProjectType},</if>
+            <if test="resuProjectJob != null">#{resuProjectJob},</if>
+            <if test="resuProjectCertifier != null">#{resuProjectCertifier},</if>
+            <if test="resuEmpId != null">#{resuEmpId},</if>
+            <if test="resuEmpName != null">#{resuEmpName},</if>
+            <if test="resuEmpIdcard != null">#{resuEmpIdcard},</if>
+            <if test="resuUpdateTime != null">#{resuUpdateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsertEmpResumes">
+        insert into emp_resume(resu_type,
+        resu_work_unit_name,
+        resu_begin_date,
+        resu_end_date,
+        resu_dept,
+        resu_position,
+        resu_context,
+        resu_project_name,
+        resu_project_scale,
+        resu_project_type,
+        resu_project_job,
+        resu_project_certifier,
+        resu_emp_id,
+        resu_emp_name,
+        resu_emp_idcard,
+        resu_update_time,
+        create_by,
+        create_time) values
+        <foreach collection="empResumes" item="empResume" separator=",">
+            (#{empResume.resuType}, #{empResume.resuWorkUnitName}, #{empResume.resuBeginDate},
+            #{empResume.resuEndDate},#{empResume.resuDept},#{empResume.resuPosition}, #{empResume.resuContext},
+            #{empResume.resuProjectName},#{empResume.resuProjectScale},
+            #{empResume.resuProjectType}, #{empResume.resuProjectJob}, #{empResume.resuProjectCertifier},
+            #{empResume.resuEmpId}, #{empResume.resuEmpName},
+            #{empResume.resuEmpIdcard}, #{empResume.resuUpdateTime}, #{empResume.createBy}, #{empResume.createTime})
+        </foreach>
+    </insert>
+
+    <update id="updateEmpResume" parameterType="com.yuantu.labor.domain.EmpResume">
+        update emp_resume
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resuType != null">resu_type = #{resuType},</if>
+            <if test="resuWorkUnitName != null">resu_work_unit_name = #{resuWorkUnitName},</if>
+            <if test="resuBeginDate != null">resu_begin_date = #{resuBeginDate},</if>
+            <if test="resuEndDate != null">resu_end_date = #{resuEndDate},</if>
+            <if test="resuDept != null">resu_dept = #{resuDept},</if>
+            <if test="resuPosition != null">resu_position = #{resuPosition},</if>
+            <if test="resuContext != null">resu_context = #{resuContext},</if>
+            <if test="resuProjectName != null">resu_project_name = #{resuProjectName},</if>
+            <if test="resuProjectScale != null">resu_project_scale = #{resuProjectScale},</if>
+            <if test="resuProjectType != null">resu_project_type = #{resuProjectType},</if>
+            <if test="resuProjectJob != null">resu_project_job = #{resuProjectJob},</if>
+            <if test="resuProjectCertifier != null">resu_project_certifier = #{resuProjectCertifier},</if>
+            <if test="resuEmpId != null">resu_emp_id = #{resuEmpId},</if>
+            <if test="resuEmpName != null">resu_emp_name = #{resuEmpName},</if>
+            <if test="resuEmpIdcard != null">resu_emp_idcard = #{resuEmpIdcard},</if>
+            <if test="resuUpdateTime != null">resu_update_time = #{resuUpdateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where resu_id = #{resuId}
+    </update>
+
+    <delete id="deleteEmpResumeByResuId" parameterType="Integer">
+        update emp_resume
+        set disabled = 1
+        where resu_id = #{resuId}
+    </delete>
+
+    <delete id="deleteEmpResumeByResuIds" parameterType="String">
+        update emp_resume set disabled = 1 where resu_id in
+        <foreach item="resuId" collection="array" open="(" separator="," close=")">
+            #{resuId}
+        </foreach>
+    </delete>
+
+    <select id="selectEmpResumeListByWhere" parameterType="com.yuantu.labor.vo.EmpResumeVO" resultMap="EmpResumeResult">
+        select resu_id,
+        resu_type,
+        resu_work_unit_name,
+        resu_begin_date,
+        resu_end_date,
+        resu_dept,
+        resu_position,
+        resu_context,
+        resu_project_name,
+        resu_project_scale,
+        resu_project_type,
+        resu_project_job,
+        resu_project_certifier,
+        resu_emp_id,
+        resu_emp_name,
+        CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as resu_emp_idcard,
+        resu_update_time,
+        emp_resume.create_by,
+        emp_resume.create_time,
+        emp_resume.update_by,
+        emp_resume.update_time
+        from emp_resume
+        LEFT JOIN employee on emp_resume.resu_emp_id=employee.emp_id
+        <where>
+            <if test="resuType != null  and resuType != ''">and resu_type = #{resuType}</if>
+            <if test="empName != null  and empName != ''">and (emp_name like concat('%', #{empName}, '%') or
+                CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) like concat('%', #{empName}, '%'))
+            </if>
+            <if test="resuBeginDateStart != null">and DATE_FORMAT(resu_begin_date, '%Y-%m-%d') &gt;=
+                DATE_FORMAT(#{resuBeginDateStart}, '%Y-%m-%d')
+            </if>
+            <if test="resuBeginDateEnd != null">and DATE_FORMAT(resu_begin_date, '%Y-%m-%d') &lt;=
+                DATE_FORMAT(#{resuBeginDateEnd}, '%Y-%m-%d')
+            </if>
+            <if test="resuEndDateStart != null">and DATE_FORMAT(resu_end_date, '%Y-%m-%d') &gt;=
+                DATE_FORMAT(#{resuEndDateStart}, '%Y-%m-%d')
+            </if>
+            <if test="resuEndDateEnd != null">and DATE_FORMAT(resu_end_date, '%Y-%m-%d') &lt;=
+                DATE_FORMAT(#{resuEndDateEnd}, '%Y-%m-%d')
+            </if>
+            <if test="resuWorkUnitName != null and resuWorkUnitName != ''">
+                and resu_work_unit_name like concat('%', #{resuWorkUnitName}, '%')
+            </if>
+            <if test="resuPosition != null and resuPosition != ''">
+                and resu_position like concat('%', #{resuPosition}, '%')
+            </if>
+            <if test="resuDept != null and resuDept != ''">
+                and resu_dept like concat('%', #{resuDept}, '%')
+            </if>
+            <if test="resuProjectName != null and resuProjectName != ''">
+                and resu_project_name like concat('%', #{resuProjectName}, '%')
+            </if>
+            <if test="resuProjectScale != null and resuProjectScale != ''">
+                and resu_project_scale like concat('%', #{resuProjectScale}, '%')
+            </if>
+            <if test="resuProjectType != null and resuProjectType != ''">
+                and resu_project_type like concat('%', #{resuProjectType}, '%')
+            </if>
+            <if test="resuProjectJob != null and resuProjectJob != ''">
+                and resu_project_job like concat('%', #{resuProjectJob}, '%')
+            </if>
+            <if test="resuProjectCertifier != null and resuProjectCertifier != ''">
+                and resu_project_certifier like concat('%', #{resuProjectCertifier}, '%')
+            </if>
+            <if test="resuIds !=null">
+                and resu_id in
+                <foreach item="resuId" collection="resuIds" open="(" separator="," close=")"></foreach>
+            </if>
+            <if test="isRelated !=null and isRelated == 1 ">and employee.disabled= 1</if>
+            and emp_resume.disabled = 0
+        </where>
+    </select>
+    <select id="findExportInfosByEmpIds" resultType="com.yuantu.labor.domain.EmpResume">
+        select resu_id,
+        resu_type,
+        resu_work_unit_name,
+        resu_begin_date,
+        resu_end_date,
+        resu_dept,
+        resu_position,
+        resu_context,
+        resu_project_name,
+        resu_project_scale,
+        resu_project_type,
+        resu_project_job,
+        resu_project_certifier,
+        resu_emp_id,
+        emp_name as resu_emp_name,
+        CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as resu_emp_idcard,
+        resu_update_time,
+        emp_resume.create_by,
+        emp_resume.create_time,
+        emp_resume.update_by,
+        emp_resume.update_time
+        from emp_resume
+        LEFT JOIN employee on emp_resume.resu_emp_id=employee.emp_id
+        where emp_resume.disabled = 0 and resu_type = #{type}
+        <if test="empIds != null and empIds.size() > 0 ">
+            and resu_emp_id in
+            <foreach collection="empIds" item="empId" open="(" close=")" separator=",">
+                #{empId}
+            </foreach>
+        </if>
+    </select>
+    <select id="findInfosByEmpIds" resultType="com.yuantu.labor.domain.EmpResume">
+        <include refid="selectEmpResumeVo"/>
+        where disabled = 0 and resu_emp_id in
+        <foreach collection="empIds" item="empId" open="(" close=")" separator=",">
+            #{empId}
+        </foreach>
+        order by create_time asc
+    </select>
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.TrainResultMapper">
+
+    <resultMap type="com.yuantu.labor.domain.TrainResult" id="TrainResultResult">
+        <result property="resultId" column="result_id"/>
+        <result property="resultName" column="result_name"/>
+        <result property="resultProjectId" column="result_project_id"/>
+        <result property="resultProjectName" column="result_project_name"/>
+        <result property="resultAnnexPath" column="result_annex_path"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="fileVO" javaType="com.yuantu.labor.vo.FileVO">
+            <result property="fileId" column="doc_id"/>
+            <result property="fileType" column="doc_type"/>
+            <result property="fileName" column="doc_name"/>
+            <result property="fileUrl" column="doc_annex_path"/>
+        </association>
+    </resultMap>
+    <resultMap type="com.yuantu.labor.vo.TrainResultVO" id="trainResultVO">
+        <result property="resultId" column="result_id"/>
+        <result property="resultName" column="result_name"/>
+        <result property="resultProjectId" column="result_project_id"/>
+        <result property="resultProjectName" column="result_project_name"/>
+        <result property="resultAnnexPath" column="result_annex_path"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="projectYear" column="project_year"/>
+        <result property="projectDeptName" column="project_dept_name"/>
+        <result property="projectNature" column="project_nature"/>
+        <result property="projectMethod" column="project_method"/>
+        <result property="projectClassify" column="project_classify"/>
+        <association property="fileVO" javaType="com.yuantu.labor.vo.FileVO">
+            <result property="fileId" column="doc_id"/>
+            <result property="fileType" column="doc_type"/>
+            <result property="fileName" column="doc_name"/>
+            <result property="fileUrl" column="doc_annex_path"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectTrainResultVo">
+        select result_id,
+               result_name,
+               result_project_id,
+               result_project_name,
+               result_annex_path,
+               train_result.create_time,
+               train_result.create_by,
+               train_result.update_by,
+               train_result.update_time,
+               doc_id,doc_type,doc_name,doc_annex_path
+        from train_result
+                 left JOIN emp_document on train_result.result_id = emp_document.doc_emp_id and doc_type = 7 and emp_document.disabled=0
+    </sql>
+
+    <select id="selectTrainResultList" parameterType="com.yuantu.labor.domain.TrainResult"
+            resultMap="TrainResultResult">
+        <include refid="selectTrainResultVo"/>
+        where
+        disabled = 0
+        <if test="resultName != null  and resultName != ''">and result_name like concat('%', #{resultName}, '%')</if>
+        <if test="resultProjectId != null ">and result_project_id = #{resultProjectId}</if>
+        <if test="resultProjectName != null  and resultProjectName != ''">and result_project_name like concat('%',
+            #{resultProjectName}, '%')
+        </if>
+    </select>
+    <select id="countByDept" resultType="com.yuantu.labor.vo.PieChartVO">
+        select count(*) as value ,project_dept_name as name
+        FROM train_result LEFT JOIN train_project
+        on result_project_id = project_id
+        where train_result.disabled = 0
+        group by project_dept_id
+
+    </select>
+
+
+</mapper>

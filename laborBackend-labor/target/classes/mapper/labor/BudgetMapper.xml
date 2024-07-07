@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.BudgetMapper">
+
+    <resultMap type="Budget" id="BudgetResult">
+        <result property="budgetId" column="budget_id"/>
+        <result property="budgetCompanyId" column="budget_company_id"/>
+        <result property="budgetCompanyName" column="budget_company_name"/>
+        <result property="budgetTypeId" column="budget_type_id"/>
+        <result property="budgetTypeName" column="budget_type_name"/>
+        <result property="budgetYear" column="budget_year"/>
+        <result property="budgetAmount" column="budget_amount"/>
+        <result property="budgetActualuse" column="budget_actualuse"/>
+        <result property="budgetExecProgress" column="budget_exec_progress"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectBudgetVo">
+        select budget_id,
+               budget_company_id,
+               budget_company_name,
+               budget_type_id,
+               budget_type_name,
+               budget_year,
+               budget_amount,
+               budget_actualuse,
+               budget_exec_progress,
+               disabled,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from budget
+    </sql>
+
+    <select id="selectBudgetList" parameterType="Budget" resultMap="BudgetResult">
+        <include refid="selectBudgetVo"/>
+        <where>
+            <if test="budgetCompanyId != null ">and budget_company_id = #{budgetCompanyId}</if>
+            <if test="budgetCompanyName != null  and budgetCompanyName != ''">and budget_company_name like concat('%',
+                #{budgetCompanyName}, '%')
+            </if>
+            <if test="budgetTypeId != null  and budgetTypeId != ''">and budget_type_id = #{budgetTypeId}</if>
+            <if test="budgetTypeName != null  and budgetTypeName != ''">and budget_type_name like concat('%',
+                #{budgetTypeName}, '%')
+            </if>
+            <if test="budgetYear != null ">and budget_year = #{budgetYear}</if>
+            <if test="budgetAmount != null ">and budget_amount = #{budgetAmount}</if>
+            <if test="budgetActualuse != null ">and budget_actualuse = #{budgetActualuse}</if>
+            <if test="budgetExecProgress != null  and budgetExecProgress != ''">and budget_exec_progress =
+                #{budgetExecProgress}
+            </if>
+            and disabled = 0
+        </where>
+    </select>
+
+
+</mapper>
