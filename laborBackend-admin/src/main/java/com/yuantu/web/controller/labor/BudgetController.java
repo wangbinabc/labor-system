@@ -55,6 +55,7 @@ public class BudgetController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Budget budget)
     {
+        //hello
         startPage();
         List<Budget> list = budgetService.selectBudgetList(budget);
         return getDataTable(list);
