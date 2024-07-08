@@ -21,5 +21,12 @@ public interface IBudgetService
      */
     public List<Budget> selectBudgetList(Budget budget);
 
+    /**
+     * 查询匹配的预算列表（预算类别和年份）
+     * @param budgetTypeId
+     * @param budgetYear
+     * @return
+     */
+    public List<Budget> selectMatchBudgetList(String budgetTypeId, Long budgetYear);
 
 }
