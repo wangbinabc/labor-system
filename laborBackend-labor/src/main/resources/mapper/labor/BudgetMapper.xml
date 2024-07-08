@@ -59,5 +59,11 @@
         </where>
     </select>
 
-
+    <select id="selectMatchBudgetList" resultMap="BudgetResult">
+        <include refid="selectBudgetVo"/>
+        <where>
+            <if test="budgetTypeId != null">and budget_type_id = #{budgetTypeId}</if>
+            <if test="budgetYear != null">and budget_year = #{budgetYear}</if>
+        </where>
+    </select>
 </mapper>

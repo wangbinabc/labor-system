@@ -5,6 +5,7 @@ import com.yuantu.labor.domain.Budget;
 import com.yuantu.labor.domain.BudgetDetail;
 import com.yuantu.labor.vo.BudgetQueryVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -26,6 +27,12 @@ public interface BudgetMapper
      */
     public List<Budget> selectBudgetList(Budget budget);
 
-
+    /**
+     * 查询匹配的预算列表（预算类别和年份）
+     * @param budgetTypeId
+     * @param budgetYear
+     * @return
+     */
+    public List<Budget> selectMatchBudgetList(@Param("budgetTypeId") String budgetTypeId, @Param("budgetYear") Long budgetYear);
 
 }
