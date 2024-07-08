@@ -4,6 +4,7 @@ ruoyi:
   #profile: /home/yuantu/yqc_labor/file
   profile: D:/ruoyi/uploadPath
 
+#test2
 
 # 数据源配置
 spring:
