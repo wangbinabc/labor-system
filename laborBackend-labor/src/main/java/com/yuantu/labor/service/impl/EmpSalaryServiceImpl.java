@@ -96,6 +96,11 @@ public class EmpSalaryServiceImpl implements IEmpSalaryService {
         return empSalaryMapper.countPastYearNetPay(queryVO);
     }
 
+    @Override
+    public List<EmpSalary> selectByNameOrId(EmpSalary empSalary) {
+        return empSalaryMapper.selectByNameOrId(empSalary);
+    }
+
 }
 
 

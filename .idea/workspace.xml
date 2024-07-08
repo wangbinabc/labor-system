@@ -4,7 +4,67 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b62e667-3c68-4a90-8d54-ed5fc9a2f3f0" name="Changes" comment="2023-12-13 修改“恢复已经删除的用户”" />
+    <list default="true" id="9b62e667-3c68-4a90-8d54-ed5fc9a2f3f0" name="Changes" comment="2023-12-13 修改“恢复已经删除的用户”">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_10_13_16_57__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_10_13_16_57__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_10_19_10_26__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_10_19_10_26__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_11_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_11_20__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_11_23__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_11_23__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_13_37__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_13_37__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_15_02__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_15_02__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_15_43__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_15_43__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_15_46__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_15_46__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_16_02__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_16_02__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_16_49__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_16_49__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_17_24__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_17_24__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_17_43__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_17_43__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_18_14__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_15_18_14__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_11_31__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_11_31__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_14_08__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_14_08__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_15_13__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_15_13__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_16_53__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_16_53__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_17_29__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_17_29__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_17_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_17_39__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_9_27__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_16_9_27__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_17_10_25__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_17_10_25__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_17_14_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_17_14_39__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_17_17_42__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_17_17_42__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_2_13_42__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_11_2_13_42__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_9_7_16_09__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023_9_7_16_09__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-admin/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-admin/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-admin/src/main/java/com/yuantu/RuoYiServletInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-admin/src/main/java/com/yuantu/RuoYiServletInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-admin/src/main/java/com/yuantu/web/controller/common/CaptchaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-admin/src/main/java/com/yuantu/web/controller/common/CaptchaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/EmpSalaryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/EmpSalaryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-admin/target/classes/com/yuantu/web/controller/common/CaptchaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-admin/target/classes/com/yuantu/web/controller/common/CaptchaController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-admin/target/classes/com/yuantu/web/controller/labor/EmpSalaryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-admin/target/classes/com/yuantu/web/controller/labor/EmpSalaryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-admin/target/classes/com/yuantu/web/controller/system/SysDeptController.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-admin/target/classes/com/yuantu/web/controller/system/SysDeptController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/file/FileUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/file/FileUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/file/ImageUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/file/ImageUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/http/HttpHelper.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/http/HttpHelper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/poi/ExcelUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-common/target/classes/com/yuantu/common/utils/poi/ExcelUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-framework/target/classes/com/yuantu/framework/aspectj/DataSourceAspect.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-framework/target/classes/com/yuantu/framework/aspectj/DataSourceAspect.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-framework/target/classes/com/yuantu/framework/aspectj/LogAspect.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-framework/target/classes/com/yuantu/framework/aspectj/LogAspect.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-framework/target/classes/com/yuantu/framework/web/service/SysLoginService.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-framework/target/classes/com/yuantu/framework/web/service/SysLoginService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/src/main/java/com/yuantu/labor/mapper/EmpSalaryMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/src/main/java/com/yuantu/labor/mapper/EmpSalaryMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/src/main/java/com/yuantu/labor/service/IEmpSalaryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/src/main/java/com/yuantu/labor/service/IEmpSalaryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/EmpSalaryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/EmpSalaryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/src/main/resources/mapper/labor/EmpSalaryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/src/main/resources/mapper/labor/EmpSalaryMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/mapper/EmpSalaryMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/mapper/EmpSalaryMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/DeptPerformanceServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/DeptPerformanceServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpAttendanceServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpAttendanceServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpCredentialsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpCredentialsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpExpertServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpExpertServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpPerformanceServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpPerformanceServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpResumeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpResumeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpSalaryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmpSalaryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmployeeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/EmployeeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/FileService.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/FileService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/LoanWorkerServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/LoanWorkerServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/PostHistoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/PostHistoryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/ProvicePerformanceServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/laborBackend-labor/target/classes/com/yuantu/labor/service/impl/ProvicePerformanceServiceImpl.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,7 +94,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -45,9 +105,10 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="localRepository" value="D:\maven\maven\repository" />
-        <option name="mavenHome" value="D:/apache-maven-3.6.0" />
-        <option name="userSettingsFile" value="D:\apache-maven-3.6.0\conf\settings.xml" />
+        <option name="customMavenHome" value="E:\soft\Intellij Idea\Maven\apache-maven-3.9.6" />
+        <option name="localRepository" value="E:\soft\Intellij Idea\Maven\repository" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
+        <option name="userSettingsFile" value="E:\soft\Intellij Idea\Maven\apache-maven-3.9.6\conf\settings.xml" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -62,17 +123,25 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Maven.labor-backend-admin [clean].executor": "Run",
+    "Maven.laborBackend [clean].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.RuoYiApplication.executor": "Run",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "F:/java16/labor-system-backend",
+    "git-widget-placeholder": "dev-Shao",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/1/labor-system",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "MavenSettings",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "spring.configuration.checksum": "2dcda05f5068c7fa6c2065ec9344a4d4",
     "vue.rearranger.settings.migration": "true"
   }
@@ -142,6 +211,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-1.8.0_402-corretto-1.8.0_402-4caba194b151-ae57be32" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -255,6 +331,9 @@
       <workItem from="1720164957906" duration="10394000" />
       <workItem from="1720252683786" duration="1695000" />
       <workItem from="1720334868685" duration="14852000" />
+      <workItem from="1720407069490" duration="3093000" />
+      <workItem from="1720410686247" duration="1405000" />
+      <workItem from="1720415760728" duration="10159000" />
     </task>
     <task id="LOCAL-00154" summary="2023-11-14 修改员工穿透，学历为空的情况">
       <option name="closed" value="true" />

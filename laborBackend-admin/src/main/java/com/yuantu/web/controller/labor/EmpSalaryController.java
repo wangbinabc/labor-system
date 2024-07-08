@@ -48,7 +48,7 @@ public class EmpSalaryController extends BaseController {
      * 查询员工酬薪主列表
      */
     @ApiOperation("查询员工酬薪主列表")
-    @PreAuthorize("@ss.hasPermi('labor:salary:list')")
+//    @PreAuthorize("@ss.hasPermi('labor:salary:list')")
     @GetMapping("/list")
     public TableDataInfo list(EmpSalary empSalary) {
         startPage();
@@ -56,7 +56,13 @@ public class EmpSalaryController extends BaseController {
         return getDataTable(list);
     }
 
+    @GetMapping("/nameOrId")
+// 2 、输入姓名或者身份证查找
+    public TableDataInfo selectNameOrId( EmpSalary empSalary){
+        List<EmpSalary> list =empSalaryService.selectByNameOrId(empSalary);
+      return  getDataTable(list);
+    }
 
-
+    //1薪资构成配置
 }
 
