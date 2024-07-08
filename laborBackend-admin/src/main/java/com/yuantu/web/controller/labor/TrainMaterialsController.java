@@ -44,9 +44,10 @@ public class TrainMaterialsController extends BaseController {
      * 查询培训项目材料列表
      */
     @ApiOperation("查询培训项目材料列表")
-    @PreAuthorize("@ss.hasPermi('labor:materials:list')")
+    //@PreAuthorize("@ss.hasPermi('labor:materials:list')")
     @GetMapping("/list")
     public TableDataInfo list(TrainMaterials trainMaterials) {
+
         startPage();
         List<TrainMaterials> list = trainMaterialsService.selectTrainMaterialsList(trainMaterials);
         return getDataTable(list);
