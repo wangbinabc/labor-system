@@ -61,6 +61,17 @@ public class BudgetController extends BaseController
         return getDataTable(list);
     }
 
-
+    /**
+     * 查询匹配的预算列表（预算类别和年份）
+     * @param budgetTypeId
+     * @param budgetYear
+     * @return
+     */
+    @ApiOperation("搜索匹配的预算列表")
+    @GetMapping("/listMatch")
+    public TableDataInfo listMatch(String budgetTypeId, Long budgetYear) {
+        List<Budget> list = budgetService.selectMatchBudgetList(budgetTypeId, budgetYear);
+        return getDataTable(list);
+    }
 
 }
