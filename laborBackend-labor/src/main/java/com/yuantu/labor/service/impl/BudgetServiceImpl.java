@@ -36,5 +36,16 @@ public class BudgetServiceImpl implements IBudgetService
         return budgetMapper.selectBudgetList(budget);
     }
 
+    /**
+     * 查询匹配的预算列表（预算类别和年份）
+     * @param budgetTypeId
+     * @param budgetYear
+     * @return
+     */
+    @Override
+    public List<Budget> selectMatchBudgetList(String budgetTypeId, Long budgetYear) {
+        return budgetMapper.selectMatchBudgetList(budgetTypeId,budgetYear);
+    }
+
 
 }
