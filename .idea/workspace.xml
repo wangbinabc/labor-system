@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b62e667-3c68-4a90-8d54-ed5fc9a2f3f0" name="Changes" comment="2023-12-13 修改“恢复已经删除的用户”" />
+    <list default="true" id="9b62e667-3c68-4a90-8d54-ed5fc9a2f3f0" name="Changes" comment="2024-07-08 test1,2" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,8 +45,9 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
+        <option name="customMavenHome" value="$PROJECT_DIR$/../../apache-maven-3.6.0" />
         <option name="localRepository" value="D:\maven\maven\repository" />
-        <option name="mavenHome" value="D:/apache-maven-3.6.0" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
         <option name="userSettingsFile" value="D:\apache-maven-3.6.0\conf\settings.xml" />
       </MavenGeneralSettings>
     </option>
@@ -67,12 +68,13 @@
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "dev-yzp",
     "last_opened_file_path": "F:/java16/labor-system-backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "MavenSettings",
+    "settings.editor.selected.configurable": "vcs.Git",
     "spring.configuration.checksum": "2dcda05f5068c7fa6c2065ec9344a4d4",
     "vue.rearranger.settings.migration": "true"
   }
@@ -255,14 +257,6 @@
       <workItem from="1720164957906" duration="10394000" />
       <workItem from="1720252683786" duration="1695000" />
       <workItem from="1720334868685" duration="14852000" />
-    </task>
-    <task id="LOCAL-00154" summary="2023-11-14 修改员工穿透，学历为空的情况">
-      <option name="closed" value="true" />
-      <created>1699943802036</created>
-      <option name="number" value="00154" />
-      <option name="presentableId" value="LOCAL-00154" />
-      <option name="project" value="LOCAL" />
-      <updated>1699943802036</updated>
     </task>
     <task id="LOCAL-00155" summary="2023-11-14 修改 添加一个查询接口 只查询本部门下的数据">
       <option name="closed" value="true" />
@@ -648,7 +642,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702544091110</updated>
     </task>
-    <option name="localTasksCounter" value="203" />
+    <task id="LOCAL-00203" summary="2024-07-08 test1,2">
+      <option name="closed" value="true" />
+      <created>1720422323570</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1720422323571</updated>
+    </task>
+    <option name="localTasksCounter" value="204" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -677,7 +679,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="2023-11-16 修改，培训记录穿透问题" />
     <MESSAGE value="2023-11-16 修改，专家统计接口" />
     <MESSAGE value="2023-11-16 修改，培训记录统计接口" />
     <MESSAGE value="2023-11-16 修改，薪酬变更 ischange" />
@@ -702,7 +703,8 @@
     <MESSAGE value="2023-12-6 修改借工模块" />
     <MESSAGE value="2023-12-13 增加系统发生意外，如何在快照表和家庭关系快照表里补录数据" />
     <MESSAGE value="2023-12-13 修改“恢复已经删除的用户”" />
-    <option name="LAST_COMMIT_MESSAGE" value="2023-12-13 修改“恢复已经删除的用户”" />
+    <MESSAGE value="2024-07-08 test1,2" />
+    <option name="LAST_COMMIT_MESSAGE" value="2024-07-08 test1,2" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
