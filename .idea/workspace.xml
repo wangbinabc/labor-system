@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9b62e667-3c68-4a90-8d54-ed5fc9a2f3f0" name="Changes" comment="2024-07-08 test1,2" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Pull.Settings">
+    <option name="OPTIONS">
+      <set>
+        <option value="REBASE" />
+      </set>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="张赛宝 &lt;zsaibao@yt.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="customMavenHome" value="$PROJECT_DIR$/../../apache-maven-3.6.0" />
+        <option name="localRepository" value="D:\maven\maven\repository" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
+        <option name="userSettingsFile" value="D:\apache-maven-3.6.0\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2UvUiwdqyUrV3u4VG4iTAuIhFBz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "dev-yzp",
+    "last_opened_file_path": "F:/java16/labor-system-backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "spring.configuration.checksum": "2dcda05f5068c7fa6c2065ec9344a4d4",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings is-module-sdk="true">
+        <option name="myUseModuleSdk" value="true" />
+      </console-settings>
+    </option>
+  </component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\myObject\labor-system-backend\laborBackend-admin\src\main\java\com\yuantu\web\controller\labor" />
+      <recent name="F:\myObject\labor-system-backend\laborBackend-labor\src\main\java\com\yuantu\labor\service\impl" />
+      <recent name="F:\myObject\labor-system-backend\laborBackend-labor\src\main\java\com\yuantu\labor\service" />
+      <recent name="F:\myObject\labor-system-backend\laborBackend-labor\src\main\resources\mapper\labor" />
+      <recent name="F:\myObject\labor-system-backend\laborBackend-labor\src\main\java\com\yuantu\labor\mapper" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\myObject\labor-system-backend\laborBackend-admin\src\main\resources\static" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="labor-system-backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="labor-system-backend" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="labor-system-backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="labor-system-backend" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="labor-backend-admin" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yuantu.RuoYiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="labor-backend-admin" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yuantu.RuoYiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9b62e667-3c68-4a90-8d54-ed5fc9a2f3f0" name="Changes" comment="" />
+      <created>1693819681994</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693819681994</updated>
+      <workItem from="1693819688533" duration="2064000" />
+      <workItem from="1693836565310" duration="60000" />
+      <workItem from="1693836660122" duration="306000" />
+      <workItem from="1693837208607" duration="2093000" />
+      <workItem from="1693873630243" duration="17195000" />
+      <workItem from="1693960703011" duration="1352000" />
+      <workItem from="1693985049700" duration="9581000" />
+      <workItem from="1694047226347" duration="17314000" />
+      <workItem from="1694072769698" duration="10000" />
+      <workItem from="1694133538878" duration="10462000" />
+      <workItem from="1694154238357" duration="11418000" />
+      <workItem from="1694223371598" duration="10339000" />
+      <workItem from="1694392360989" duration="22434000" />
+      <workItem from="1694444527880" duration="723000" />
+      <workItem from="1694478832290" duration="24940000" />
+      <workItem from="1694564705186" duration="17679000" />
+      <workItem from="1694652485675" duration="11787000" />
+      <workItem from="1694742544694" duration="9801000" />
+      <workItem from="1694940139135" duration="1398000" />
+      <workItem from="1694999703898" duration="23865000" />
+      <workItem from="1695084786631" duration="13453000" />
+      <workItem from="1695170847704" duration="26173000" />
+      <workItem from="1695256469092" duration="27271000" />
+      <workItem from="1695343200195" duration="24496000" />
+      <workItem from="1695457357223" duration="7360000" />
+      <workItem from="1695602542358" duration="27492000" />
+      <workItem from="1695687934318" duration="28280000" />
+      <workItem from="1695774398023" duration="15797000" />
+      <workItem from="1695803068542" duration="5683000" />
+      <workItem from="1695861307813" duration="17536000" />
+      <workItem from="1695887537247" duration="1236000" />
+      <workItem from="1696639746866" duration="20159000" />
+      <workItem from="1696725409431" duration="18057000" />
+      <workItem from="1696752129146" duration="7022000" />
+      <workItem from="1696811619102" duration="24529000" />
+      <workItem from="1696898303911" duration="19911000" />
+      <workItem from="1696985047160" duration="24149000" />
+      <workItem from="1697071165037" duration="28795000" />
+      <workItem from="1697156970654" duration="29613000" />
+      <workItem from="1697248704221" duration="14988000" />
+      <workItem from="1697275190470" duration="660000" />
+      <workItem from="1697344617232" duration="4483000" />
+      <workItem from="1697416583930" duration="56500000" />
+      <workItem from="1697553478907" duration="1016000" />
+      <workItem from="1697589196568" duration="28475000" />
+      <workItem from="1697675374736" duration="22738000" />
+      <workItem from="1697764420420" duration="695000" />
+      <workItem from="1697765345045" duration="21819000" />
+      <workItem from="1698023272216" duration="26159000" />
+      <workItem from="1698108140809" duration="19658000" />
+      <workItem from="1698194171851" duration="18914000" />
+      <workItem from="1698280734498" duration="24807000" />
+      <workItem from="1698367641411" duration="26594000" />
+      <workItem from="1698626446192" duration="26241000" />
+      <workItem from="1698713673715" duration="18935000" />
+      <workItem from="1698800077394" duration="23020000" />
+      <workItem from="1698887150394" duration="20711000" />
+      <workItem from="1698973634639" duration="22102000" />
+      <workItem from="1699231329113" duration="23580000" />
+      <workItem from="1699318709313" duration="47290000" />
+      <workItem from="1699490291045" duration="62592000" />
+      <workItem from="1699669574538" duration="7752000" />
+      <workItem from="1699709251460" duration="632000" />
+      <workItem from="1699768344119" duration="8381000" />
+      <workItem from="1699837100577" duration="23847000" />
+      <workItem from="1699921559079" duration="26070000" />
+      <workItem from="1700008163494" duration="25743000" />
+      <workItem from="1700094788680" duration="24860000" />
+      <workItem from="1700182293473" duration="1194000" />
+      <workItem from="1700183498323" duration="22474000" />
+      <workItem from="1700271543300" duration="11780000" />
+      <workItem from="1700441775819" duration="18550000" />
+      <workItem from="1700526877177" duration="26634000" />
+      <workItem from="1700614345085" duration="12361000" />
+      <workItem from="1700698866427" duration="1211000" />
+      <workItem from="1700787773656" duration="2210000" />
+      <workItem from="1700790839393" duration="6036000" />
+      <workItem from="1701048099870" duration="3030000" />
+      <workItem from="1701134909303" duration="6072000" />
+      <workItem from="1701221516594" duration="5933000" />
+      <workItem from="1701305722049" duration="1041000" />
+      <workItem from="1701656163446" duration="22361000" />
+      <workItem from="1701737187262" duration="23639000" />
+      <workItem from="1701823859539" duration="13292000" />
+      <workItem from="1702428898439" duration="25972000" />
+      <workItem from="1702514397526" duration="20506000" />
+      <workItem from="1702602872436" duration="4961000" />
+      <workItem from="1704433466240" duration="36000" />
+      <workItem from="1704433917353" duration="614000" />
+      <workItem from="1706059258922" duration="3705000" />
+      <workItem from="1712107371946" duration="2108000" />
+      <workItem from="1712988431016" duration="104000" />
+      <workItem from="1714225542055" duration="87000" />
+      <workItem from="1714267615861" duration="604000" />
+      <workItem from="1714288022275" duration="487000" />
+      <workItem from="1714349392900" duration="5878000" />
+      <workItem from="1714547150507" duration="2250000" />
+      <workItem from="1716365423733" duration="518000" />
+      <workItem from="1716371666071" duration="413000" />
+      <workItem from="1716425826573" duration="31000" />
+      <workItem from="1718854268692" duration="139000" />
+      <workItem from="1720164957906" duration="10394000" />
+      <workItem from="1720252683786" duration="1695000" />
+      <workItem from="1720334868685" duration="14852000" />
+    </task>
+    <task id="LOCAL-00155" summary="2023-11-14 修改 添加一个查询接口 只查询本部门下的数据">
+      <option name="closed" value="true" />
+      <created>1699945434040</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
+      <option name="project" value="LOCAL" />
+      <updated>1699945434040</updated>
+    </task>
+    <task id="LOCAL-00156" summary="2023-11-14 修改 添加一个查询接口 只查询本部门下的数据">
+      <option name="closed" value="true" />
+      <created>1699945735022</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
+      <option name="project" value="LOCAL" />
+      <updated>1699945735022</updated>
+    </task>
+    <task id="LOCAL-00157" summary="2023-11-14 修改 添加一个查询接口 只查询本部门下的数据">
+      <option name="closed" value="true" />
+      <created>1699946120857</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1699946120857</updated>
+    </task>
+    <task id="LOCAL-00158" summary="2023-11-14 修改查询材料列表，将材料的上级目录带回问题">
+      <option name="closed" value="true" />
+      <created>1699950093559</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1699950093559</updated>
+    </task>
+    <task id="LOCAL-00159" summary="2023-11-14 修改导入导出权限问题">
+      <option name="closed" value="true" />
+      <created>1699954108223</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1699954108223</updated>
+    </task>
+    <task id="LOCAL-00160" summary="2023-11-15 修改培训信息统计需求">
+      <option name="closed" value="true" />
+      <created>1700018398515</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1700018398516</updated>
+    </task>
+    <task id="LOCAL-00161" summary="2023-11-15 修改培训信息统计需求">
+      <option name="closed" value="true" />
+      <created>1700026557453</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
+      <option name="project" value="LOCAL" />
+      <updated>1700026557453</updated>
+    </task>
+    <task id="LOCAL-00162" summary="2023-11-15 修改薪酬统计返回员工是否删除">
+      <option name="closed" value="true" />
+      <created>1700031717037</created>
+      <option name="number" value="00162" />
+      <option name="presentableId" value="LOCAL-00162" />
+      <option name="project" value="LOCAL" />
+      <updated>1700031717037</updated>
+    </task>
+    <task id="LOCAL-00163" summary="2023-11-15 修改专家统计错误数据处理">
+      <option name="closed" value="true" />
+      <created>1700032729737</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
+      <option name="project" value="LOCAL" />
+      <updated>1700032729737</updated>
+    </task>
+    <task id="LOCAL-00164" summary="2023-11-15 修改专家列表过滤条件">
+      <option name="closed" value="true" />
+      <created>1700035352885</created>
+      <option name="number" value="00164" />
+      <option name="presentableId" value="LOCAL-00164" />
+      <option name="project" value="LOCAL" />
+      <updated>1700035352885</updated>
+    </task>
+    <task id="LOCAL-00165" summary="2023-11-15 修改薪资统计导出问题">
+      <option name="closed" value="true" />
+      <created>1700038129940</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
+      <option name="project" value="LOCAL" />
+      <updated>1700038129940</updated>
+    </task>
+    <task id="LOCAL-00166" summary="2023-11-15 修改培训记录查询问题">
+      <option name="closed" value="true" />
+      <created>1700040215662</created>
+      <option name="number" value="00166" />
+      <option name="presentableId" value="LOCAL-00166" />
+      <option name="project" value="LOCAL" />
+      <updated>1700040215662</updated>
+    </task>
+    <task id="LOCAL-00167" summary="2023-11-15 修改培训记录查询问题">
+      <option name="closed" value="true" />
+      <created>1700041353016</created>
+      <option name="number" value="00167" />
+      <option name="presentableId" value="LOCAL-00167" />
+      <option name="project" value="LOCAL" />
+      <updated>1700041353016</updated>
+    </task>
+    <task id="LOCAL-00168" summary="2023-11-15 修改年度工资导出字典问题">
+      <option name="closed" value="true" />
+      <created>1700043228638</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
+      <option name="project" value="LOCAL" />
+      <updated>1700043228638</updated>
+    </task>
+    <task id="LOCAL-00169" summary="2023-11-16 增加-培训计划穿透统计">
+      <option name="closed" value="true" />
+      <created>1700105465691</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
+      <option name="project" value="LOCAL" />
+      <updated>1700105465691</updated>
+    </task>
+    <task id="LOCAL-00170" summary="2023-11-16 增加-预算填报，预算金额为0,进度报错的问题">
+      <option name="closed" value="true" />
+      <created>1700114907186</created>
+      <option name="number" value="00170" />
+      <option name="presentableId" value="LOCAL-00170" />
+      <option name="project" value="LOCAL" />
+      <updated>1700114907186</updated>
+    </task>
+    <task id="LOCAL-00171" summary="2023-11-16 修改，培训记录穿透问题">
+      <option name="closed" value="true" />
+      <created>1700118798686</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
+      <option name="project" value="LOCAL" />
+      <updated>1700118798686</updated>
+    </task>
+    <task id="LOCAL-00172" summary="2023-11-16 修改，专家统计接口">
+      <option name="closed" value="true" />
+      <created>1700120910441</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
+      <option name="project" value="LOCAL" />
+      <updated>1700120910441</updated>
+    </task>
+    <task id="LOCAL-00173" summary="2023-11-16 修改，培训记录统计接口">
+      <option name="closed" value="true" />
+      <created>1700124797545</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
+      <option name="project" value="LOCAL" />
+      <updated>1700124797545</updated>
+    </task>
+    <task id="LOCAL-00174" summary="2023-11-16 修改，培训记录统计接口">
+      <option name="closed" value="true" />
+      <created>1700126937329</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
+      <option name="project" value="LOCAL" />
+      <updated>1700126937329</updated>
+    </task>
+    <task id="LOCAL-00175" summary="2023-11-16 修改，薪酬变更 ischange">
+      <option name="closed" value="true" />
+      <created>1700127548252</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
+      <option name="project" value="LOCAL" />
+      <updated>1700127548252</updated>
+    </task>
+    <task id="LOCAL-00176" summary="2023-11-16 修改empTrain,SalaryHis导入">
+      <option name="closed" value="true" />
+      <created>1700187898883</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1700187898883</updated>
+    </task>
+    <task id="LOCAL-00177" summary="2023-11-17 修改根据id查询对象的身份证脱敏问题">
+      <option name="closed" value="true" />
+      <created>1700203105451</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1700203105451</updated>
+    </task>
+    <task id="LOCAL-00178" summary="2023-11-17 修改empTrain动态下载问题">
+      <option name="closed" value="true" />
+      <created>1700213856793</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1700213856793</updated>
+    </task>
+    <task id="LOCAL-00179" summary="2023-11-17 修改动态下载问题">
+      <option name="closed" value="true" />
+      <created>1700285404626</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1700285404627</updated>
+    </task>
+    <task id="LOCAL-00180" summary="2023-11-20 修改履历导入VO的idcard移除">
+      <option name="closed" value="true" />
+      <created>1700446432496</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
+      <option name="project" value="LOCAL" />
+      <updated>1700446432496</updated>
+    </task>
+    <task id="LOCAL-00181" summary="2023-11-20 修改稳定度分析">
+      <option name="closed" value="true" />
+      <created>1700537505709</created>
+      <option name="number" value="00181" />
+      <option name="presentableId" value="LOCAL-00181" />
+      <option name="project" value="LOCAL" />
+      <updated>1700537505709</updated>
+    </task>
+    <task id="LOCAL-00182" summary="2023-11-20 修改培训性质饼图">
+      <option name="closed" value="true" />
+      <created>1700546089581</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
+      <option name="project" value="LOCAL" />
+      <updated>1700546089582</updated>
+    </task>
+    <task id="LOCAL-00183" summary="2023-11-21 修改借工导出问题">
+      <option name="closed" value="true" />
+      <created>1700552461610</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
+      <option name="project" value="LOCAL" />
+      <updated>1700552461610</updated>
+    </task>
+    <task id="LOCAL-00184" summary="2023-11-21 修改培训成果导出问题">
+      <option name="closed" value="true" />
+      <created>1700559856962</created>
+      <option name="number" value="00184" />
+      <option name="presentableId" value="LOCAL-00184" />
+      <option name="project" value="LOCAL" />
+      <updated>1700559856962</updated>
+    </task>
+    <task id="LOCAL-00185" summary="2023-11-22 修改稳定度分析问题">
+      <option name="closed" value="true" />
+      <created>1700618345732</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
+      <option name="project" value="LOCAL" />
+      <updated>1700618345732</updated>
+    </task>
+    <task id="LOCAL-00186" summary="2023-11-22 修改稳定度分析问题">
+      <option name="closed" value="true" />
+      <created>1700619626409</created>
+      <option name="number" value="00186" />
+      <option name="presentableId" value="LOCAL-00186" />
+      <option name="project" value="LOCAL" />
+      <updated>1700619626409</updated>
+    </task>
+    <task id="LOCAL-00187" summary="2023-11-24 修改培训画像取不到培训方式">
+      <option name="closed" value="true" />
+      <created>1700792041530</created>
+      <option name="number" value="00187" />
+      <option name="presentableId" value="LOCAL-00187" />
+      <option name="project" value="LOCAL" />
+      <updated>1700792041531</updated>
+    </task>
+    <task id="LOCAL-00188" summary="2023-11-24 修改专家统计没有部门专家统计问题">
+      <option name="closed" value="true" />
+      <created>1700815433280</created>
+      <option name="number" value="00188" />
+      <option name="presentableId" value="LOCAL-00188" />
+      <option name="project" value="LOCAL" />
+      <updated>1700815433280</updated>
+    </task>
+    <task id="LOCAL-00189" summary="2023-11-28 修改薪酬变动修改EMP表问题">
+      <option name="closed" value="true" />
+      <created>1701140744952</created>
+      <option name="number" value="00189" />
+      <option name="presentableId" value="LOCAL-00189" />
+      <option name="project" value="LOCAL" />
+      <updated>1701140744952</updated>
+    </task>
+    <task id="LOCAL-00190" summary="2023-12-5 修改借工模块">
+      <option name="closed" value="true" />
+      <created>1701759669805</created>
+      <option name="number" value="00190" />
+      <option name="presentableId" value="LOCAL-00190" />
+      <option name="project" value="LOCAL" />
+      <updated>1701759669809</updated>
+    </task>
+    <task id="LOCAL-00191" summary="2023-12-5 修改借工模块一些优化">
+      <option name="closed" value="true" />
+      <created>1701765658638</created>
+      <option name="number" value="00191" />
+      <option name="presentableId" value="LOCAL-00191" />
+      <option name="project" value="LOCAL" />
+      <updated>1701765658638</updated>
+    </task>
+    <task id="LOCAL-00192" summary="2023-12-5 修改借工模块一些优化">
+      <option name="closed" value="true" />
+      <created>1701769872558</created>
+      <option name="number" value="00192" />
+      <option name="presentableId" value="LOCAL-00192" />
+      <option name="project" value="LOCAL" />
+      <updated>1701769872559</updated>
+    </task>
+    <task id="LOCAL-00193" summary="2023-12-6 修改借工模块一些优化">
+      <option name="closed" value="true" />
+      <created>1701825104012</created>
+      <option name="number" value="00193" />
+      <option name="presentableId" value="LOCAL-00193" />
+      <option name="project" value="LOCAL" />
+      <updated>1701825104013</updated>
+    </task>
+    <task id="LOCAL-00194" summary="2023-12-6 修改借工模块导出">
+      <option name="closed" value="true" />
+      <created>1701831085537</created>
+      <option name="number" value="00194" />
+      <option name="presentableId" value="LOCAL-00194" />
+      <option name="project" value="LOCAL" />
+      <updated>1701831085538</updated>
+    </task>
+    <task id="LOCAL-00195" summary="2023-12-6 修改借工模块导出">
+      <option name="closed" value="true" />
+      <created>1701832277113</created>
+      <option name="number" value="00195" />
+      <option name="presentableId" value="LOCAL-00195" />
+      <option name="project" value="LOCAL" />
+      <updated>1701832277113</updated>
+    </task>
+    <task id="LOCAL-00196" summary="2023-12-6 修改借工模块筛选">
+      <option name="closed" value="true" />
+      <created>1701833829675</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
+      <option name="project" value="LOCAL" />
+      <updated>1701833829675</updated>
+    </task>
+    <task id="LOCAL-00197" summary="2023-12-6 修改借工模块">
+      <option name="closed" value="true" />
+      <created>1701842768410</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
+      <option name="project" value="LOCAL" />
+      <updated>1701842768410</updated>
+    </task>
+    <task id="LOCAL-00198" summary="2023-12-13 增加系统发生意外，如何在快照表和家庭关系快照表里补录数据">
+      <option name="closed" value="true" />
+      <created>1702455130608</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
+      <option name="project" value="LOCAL" />
+      <updated>1702455130609</updated>
+    </task>
+    <task id="LOCAL-00199" summary="2023-12-13 修改“恢复已经删除的用户”">
+      <option name="closed" value="true" />
+      <created>1702459683927</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
+      <option name="project" value="LOCAL" />
+      <updated>1702459683927</updated>
+    </task>
+    <task id="LOCAL-00200" summary="2023-12-13 修改“恢复已经删除的用户”">
+      <option name="closed" value="true" />
+      <created>1702543670077</created>
+      <option name="number" value="00200" />
+      <option name="presentableId" value="LOCAL-00200" />
+      <option name="project" value="LOCAL" />
+      <updated>1702543670078</updated>
+    </task>
+    <task id="LOCAL-00201" summary="2023-12-13 修改“恢复已经删除的用户”">
+      <option name="closed" value="true" />
+      <created>1702543683898</created>
+      <option name="number" value="00201" />
+      <option name="presentableId" value="LOCAL-00201" />
+      <option name="project" value="LOCAL" />
+      <updated>1702543683898</updated>
+    </task>
+    <task id="LOCAL-00202" summary="2023-12-13 修改“恢复已经删除的用户”">
+      <option name="closed" value="true" />
+      <created>1702544091109</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
+      <option name="project" value="LOCAL" />
+      <updated>1702544091110</updated>
+    </task>
+    <task id="LOCAL-00203" summary="2024-07-08 test1,2">
+      <option name="closed" value="true" />
+      <created>1720422323570</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1720422323571</updated>
+    </task>
+    <option name="localTasksCounter" value="204" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="2023-11-16 修改，专家统计接口" />
+    <MESSAGE value="2023-11-16 修改，培训记录统计接口" />
+    <MESSAGE value="2023-11-16 修改，薪酬变更 ischange" />
+    <MESSAGE value="2023-11-16 修改empTrain,SalaryHis导入" />
+    <MESSAGE value="2023-11-17 修改根据id查询对象的身份证脱敏问题" />
+    <MESSAGE value="2023-11-17 修改empTrain动态下载问题" />
+    <MESSAGE value="2023-11-17 修改动态下载问题" />
+    <MESSAGE value="2023-11-20 修改履历导入VO的idcard移除" />
+    <MESSAGE value="2023-11-20 修改稳定度分析" />
+    <MESSAGE value="2023-11-20 修改培训性质饼图" />
+    <MESSAGE value="2023-11-21 修改借工导出问题" />
+    <MESSAGE value="2023-11-21 修改培训成果导出问题" />
+    <MESSAGE value="2023-11-22 修改稳定度分析问题" />
+    <MESSAGE value="2023-11-24 修改培训画像取不到培训方式" />
+    <MESSAGE value="2023-11-24 修改专家统计没有部门专家统计问题" />
+    <MESSAGE value="2023-11-28 修改薪酬变动修改EMP表问题" />
+    <MESSAGE value="2023-12-5 修改借工模块" />
+    <MESSAGE value="2023-12-5 修改借工模块一些优化" />
+    <MESSAGE value="2023-12-6 修改借工模块一些优化" />
+    <MESSAGE value="2023-12-6 修改借工模块导出" />
+    <MESSAGE value="2023-12-6 修改借工模块筛选" />
+    <MESSAGE value="2023-12-6 修改借工模块" />
+    <MESSAGE value="2023-12-13 增加系统发生意外，如何在快照表和家庭关系快照表里补录数据" />
+    <MESSAGE value="2023-12-13 修改“恢复已经删除的用户”" />
+    <MESSAGE value="2024-07-08 test1,2" />
+    <option name="LAST_COMMIT_MESSAGE" value="2024-07-08 test1,2" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.yuantu.labor.vo.TreeSelectVO" memberName="children" />
+      </pinned-members>
+    </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="SpringBootApplicationConfigurationType">
+        <watch expression="salaryHisImport" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

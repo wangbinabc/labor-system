@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.SalaryConfigMapper">
+
+    <resultMap type="com.yuantu.labor.domain.SalaryConfig" id="SalaryConfigResult">
+        <result property="confId" column="conf_id"/>
+        <result property="confTypeValue" column="conf_type_value"/>
+        <result property="confTypeLabel" column="conf_type_label"/>
+        <result property="confItem" column="conf_item"/>
+        <result property="confRatio" column="conf_ratio"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <resultMap type="com.yuantu.labor.vo.SalaryLabelAndItemVO" id="salaryLabelAndItemResult">
+        <result property="label" column="conf_type_label"/>
+        <collection property="children" ofType="com.yuantu.labor.vo.SalaryLabelAndItemVO" javaType="list">
+            <result property="label" column="conf_item"/>
+        </collection>
+    </resultMap>
+
+    <sql id="selectSalaryConfigVo">
+        select conf_id,
+               conf_type_value,
+               conf_type_label,
+               conf_item,
+               conf_ratio,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from salary_config
+    </sql>
+
+    <select id="selectSalaryConfigList" parameterType="com.yuantu.labor.domain.SalaryConfig"
+            resultMap="SalaryConfigResult">
+        <include refid="selectSalaryConfigVo"/>
+        <where>
+            <if test="confTypeValue != null and confTypeValue != ''">and conf_type_value = #{confTypeValue}</if>
+            <if test="confItem != null  and confItem != ''">and conf_item like concat('%', #{confItem},'%')</if>
+            <if test="confRatio != null ">and conf_ratio = #{confRatio}</if>
+            and disabled = 0
+        </where>
+        order by conf_type_value
+    </select>
+
+    <select id="selectSalaryConfigByConfId" parameterType="Integer" resultMap="SalaryConfigResult">
+        <include refid="selectSalaryConfigVo"/>
+        where conf_id = #{confId}
+    </select>
+
+    <insert id="insertSalaryConfig" parameterType="com.yuantu.labor.domain.SalaryConfig" useGeneratedKeys="true"
+            keyProperty="confId">
+        insert into salary_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="confTypeValue != null">conf_type_value,</if>
+            <if test="confTypeLabel != null">conf_type_label,</if>
+            <if test="confItem != null">conf_item,</if>
+            <if test="confRatio != null">conf_ratio,</if>
+            <if test="createBy != null">create_by,</if>
+            create_time,
+            <if test="updateBy != null">update_by,</if>
+            update_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="confTypeValue != null">#{confTypeValue},</if>
+            <if test="confTypeLabel != null">#{confTypeLabel},</if>
+            <if test="confItem != null">#{confItem},</if>
+            <if test="confRatio != null">#{confRatio},</if>
+            <if test="createBy != null">#{createBy},</if>
+            sysdate(),
+            <if test="updateBy != null">#{updateBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateSalaryConfig" parameterType="com.yuantu.labor.domain.SalaryConfig">
+        update salary_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="confTypeValue != null">conf_type_value = #{confTypeValue},</if>
+            <if test="confTypeLabel != null">conf_type_label = #{confTypeLabel},</if>
+            <if test="confItem != null">conf_item = #{confItem},</if>
+            <if test="confRatio != null">conf_ratio = #{confRatio},</if>
+
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where conf_id = #{confId}
+    </update>
+
+    <delete id="deleteSalaryConfigByConfId" parameterType="Integer">
+        update salary_config
+        set disabled =1
+        where conf_id = #{confId}
+    </delete>
+
+    <delete id="deleteSalaryConfigByConfIds" parameterType="String">
+        update salary_config set disabled =1 where conf_id in
+        <foreach item="confId" collection="array" open="(" separator="," close=")">
+            #{confId}
+        </foreach>
+    </delete>
+    <select id="checkConfigUnique" parameterType="com.yuantu.labor.domain.SalaryConfig" resultType="Integer">
+        select count(*) from salary_config
+        <where>
+            <if test="confId != null">and conf_id != #{confId}</if>
+            <if test="confTypeValue != null and confTypeValue != ''">and conf_type_value = #{confTypeValue}</if>
+            <if test="confItem != null  and confItem != ''">and conf_item = #{confItem}</if>
+            and disabled = 0
+        </where>
+    </select>
+    <select id="selectSalaryLabelAndItem" resultMap="salaryLabelAndItemResult">
+        select conf_type_label, conf_item
+        from salary_config
+        where salary_config.disabled = 0
+    </select>
+    <select id="findAllSalaryConfigs" resultType="com.yuantu.labor.domain.SalaryConfig">
+        <include refid="selectSalaryConfigVo"/>
+        where disabled = 0
+    </select>
+    <select id="findInfoByConfItemAndTypeValue" resultType="com.yuantu.labor.domain.SalaryConfig">
+        <include refid="selectSalaryConfigVo"/>
+        where disabled = 0 and conf_item = #{confItem} and conf_type_label = #{typeLabel}
+    </select>
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpWelfareMapper">
+    
+    <resultMap type="EmpWelfare" id="EmpWelfareResult">
+        <result property="welfareId"    column="welfare_id"    />
+        <result property="welfareEmpId"    column="welfare_emp_id"    />
+        <result property="welfareEmpName"    column="welfare_emp_name"    />
+        <result property="welfareEmpIdcard"    column="welfare_emp_idcard"    />
+        <result property="welfareInsureFee"    column="welfare_insure_fee"    />
+        <result property="welfareProtectFee"    column="welfare_protect_fee"    />
+        <result property="welfareFoodFee"    column="welfare_food_fee"    />
+        <result property="welfareCheckupFee"    column="welfare_checkup_fee"    />
+        <result property="disabled"    column="disabled"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectEmpWelfareVo">
+        select welfare_id, welfare_emp_id,INSERT(SP_DECRYPT(employee.emp_idcard),5,10,'**********') as welfare_emp_idcard,
+               welfare_emp_name, welfare_insure_fee,
+               welfare_protect_fee, welfare_food_fee,
+               welfare_checkup_fee, emp_welfare.disabled, emp_welfare.create_time, emp_welfare.create_by,
+               emp_welfare.update_by, emp_welfare.update_time from emp_welfare
+             left join employee on welfare_emp_id = employee.emp_id
+    </sql>
+
+    <select id="findExportInfos" resultType="com.yuantu.labor.domain.EmpWelfare">
+        <include refid="selectEmpWelfareVo"/>
+        where emp_welfare.disabled = 0
+        <if test="export.ids != null and export.ids.size() > 0 ">
+            and welfare_id in
+            <foreach collection="export.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectEmpWelfareList" parameterType="EmpWelfare" resultMap="EmpWelfareResult">
+        <include refid="selectEmpWelfareVo"/>
+        <where>  
+            <if test="welfareEmpId != null "> and welfare_emp_id = #{welfareEmpId}</if>
+            <if test="welfareEmpName != null  and welfareEmpName != ''"> and (welfare_emp_name like concat('%', #{welfareEmpName}, '%') or CAST(SP_DECRYPT(welfare_emp_idcard) AS CHAR(128)) like concat('%', #{welfareEmpName}, '%'))</if>
+            <if test="welfareEmpIdcard != null  and welfareEmpIdcard != ''"> and ( CAST(SP_DECRYPT(welfare_emp_idcard) AS CHAR(128))  like concat('%', #{welfareEmpIdcard}, '%') or welfare_emp_name like concat('%', #{welfareEmpIdcard}, '%'))</if>
+            <if test="welfareInsureFee != null "> and welfare_insure_fee = #{welfareInsureFee}</if>
+            <if test="welfareProtectFee != null "> and welfare_protect_fee = #{welfareProtectFee}</if>
+            <if test="welfareFoodFee != null "> and welfare_food_fee = #{welfareFoodFee}</if>
+            <if test="welfareCheckupFee != null "> and welfare_checkup_fee = #{welfareCheckupFee}</if>
+            <if test="isRelated !=null and isRelated == 1 "> and employee.disabled= 1</if>
+            and emp_welfare.disabled = 0
+        </where>
+    </select>
+    
+    <select id="selectEmpWelfareByWelfareId" parameterType="Long" resultMap="EmpWelfareResult">
+        <include refid="selectEmpWelfareVo"/>
+        where welfare_id = #{welfareId} and emp_welfare.disabled = 0
+    </select>
+        
+    <insert id="insertEmpWelfare" parameterType="EmpWelfare" useGeneratedKeys="true" keyProperty="welfareId">
+        insert into emp_welfare
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="welfareEmpId != null">welfare_emp_id,</if>
+            <if test="welfareEmpName != null">welfare_emp_name,</if>
+            <if test="welfareEmpIdcard != null">welfare_emp_idcard,</if>
+            <if test="welfareInsureFee != null">welfare_insure_fee,</if>
+            <if test="welfareProtectFee != null">welfare_protect_fee,</if>
+            <if test="welfareFoodFee != null">welfare_food_fee,</if>
+            <if test="welfareCheckupFee != null">welfare_checkup_fee,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="welfareEmpId != null">#{welfareEmpId},</if>
+            <if test="welfareEmpName != null">#{welfareEmpName},</if>
+            <if test="welfareEmpIdcard != null">SP_ENCRYPT(#{welfareEmpIdcard}),</if>
+            <if test="welfareInsureFee != null">#{welfareInsureFee},</if>
+            <if test="welfareProtectFee != null">#{welfareProtectFee},</if>
+            <if test="welfareFoodFee != null">#{welfareFoodFee},</if>
+            <if test="welfareCheckupFee != null">#{welfareCheckupFee},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmpWelfare" parameterType="EmpWelfare">
+        update emp_welfare
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="welfareEmpId != null">welfare_emp_id = #{welfareEmpId},</if>
+            <if test="welfareEmpName != null">welfare_emp_name = #{welfareEmpName},</if>
+            <if test="welfareEmpIdcard != null">welfare_emp_idcard = #{welfareEmpIdcard},</if>
+            <if test="welfareInsureFee != null">welfare_insure_fee = #{welfareInsureFee},</if>
+            <if test="welfareProtectFee != null">welfare_protect_fee = #{welfareProtectFee},</if>
+            <if test="welfareFoodFee != null">welfare_food_fee = #{welfareFoodFee},</if>
+            <if test="welfareCheckupFee != null">welfare_checkup_fee = #{welfareCheckupFee},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where welfare_id = #{welfareId}
+    </update>
+
+    <delete id="deleteEmpWelfareByWelfareId" parameterType="Long">
+        update emp_welfare set disabled = 1   where welfare_id = #{welfareId}
+    </delete>
+
+    <delete id="deleteEmpWelfareByWelfareIds" parameterType="String">
+        update emp_welfare set disabled = 1 where welfare_id in
+        <foreach item="welfareId" collection="array" open="(" separator="," close=")">
+            #{welfareId}
+        </foreach>
+    </delete>
+</mapper>

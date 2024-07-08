@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.InsuranceConfigurationMapper">
+    
+    <resultMap type="InsuranceConfiguration" id="InsuranceConfigurationResult">
+        <result property="insId"    column="ins_id"    />
+        <result property="paymentBase"    column="payment_base"    />
+        <result property="enterpriseContributionRatio"    column="enterprise_contribution_ratio"    />
+        <result property="individualPaymentRatio"    column="individual_payment_ratio"    />
+        <result property="type"    column="type"    />
+        <result property="disabled"    column="disabled"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectInsuranceConfigurationVo">
+        select ins_id, payment_base, enterprise_contribution_ratio, individual_payment_ratio, type, disabled, create_time, create_by, update_by, update_time from insurance_configuration
+    </sql>
+
+    <select id="selectInsuranceConfigurationList" parameterType="InsuranceConfiguration" resultMap="InsuranceConfigurationResult">
+        <include refid="selectInsuranceConfigurationVo"/>
+        <where>  
+            <if test="paymentBase != null "> and payment_base = #{paymentBase}</if>
+            <if test="enterpriseContributionRatio != null "> and enterprise_contribution_ratio = #{enterpriseContributionRatio}</if>
+            <if test="individualPaymentRatio != null "> and individual_payment_ratio = #{individualPaymentRatio}</if>
+            <if test="type != null "> and type = #{type}</if>
+            and disabled = 0
+        </where>
+    </select>
+    
+    <select id="selectInsuranceConfigurationByInsId" parameterType="Integer" resultMap="InsuranceConfigurationResult">
+        <include refid="selectInsuranceConfigurationVo"/>
+        where ins_id = #{insId} and disabled = 0
+    </select>
+        
+    <insert id="insertInsuranceConfiguration" parameterType="InsuranceConfiguration">
+        insert into insurance_configuration
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="paymentBase != null">payment_base,</if>
+            <if test="enterpriseContributionRatio != null">enterprise_contribution_ratio,</if>
+            <if test="individualPaymentRatio != null">individual_payment_ratio,</if>
+            <if test="type != null">type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="paymentBase != null">#{paymentBase},</if>
+            <if test="enterpriseContributionRatio != null">#{enterpriseContributionRatio},</if>
+            <if test="individualPaymentRatio != null">#{individualPaymentRatio},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInsuranceConfiguration" parameterType="InsuranceConfiguration">
+        update insurance_configuration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paymentBase != null">payment_base = #{paymentBase},</if>
+            <if test="enterpriseContributionRatio != null">enterprise_contribution_ratio = #{enterpriseContributionRatio},</if>
+            <if test="individualPaymentRatio != null">individual_payment_ratio = #{individualPaymentRatio},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where ins_id = #{insId}
+    </update>
+
+    <delete id="deleteInsuranceConfigurationByInsId" parameterType="Integer">
+        update insurance_configuration set disabled = 1 where ins_id = #{insId}
+    </delete>
+
+    <delete id="deleteInsuranceConfigurationByInsIds" parameterType="String">
+        update insurance_configuration set disabled = 1where ins_id in
+        <foreach item="insId" collection="array" open="(" separator="," close=")">
+            #{insId}
+        </foreach>
+    </delete>
+</mapper>

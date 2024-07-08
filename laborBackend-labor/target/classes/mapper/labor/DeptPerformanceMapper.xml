@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.DeptPerformanceMapper">
+
+    <resultMap type="DeptPerformance" id="DeptPerformanceResult">
+        <result property="dpId" column="dp_id"/>
+        <result property="dpDeptId" column="dp_dept_id"/>
+        <result property="dpDeptName" column="dp_dept_name"/>
+        <result property="dpYear" column="dp_year"/>
+        <result property="dpCycle" column="dp_cycle"/>
+        <result property="dpLevelValue" column="dp_level_value"/>
+        <result property="dpRemark" column="dp_remark"/>
+        <result property="disabled" column="disabled"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectDeptPerformanceVo">
+        select dp_id,
+               dp_dept_id,
+               dp_dept_name,
+               dp_year,
+               dp_cycle,
+               dp_level_value,
+               dp_remark,
+               disabled,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from dept_performance
+    </sql>
+
+    <select id="selectDeptPerformanceList" parameterType="DeptPerformance" resultMap="DeptPerformanceResult">
+        <include refid="selectDeptPerformanceVo"/>
+        <where>
+            and disabled = 0
+            <if test="dpDeptId != null ">and dp_dept_id = #{dpDeptId}</if>
+            <if test="dpDeptName != null  and dpDeptName != ''">and dp_dept_name like concat('%', #{dpDeptName}, '%')
+            </if>
+            <if test="dpYear != null  and dpYear != ''">and dp_year = #{dpYear}</if>
+            <if test="dpCycle != null  and dpCycle != ''">and dp_cycle = #{dpCycle}</if>
+            <if test="dpLevelValue != null  and dpLevelValue != ''">and dp_level_value = #{dpLevelValue}</if>
+            <if test="dpRemark != null  and dpRemark != ''">and dp_remark = #{dpRemark}</if>
+        </where>
+    </select>
+
+    <select id="selectDeptPerformanceListByCycle" parameterType="DeptPerformance" resultMap="DeptPerformanceResult">
+        <include refid="selectDeptPerformanceVo"/>
+        <where>
+            and disabled = 0
+            <if test="dpDeptId != null ">and dp_dept_id = #{dpDeptId}</if>
+            <if test="dpDeptName != null  and dpDeptName != ''">and dp_dept_name like concat('%', #{dpDeptName}, '%')
+            </if>
+            <if test="dpYear != null  and dpYear != ''">and dp_year = #{dpYear}</if>
+            <if test="dpCycle != null  and dpCycle != ''">and dp_cycle = #{dpCycle}</if>
+            <if test="dpCycle == null">and dp_cycle != '0'</if>
+            <if test="dpLevelValue != null  and dpLevelValue != ''">and dp_level_value = #{dpLevelValue}</if>
+            <if test="dpRemark != null  and dpRemark != ''">and dp_remark = #{dpRemark}</if>
+            order by dp_dept_id,dp_year,dp_cycle
+        </where>
+    </select>
+
+    <select id="selectDeptPerformanceListByScreen" parameterType="com.yuantu.labor.vo.DeptPerformanceParamsVO" resultMap="DeptPerformanceResult">
+        <include refid="selectDeptPerformanceVo"/>
+        <where>
+            and disabled = 0
+            <if test="dpDeptId != null ">and dp_dept_id = #{dpDeptId}</if>
+            <if test="dpDeptName != null  and dpDeptName != ''">and dp_dept_name like concat('%', #{dpDeptName}, '%')
+            </if>
+            <if test="dpYear != null  and dpYear != ''">and dp_year = #{dpYear}</if>
+            <if test="dpCycle != null  and dpCycle != ''">and dp_cycle = #{dpCycle}</if>
+            <if test="dpLevelValue != null  and dpLevelValue != ''">and dp_level_value = #{dpLevelValue}</if>
+            <if test="dpRemark != null  and dpRemark != ''">and  dp_remark like concat('%', #{dpRemark}, '%') </if>
+            <if test="updateTimeStart != null ">and update_time &gt;=  #{updateTimeStart}</if>
+            <if test="updateTimeEnd != null ">and update_time &lt;= #{updateTimeEnd}</if>
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <select id="findExportInfos" resultType="com.yuantu.labor.domain.DeptPerformance">
+        <include refid="selectDeptPerformanceVo"/>
+        where disabled = 0
+        <if test="export.ids != null and export.ids.size() > 0 ">
+            and dp_id in
+            <foreach collection="export.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="selectDeptPerformanceListByParamsVO" parameterType="com.yuantu.labor.vo.DeptPerformanceParamsVO"
+            resultMap="DeptPerformanceResult">
+        <include refid="selectDeptPerformanceVo"/>
+        <where>
+            and disabled = 0
+            <if test="dpDeptId != null ">and dp_dept_id = #{dpDeptId}</if>
+            <if test="dpDeptName != null  and dpDeptName != ''">and dp_dept_name like concat('%', #{dpDeptName}, '%')
+            </if>
+            <if test="dpYear != null  and dpYear != ''">and dp_year = #{dpYear}</if>
+            <if test="startUpdateTime != null  and startUpdateTime != ''">and update_time &gt;= #{startUpdateTime}</if>
+            <if test="endUpdateTime != null  and endUpdateTime != ''">and update_time &lt;= #{endUpdateTime}</if>
+        </where>
+    </select>
+    <select id="selectDeptPerformanceEffectivenessList" parameterType="com.yuantu.labor.vo.DeptEffectivenessSearchVO" resultType="com.yuantu.labor.vo.DeptEffectivenessVO">
+        SELECT dp_dept_name as dept_name,NULLIF((a*10+b*7+c*4+d*1)/(a+b+c+d)/10*100,0) result
+        FROM (SELECT dp_dept_name,
+                     count(case dp_level_value when 'A' then dp_level_value else NULL end) as 'A',
+                      count(case dp_level_value when 'B' then dp_level_value else NULL end) as 'B',
+                      count(case dp_level_value when 'C' then dp_level_value else NULL end) as 'C',
+                      count(case dp_level_value when 'D' then dp_level_value else NULL end) as 'D'
+              FROM `dept_performance`
+        <where>
+            and disabled = 0
+            <if test="deptId != null ">and dp_dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''">and dp_dept_name like concat('%', #{deptName}, '%')
+            </if>
+        </where>
+              GROUP BY dp_dept_name) t
+    </select>
+    <select id="countDeptPerformances" parameterType="DeptPerformance"
+            resultType="com.yuantu.labor.vo.CountDeptPerformanceVO">
+        SELECT dp_dept_id,dp_dept_name,dp_year,
+        MAX(case dp_cycle when '1' then dp_level_value else NULL end) as 'first_quarter',
+        MAX(case dp_cycle when '2' then dp_level_value else NULL end) as 'second_quarter',
+        MAX(case dp_cycle when '3' then dp_level_value else NULL end) as 'third_quarter',
+        MAX(case dp_cycle when '4' then dp_level_value else NULL end) as 'fourth_quarter',
+        MAX(case dp_cycle when '0' then dp_level_value else NULL end) as 'this_year'
+        FROM `dept_performance`
+        <where>
+            and disabled = 0
+            <if test="dpDeptId != null ">and dp_dept_id = #{dpDeptId}</if>
+            <if test="dpDeptName != null  and dpDeptName != ''">and dp_dept_name like concat('%', #{dpDeptName}, '%')
+            </if>
+            <if test="dpYear != null  and dpYear != ''">and dp_year = #{dpYear}</if>
+        </where>
+        GROUP BY dp_dept_id,dp_dept_name,dp_year
+    </select>
+
+
+    <select id="selectDeptPerformanceByDpId" parameterType="Long" resultMap="DeptPerformanceResult">
+        <include refid="selectDeptPerformanceVo"/>
+        where dp_id = #{dpId} and disabled = 0
+    </select>
+
+    <insert id="insertDeptPerformance" parameterType="DeptPerformance" useGeneratedKeys="true" keyProperty="dpId">
+        insert into dept_performance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dpDeptId != null">dp_dept_id,</if>
+            <if test="dpDeptName != null">dp_dept_name,</if>
+            <if test="dpYear != null">dp_year,</if>
+            <if test="dpCycle != null">dp_cycle,</if>
+            <if test="dpLevelValue != null">dp_level_value,</if>
+            <if test="dpRemark != null">dp_remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dpDeptId != null">#{dpDeptId},</if>
+            <if test="dpDeptName != null">#{dpDeptName},</if>
+            <if test="dpYear != null">#{dpYear},</if>
+            <if test="dpCycle != null">#{dpCycle},</if>
+            <if test="dpLevelValue != null">#{dpLevelValue},</if>
+            <if test="dpRemark != null">#{dpRemark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDeptPerformance" parameterType="DeptPerformance">
+        update dept_performance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dpDeptId != null">dp_dept_id = #{dpDeptId},</if>
+            <if test="dpDeptName != null">dp_dept_name = #{dpDeptName},</if>
+            <if test="dpYear != null">dp_year = #{dpYear},</if>
+            <if test="dpCycle != null">dp_cycle = #{dpCycle},</if>
+            <if test="dpLevelValue != null">dp_level_value = #{dpLevelValue},</if>
+            <if test="dpRemark != null">dp_remark = #{dpRemark},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where dp_id = #{dpId}
+    </update>
+
+    <delete id="deleteDeptPerformanceByDpId" parameterType="Long">
+        update dept_performance
+        set disabled = 1
+        where dp_id = #{dpId}
+    </delete>
+
+    <delete id="deleteDeptPerformanceByDpIds" parameterType="String">
+        update dept_performance set disabled = 1 where dp_id in
+        <foreach item="dpId" collection="array" open="(" separator="," close=")">
+            #{dpId}
+        </foreach>
+    </delete>
+</mapper>

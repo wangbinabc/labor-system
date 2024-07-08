@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.WelfareBudgetMapper">
+    
+    <resultMap type="WelfareBudget" id="WelfareBudgetResult">
+        <result property="welbudId"    column="welbud_id"    />
+        <result property="welbudYearMonth"    column="welbud_year_month"    />
+        <result property="welbudInsureBudget"    column="welbud_insure_budget"    />
+        <result property="welbudInsureActual"    column="welbud_insure_actual"    />
+        <result property="welbudLaborprotectBudget"    column="welbud_laborprotect_budget"    />
+        <result property="welbudLaborprotectActual"    column="welbud_laborprotect_actual"    />
+        <result property="welbudCanteenBudget"    column="welbud_canteen_budget"    />
+        <result property="welbudCanteenActual"    column="welbud_canteen_actual"    />
+        <result property="welbudPhysicalexamBudget"    column="welbud_physicalexam_budget"    />
+        <result property="welbudPhysicalexamActual"    column="welbud_physicalexam__actual"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWelfareBudgetVo">
+        select welbud_id, welbud_year_month, welbud_insure_budget, welbud_insure_actual, welbud_laborprotect_budget, welbud_laborprotect_actual, welbud_canteen_budget, welbud_canteen_actual, welbud_physicalexam_budget, welbud_physicalexam__actual, create_by, create_time, update_by, update_time from welfare_budget
+    </sql>
+
+    <select id="selectWelfareBudgetList" parameterType="WelfareBudget" resultMap="WelfareBudgetResult">
+        <include refid="selectWelfareBudgetVo"/>
+        <where>  
+            <if test="welbudYearMonth != null  and welbudYearMonth != ''"> and welbud_year_month = #{welbudYearMonth}</if>
+            <if test="welbudInsureBudget != null "> and welbud_insure_budget = #{welbudInsureBudget}</if>
+            <if test="welbudInsureActual != null "> and welbud_insure_actual = #{welbudInsureActual}</if>
+            <if test="welbudLaborprotectBudget != null "> and welbud_laborprotect_budget = #{welbudLaborprotectBudget}</if>
+            <if test="welbudLaborprotectActual != null "> and welbud_laborprotect_actual = #{welbudLaborprotectActual}</if>
+            <if test="welbudCanteenBudget != null "> and welbud_canteen_budget = #{welbudCanteenBudget}</if>
+            <if test="welbudCanteenActual != null "> and welbud_canteen_actual = #{welbudCanteenActual}</if>
+            <if test="welbudPhysicalexamBudget != null "> and welbud_physicalexam_budget = #{welbudPhysicalexamBudget}</if>
+            <if test="welbudPhysicalexamActual != null "> and welbud_physicalexam__actual = #{welbudPhysicalexamActual}</if>
+             and disabled = 0
+        </where>
+    </select>
+    
+    <select id="selectWelfareBudgetByWelbudId" parameterType="Integer" resultMap="WelfareBudgetResult">
+        <include refid="selectWelfareBudgetVo"/>
+        where welbud_id = #{welbudId}
+    </select>
+        
+    <insert id="insertWelfareBudget" parameterType="WelfareBudget" useGeneratedKeys="true" keyProperty="welbudId">
+        insert into welfare_budget
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="welbudYearMonth != null">welbud_year_month,</if>
+            <if test="welbudInsureBudget != null">welbud_insure_budget,</if>
+            <if test="welbudInsureActual != null">welbud_insure_actual,</if>
+            <if test="welbudLaborprotectBudget != null">welbud_laborprotect_budget,</if>
+            <if test="welbudLaborprotectActual != null">welbud_laborprotect_actual,</if>
+            <if test="welbudCanteenBudget != null">welbud_canteen_budget,</if>
+            <if test="welbudCanteenActual != null">welbud_canteen_actual,</if>
+            <if test="welbudPhysicalexamBudget != null">welbud_physicalexam_budget,</if>
+            <if test="welbudPhysicalexamActual != null">welbud_physicalexam__actual,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="welbudYearMonth != null">#{welbudYearMonth},</if>
+            <if test="welbudInsureBudget != null">#{welbudInsureBudget},</if>
+            <if test="welbudInsureActual != null">#{welbudInsureActual},</if>
+            <if test="welbudLaborprotectBudget != null">#{welbudLaborprotectBudget},</if>
+            <if test="welbudLaborprotectActual != null">#{welbudLaborprotectActual},</if>
+            <if test="welbudCanteenBudget != null">#{welbudCanteenBudget},</if>
+            <if test="welbudCanteenActual != null">#{welbudCanteenActual},</if>
+            <if test="welbudPhysicalexamBudget != null">#{welbudPhysicalexamBudget},</if>
+            <if test="welbudPhysicalexamActual != null">#{welbudPhysicalexamActual},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime}</if>
+
+         </trim>
+    </insert>
+
+    <update id="updateWelfareBudget" parameterType="WelfareBudget">
+        update welfare_budget
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="welbudYearMonth != null">welbud_year_month = #{welbudYearMonth},</if>
+            <if test="welbudInsureBudget != null">welbud_insure_budget = #{welbudInsureBudget},</if>
+            <if test="welbudInsureActual != null">welbud_insure_actual = #{welbudInsureActual},</if>
+            <if test="welbudLaborprotectBudget != null">welbud_laborprotect_budget = #{welbudLaborprotectBudget},</if>
+            <if test="welbudLaborprotectActual != null">welbud_laborprotect_actual = #{welbudLaborprotectActual},</if>
+            <if test="welbudCanteenBudget != null">welbud_canteen_budget = #{welbudCanteenBudget},</if>
+            <if test="welbudCanteenActual != null">welbud_canteen_actual = #{welbudCanteenActual},</if>
+            <if test="welbudPhysicalexamBudget != null">welbud_physicalexam_budget = #{welbudPhysicalexamBudget},</if>
+            <if test="welbudPhysicalexamActual != null">welbud_physicalexam__actual = #{welbudPhysicalexamActual},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+        </trim>
+        where welbud_id = #{welbudId}
+    </update>
+
+    <delete id="deleteWelfareBudgetByWelbudId" parameterType="Integer">
+        update welfare_budget set disabled = 1 where welbud_id = #{welbudId}
+    </delete>
+
+    <delete id="deleteWelfareBudgetByWelbudIds" parameterType="String">
+        update welfare_budget set disabled = 1  where welbud_id in
+        <foreach item="welbudId" collection="array" open="(" separator="," close=")">
+            #{welbudId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWelfareBudgetByMonth" parameterType="String" >
+        update welfare_budget set disabled = 1 where welbud_year_month = #{welbudYearMonth}
+    </delete>
+    <select id="checkWelfareBudgetUnique" parameterType="com.yuantu.labor.domain.WelfareBudget" resultType="Integer">
+        select count(*)
+        from welfare_budget
+        <where>
+            and welbud_year_month = #{welbudYearMonth}
+            and disabled = 0
+        </where>
+    </select>
+    <select id="countWelfareActual" resultType="com.yuantu.labor.domain.WelfareBudget">
+        select sum(welfare_insure_fee) as welbudInsureActual,
+               sum(welfare_protect_fee) as welbudLaborprotectActual,
+               sum(welfare_food_fee) as welbudCanteenActual,
+               sum(welfare_checkup_fee) as welbudPhysicalexamActual
+        from  emp_welfare
+        where disabled=0
+    </select>
+</mapper>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpPerformanceMapper">
+
+    <resultMap type="EmpPerformance" id="EmpPerformanceResult">
+        <result property="perfId" column="perf_id"/>
+        <result property="perfEmpId" column="perf_emp_id"/>
+        <result property="perfEmpName" column="perf_emp_name"/>
+        <result property="perfEmpIdcard" column="perf_emp_idcard"/>
+        <result property="perfDeptId" column="perf_dept_id"/>
+        <result property="perfDeptName" column="perf_dept_name"/>
+        <result property="perfYear" column="perf_year"/>
+        <result property="perfCycle" column="perf_cycle"/>
+        <result property="perfLevelValue" column="perf_level_value"/>
+        <result property="perfRemark" column="perf_remark"/>
+        <result property="disabled" column="disabled"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectEmpPerformanceVo">
+        select perf_id,
+               perf_emp_id,
+               perf_emp_name,
+        INSERT
+        (
+        SP_DECRYPT
+        (
+        emp_performance.perf_emp_idcard
+        )
+        ,
+        5
+        ,
+        10
+        ,
+        '**********'
+        )
+        as
+        perf_emp_idcard
+        ,
+        perf_dept_id
+        ,
+        perf_dept_name
+        ,
+        perf_year
+        ,
+        perf_cycle
+        ,
+        perf_level_value
+        ,
+        perf_remark
+        ,
+        emp_performance
+        .
+        disabled
+        ,
+        emp_performance
+        .
+        create_by
+        ,
+        emp_performance
+        .
+        create_time
+        ,
+        emp_performance
+        .
+        update_by
+        ,
+        emp_performance
+        .
+        update_time,
+        flag
+        from emp_performance
+    </sql>
+
+    <select id="findExportInfos" resultType="com.yuantu.labor.domain.EmpPerformance">
+        <include refid="selectEmpPerformanceVo"/>
+        where emp_performance.disabled = 0
+        <if test="export.ids != null and export.ids.size() > 0 ">
+            and perf_id in
+            <foreach collection="export.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectEmpPerformanceList" parameterType="EmpPerformance" resultMap="EmpPerformanceResult">
+        <include refid="selectEmpPerformanceVo"/>
+        <where>
+            <if test="perfEmpId != null ">and perf_emp_id = #{perfEmpId}</if>
+            <if test="perfEmpName != null  and perfEmpName != ''">and ( perf_emp_name like concat('%', #{perfEmpName},
+                '%') or CAST(SP_DECRYPT(perf_emp_idcard) AS CHAR(128)) like concat('%', #{perfEmpName}, '%'))
+            </if>
+            <if test="perfEmpIdcard != null  and perfEmpIdcard != ''">and (CAST(SP_DECRYPT(perf_emp_idcard) AS
+                CHAR(128)) like concat('%',
+                #{perfEmpIdcard}, '%') or perf_emp_name like concat('%', #{perfEmpIdcard}, '%'))
+            </if>
+            <if test="perfDeptId != null ">and perf_dept_id = #{perfDeptId}</if>
+            <if test="perfDeptName != null  and perfDeptName != ''">and perf_dept_name like concat('%', #{perfDeptName},
+                '%')
+            </if>
+            <if test="perfYear != null  and perfYear != ''">and perf_year = #{perfYear}</if>
+            <if test="perfCycle != null  and perfCycle != ''">and perf_cycle = #{perfCycle}</if>
+            <if test="perfLevelValue != null  and perfLevelValue != ''">and perf_level_value = #{perfLevelValue}</if>
+            <if test="perfRemark != null  and perfRemark != ''">and perf_remark = #{perfRemark}</if>
+            and emp_performance.disabled = 0
+            <if test="flag != null">and flag = #{flag}</if>
+        </where>
+    </select>
+
+
+    <select id="selectEmpPerformanceListForSearch" resultType="com.yuantu.labor.domain.EmpPerformance">
+        <include refid="selectEmpPerformanceVo"/>
+        <where>
+            <if test="perform.perfYear != null  and perform.perfYear != ''">and perf_year = #{perform.perfYear}</if>
+            <if test="perform.perfCycle != null  and perform.perfCycle != ''">and perf_cycle = #{perform.perfCycle}</if>
+            <if test="perform.perfLevelValue != null  and perform.perfLevelValue != ''">and perf_level_value =
+                #{perform.perfLevelValue}
+            </if>
+            <if test="perform.perfRemark != null  and perform.perfRemark != ''">and perf_remark =
+                #{perform.perfRemark}
+            </if>
+            <if test="performIds != null and performIds.size() > 0 ">
+                and perf_id in
+                <foreach collection="performIds" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="performIds.size() == 0 and query != null">
+                and 1 = 2
+            </if>
+            and emp_performance.disabled = 0
+        </where>
+    </select>
+
+
+
+    <select id="selectEmpPerformanceListByScreen" resultMap="EmpPerformanceResult">
+        <include refid="selectEmpPerformanceVo"/>
+        <where>
+            <if test="empPerform.perfEmpId != null ">and perf_emp_id = #{empPerform.perfEmpId}</if>
+            <!--            <if test="perfEmpName != null  and perfEmpName != ''">and ( perf_emp_name like concat('%', #{perfEmpName},-->
+            <!--                '%') or CAST(SP_DECRYPT(perf_emp_idcard) AS CHAR(128)) like concat('%', #{perfEmpName}, '%'))-->
+            <!--            </if>-->
+            <!--            <if test="perfEmpIdcard != null  and perfEmpIdcard != ''">and ( CAST(SP_DECRYPT(perf_emp_idcard) AS-->
+            <!--                CHAR(128)) like concat('%',-->
+            <!--                #{perfEmpIdcard}, '%') or perf_emp_name like concat('%', #{perfEmpIdcard}, '%'))-->
+            <!--            </if>-->
+<!--            <if test="empPerform.perfDeptId != null ">and perf_dept_id = #{empPerform.perfDeptId}</if>-->
+<!--            <if test="empPerform.perfDeptName != null  and empPerform.perfDeptName != ''">and perf_dept_name like-->
+<!--                concat('%', #{empPerform.perfDeptName},-->
+<!--                '%')-->
+<!--            </if>-->
+            <if test="empPerform.perfYear != null  and empPerform.perfYear != ''">and perf_year =
+                #{empPerform.perfYear}
+            </if>
+            <if test="empPerform.perfCycle != null  and empPerform.perfCycle != ''">and perf_cycle =
+                #{empPerform.perfCycle}
+            </if>
+            <if test="empPerform.perfLevelValue != null  and empPerform.perfLevelValue != ''">and perf_level_value =
+                #{empPerform.perfLevelValue}
+            </if>
+            <if test="empPerform.perfRemark != null  and empPerform.perfRemark != ''">and perf_remark like concat('%',
+                #{empPerform.perfRemark}, '%')
+            </if>
+            <if test="empPerform.updateTimeStart != null ">and update_time &gt;= #{empPerform.updateTimeStart}</if>
+            <if test="empPerform.updateTimeEnd != null ">and update_time &lt;= #{empPerform.updateTimeEnd}</if>
+            <if test="performIds != null and performIds.size() > 0 ">
+                and perf_id in
+                <foreach collection="performIds" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="performIds.size() == 0 and query != null">
+                and 1 = 2
+            </if>
+            and disabled = 0
+        </where>
+    </select>
+
+    <select id="selectEmpPerformanceEffectivenessList" parameterType="com.yuantu.labor.vo.EmpEffectivenessSearchVO"
+            resultType="com.yuantu.labor.vo.EmpEffectivenessVO">
+        SELECT employee.emp_dept_id as dept_id,employee.emp_dept_name as dept_name, employee.emp_id as
+        emp_id,employee.emp_name as emp_name,INSERT(SP_DECRYPT(employee.emp_idcard),5,10,'**********') as
+        emp_idcard,(A*10+B*7+C*4+D*1)/(A+B+C+D)/10*100 result
+        FROM
+        (SELECT perf_emp_id,perf_emp_name,perf_emp_idcard,
+        COUNT(case perf_level_value when 'A' then perf_level_value else NULL end) as 'A',
+        COUNT(case perf_level_value when 'B' then perf_level_value else NULL end) as 'B',
+        COUNT(case perf_level_value when 'C' then perf_level_value else NULL end) as 'C',
+        COUNT(case perf_level_value when 'D' then perf_level_value else NULL end) as 'D'
+        FROM `emp_performance`
+        <where>
+            and disabled = 0
+            <if test="empName != null  and empName != ''">and (perf_emp_name like concat('%', #{empName},
+                '%') or CAST(SP_DECRYPT(perf_emp_idcard) AS CHAR(128)) like concat('%', #{empName}, '%'))
+            </if>
+            <if test="empIdcard != null  and empIdcard != ''">and ( CAST(SP_DECRYPT(perf_emp_idcard) AS CHAR(128)) like
+                concat('%',
+                #{empIdcard}, '%') or perf_emp_name like concat('%', #{empIdcard}, '%'))
+            </if>
+            <if test="searchYear != null  and searchYear != ''">
+                and perf_year = #{searchYear}
+            </if>
+            <if test="searchCycle != null  and searchCycle != ''">
+                and perf_cycle = #{searchCycle}
+            </if>
+        </where>
+        GROUP BY perf_emp_id,perf_emp_name,perf_emp_idcard
+        ) as t
+        RIGHT JOIN employee on t.perf_emp_id = employee.emp_id
+        where employee.disabled = 0
+    </select>
+
+    <select id="countEmpPerformanceList" parameterType="EmpPerformance"
+            resultType="com.yuantu.labor.vo.CountEmpPerformanceVO">
+        SELECT perf_dept_id,perf_dept_name,perf_year,perf_cycle,
+        max(t.a) result_a,max(t.b) result_b,max(t.c) result_c,max(t.d) result_d
+        FROM
+        (SELECT perf_dept_id,perf_dept_name,perf_year,perf_cycle,
+        COUNT(case perf_level_value when 'A' then perf_level_value else NULL end) as 'A',
+        COUNT(case perf_level_value when 'B' then perf_level_value else NULL end) as 'B',
+        COUNT(case perf_level_value when 'C' then perf_level_value else NULL end) as 'C',
+        COUNT(case perf_level_value when 'D' then perf_level_value else NULL end) as 'D'
+        FROM `emp_performance` left join employee on emp_performance.perf_emp_id = employee.emp_id and employee.emp_status not in (3, 4)
+        <where>
+            and emp_performance.disabled = 0 and perf_dept_id is not null
+            <if test="perfDeptId != null ">and perf_dept_id = #{perfDeptId}</if>
+            <if test="perfDeptName != null  and perfDeptName != ''">and perf_dept_name like concat('%', #{perfDeptName},
+                '%')
+            </if>
+            <if test="perfYear != null  and perfYear != ''">and perf_year = #{perfYear}</if>
+            <if test="perfCycle != null  and perfCycle != ''">and perf_cycle = #{perfCycle}</if>
+        </where>
+        GROUP BY perf_dept_id,perf_dept_name,perf_year,perf_cycle,perf_level_value
+        ) as t
+        GROUP BY perf_dept_id,perf_dept_name,perf_year,perf_cycle
+    </select>
+
+
+    <select id="selectEmpPerformanceByPerfId" parameterType="Long" resultMap="EmpPerformanceResult">
+        <include refid="selectEmpPerformanceVo"/>
+        where perf_id = #{perfId} and emp_performance.disabled = 0
+    </select>
+    <select id="findInfosByEmpIds" resultType="com.yuantu.labor.domain.EmpPerformance">
+        <include refid="selectEmpPerformanceVo"/>
+        where emp_performance.disabled = 0 and perf_emp_id in
+        <foreach collection="empIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and flag = 1
+    </select>
+    <select id="findInfosDuringOneYearByEmpIds" resultType="com.yuantu.labor.domain.EmpPerformance">
+        <include refid="selectEmpPerformanceVo"/>
+        where emp_performance.disabled = 0 and emp_performance.create_time >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+        and perf_emp_id in
+        <foreach collection="empIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and flag = 1
+    </select>
+    <select id="findInfosByEmpIdsAndCreateTime" resultType="com.yuantu.labor.domain.EmpPerformance">
+        <include refid="selectEmpPerformanceVo"/>
+        where emp_performance.disabled = 0
+        <if test="now != null">
+            and DATE_FORMAT(emp_performance.create_time, '%Y-%m') = DATE_FORMAT(#{now},
+            '%Y-%m')
+        </if>
+        and perf_emp_id in
+        <foreach collection="empIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="findEmpPerformanceIdByEmpIdsAndFlag" resultType="java.lang.Long">
+        <include refid="selectEmpPerformanceVo"/>
+        where disabled = 0 and perf_emp_id in
+        <foreach collection="empIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and flag = #{flag}
+    </select>
+
+
+    <insert id="insertEmpPerformance" parameterType="EmpPerformance" useGeneratedKeys="true" keyProperty="perfId">
+        insert into emp_performance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="perfEmpId != null">perf_emp_id,</if>
+            <if test="perfEmpName != null">perf_emp_name,</if>
+            <if test="perfEmpIdcard != null">perf_emp_idcard,</if>
+            <if test="perfDeptId != null">perf_dept_id,</if>
+            <if test="perfDeptName != null">perf_dept_name,</if>
+            <if test="perfYear != null">perf_year,</if>
+            <if test="perfCycle != null">perf_cycle,</if>
+            <if test="perfLevelValue != null">perf_level_value,</if>
+            <if test="perfRemark != null">perf_remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="flag != null">flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="perfEmpId != null">#{perfEmpId},</if>
+            <if test="perfEmpName != null">#{perfEmpName},</if>
+            <if test="perfEmpIdcard != null">SP_ENCRYPT(#{perfEmpIdcard}),</if>
+            <if test="perfDeptId != null">#{perfDeptId},</if>
+            <if test="perfDeptName != null">#{perfDeptName},</if>
+            <if test="perfYear != null">#{perfYear},</if>
+            <if test="perfCycle != null">#{perfCycle},</if>
+            <if test="perfLevelValue != null">#{perfLevelValue},</if>
+            <if test="perfRemark != null">#{perfRemark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="flag != null">#{flag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEmpPerformance" parameterType="EmpPerformance">
+        update emp_performance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="perfEmpId != null">perf_emp_id = #{perfEmpId},</if>
+            <if test="perfEmpName != null">perf_emp_name = #{perfEmpName},</if>
+            <if test="perfEmpIdcard != null">perf_emp_idcard = SP_ENCRYPT(#{perfEmpIdcard}),</if>
+            <if test="perfDeptId != null">perf_dept_id = #{perfDeptId},</if>
+            <if test="perfDeptName != null">perf_dept_name = #{perfDeptName},</if>
+            <if test="perfYear != null">perf_year = #{perfYear},</if>
+            <if test="perfCycle != null">perf_cycle = #{perfCycle},</if>
+            <if test="perfLevelValue != null">perf_level_value = #{perfLevelValue},</if>
+            <if test="perfRemark != null">perf_remark = #{perfRemark},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where perf_id = #{perfId}
+    </update>
+
+    <delete id="deleteEmpPerformanceByPerfId" parameterType="Long">
+        update emp_performance
+        set disabled = 1
+        where perf_id = #{perfId}
+    </delete>
+
+    <delete id="deleteEmpPerformanceByPerfIds" parameterType="String">
+        update emp_performance set disabled = 1 where perf_id in
+        <foreach item="perfId" collection="array" open="(" separator="," close=")">
+            #{perfId}
+        </foreach>
+    </delete>
+</mapper>

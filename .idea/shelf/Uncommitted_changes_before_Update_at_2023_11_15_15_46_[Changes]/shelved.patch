@@ -1,0 +1,31 @@
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/vo/EmpExpertQueryVO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.vo;\r\n\r\nimport com.yuantu.common.annotation.Excel;\r\nimport com.yuantu.common.core.domain.BaseEntity;\r\nimport io.swagger.annotations.ApiModelProperty;\r\nimport lombok.Data;\r\n\r\nimport java.util.Date;\r\n\r\n@Data\r\npublic class EmpExpertQueryVO extends BaseEntity {\r\n\r\n    private String empName;\r\n\r\n    private Integer[] expertIds;\r\n\r\n    @ApiModelProperty(\"年龄最小\")\r\n    private Integer empAgeMin;\r\n    @ApiModelProperty(\"年龄最大\")\r\n    private Integer empAgeMax;\r\n    @ApiModelProperty(\"性别\")\r\n    private String empGender;\r\n    @ApiModelProperty(\"专家级别\")\r\n    private String expertLevel;\r\n    @ApiModelProperty(\"专家人才称号\")\r\n    private String expertTitle;\r\n    @ApiModelProperty(\"授予时间开始\")\r\n    private Date expertGrantTimeStart;\r\n    @ApiModelProperty(\"授予时间结束\")\r\n    private Date expertGrantTimeEnd;\r\n    @ApiModelProperty(\"解聘时间开始\")\r\n    private Date expertDismissTimeStart;\r\n    @ApiModelProperty(\"解聘时间结束\")\r\n    private Date expertDismissTimeEnd;\r\n    @ApiModelProperty(\"聘用期\")\r\n    private String expertPeriod;\r\n    @ApiModelProperty(\"修改时间开始\")\r\n    private Date expertUpdateTimeStart;\r\n    @ApiModelProperty(\"修改时间结束\")\r\n    private Date expertUpdateTimeEnd;\r\n    @ApiModelProperty(\"1 查询已删除人员的有关数据\")\r\n\r\n    private Integer isRelated;\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/vo/EmpExpertQueryVO.java b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/EmpExpertQueryVO.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/vo/EmpExpertQueryVO.java	(revision 00c40b9a6e053f4a008c3cce4e2b43a9d27d3990)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/EmpExpertQueryVO.java	(date 1700034390214)
+@@ -20,6 +20,9 @@
+     private Integer empAgeMax;
+     @ApiModelProperty("性别")
+     private String empGender;
++
++    private Long expertDeptId;
++
+     @ApiModelProperty("专家级别")
+     private String expertLevel;
+     @ApiModelProperty("专家人才称号")
+@@ -39,8 +42,9 @@
+     @ApiModelProperty("修改时间结束")
+     private Date expertUpdateTimeEnd;
+     @ApiModelProperty("1 查询已删除人员的有关数据")
+-
+     private Integer isRelated;
+ 
+ 
++
++
+ }

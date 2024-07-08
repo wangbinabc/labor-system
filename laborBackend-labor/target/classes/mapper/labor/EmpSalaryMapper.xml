@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpSalaryMapper">
+
+    <resultMap type="EmpSalary" id="EmpSalaryResult">
+        <result property="salaryId" column="salary_id"/>
+        <result property="salaryYearMonth" column="salary_year_month"/>
+        <result property="salaryPayableNum" column="salary_payable_num"/>
+        <result property="salaryPersonFund" column="salary_person_fund"/>
+        <result property="salaryNetPay" column="salary_net_pay"/>
+        <result property="salaryEmpId" column="salary_emp_id"/>
+        <result property="salaryEmpName" column="salary_emp_name"/>
+        <result property="salaryEmpIdcard" column="salary_emp_idcard"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="EmpSalaryItem" id="EmpSalaryItemRatioResult">
+        <result property="itemId" column="item_id"/>
+        <result property="itemSalaryId" column="item_salary_id"/>
+        <result property="itemConfId" column="item_conf_id"/>
+        <result property="itemConfTypeValue" column="item_conf_type_value"/>
+        <result property="itemConfTypeLabel" column="item_conf_type_label"/>
+        <result property="itemConfItem" column="item_conf_item"/>
+        <result property="itemValue" column="item_value"/>
+        <result property="confRatio" column="conf_ratio"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <sql id="selectEmpSalaryVo">
+        select salary_emp_name,
+               CAST(SP_DECRYPT(salary_emp_idcard) AS CHAR(128)) as salary_emp_idcard,
+               salary_year_month,
+               salary_payable_num,
+               salary_person_fund,
+               salary_net_pay,
+               salary_id,
+               salary_emp_id,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from emp_salary
+    </sql>
+    <sql id="selectEmpSalaryItemVo">
+        select item_id,
+               item_salary_id,
+               item_conf_id,
+               item_conf_type_value,
+               item_conf_type_label,
+               item_conf_item,
+               item_value,
+               disabled,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from emp_salary_item
+    </sql>
+    <select id="selectEmpSalaryList" parameterType="EmpSalary" resultMap="EmpSalaryResult">
+        <include refid="selectEmpSalaryVo"/>
+        <where>
+            <if test="salaryYearMonth != null  and salaryYearMonth != ''">and salary_year_month = #{salaryYearMonth}
+            </if>
+            <if test="salaryPayableNum != null ">and salary_payable_num = #{salaryPayableNum}</if>
+            <if test="salaryPersonFund != null ">and salary_person_fund = #{salaryPersonFund}</if>
+            <if test="salaryNetPay != null ">and salary_net_pay = #{salaryNetPay}</if>
+            <if test="salaryEmpId != null ">and salary_emp_id = #{salaryEmpId}</if>
+            <if test="salaryEmpName != null  and salaryEmpName != ''">and salary_emp_name like concat('%',
+                #{salaryEmpName}, '%')
+            </if>
+            <if test="salaryEmpIdcard != null  and salaryEmpIdcard != ''">and salary_emp_idcard = #{salaryEmpIdcard}
+            </if>
+        </where>
+    </select>
+    <select id="selectEmpSalaryItemListBySalaryId" parameterType="Integer" resultMap="EmpSalaryItemRatioResult">
+        select item_id,
+        item_salary_id,
+        item_conf_id,
+        item_conf_type_value,
+        item_conf_type_label,
+        item_conf_item,
+        item_value,
+        conf_ratio,
+        emp_salary_item.create_by,
+        emp_salary_item.create_time,
+        emp_salary_item.update_by,
+        emp_salary_item.update_time
+        from emp_salary_item
+        LEFT JOIN salary_config on emp_salary_item.item_conf_id = salary_config.conf_id
+        <where>
+            item_salary_id = #{itemSalaryId} and emp_salary_item.disabled = 0
+        </where>
+    </select>
+    <select id="findInfosByEmpIds" resultType="com.yuantu.labor.domain.EmpSalary">
+        select salary_id, salary_year_month, salary_payable_num, salary_person_fund, salary_net_pay, salary_emp_id,
+        emp_name as salary_emp_name,
+        CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as
+        salary_emp_idcard,
+        emp_salary.create_by, emp_salary.create_time, emp_salary.update_by, emp_salary.update_time
+        from emp_salary
+        LEFT JOIN employee on emp_salary.salary_emp_id = employee.emp_id
+        where emp_salary.disabled = 0
+        and salary_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+    <select id="findInfosByEmpIdsAndCurrentTime" resultType="com.yuantu.labor.domain.EmpSalary">
+        select salary_id,
+        salary_year_month,
+        salary_payable_num,
+        salary_person_fund,
+        salary_net_pay,
+        salary_emp_id,
+        salary_emp_name,
+        create_time
+        from emp_salary
+        where disabled = 0
+        <if test="now != null">
+            and salary_year_month = DATE_FORMAT(#{now}, '%Y-%m')
+        </if>
+        and salary_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+    <select id="countPastYearNetPay" parameterType="com.yuantu.labor.vo.EmpSalaryQueryVO"
+            resultType="com.yuantu.labor.vo.SalaryChartVO">
+        select '薪酬' as id, monthTab.mon as name, COALESCE(sum(salary_net_pay), 0) as value
+        from
+            (
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 12 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m') AS `mon` union all
+            select DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m') AS `mon`
+            ) monthTab
+            left join emp_salary
+        on monthTab.mon = emp_salary.salary_year_month and emp_salary.disabled=0 and emp_salary.salary_emp_id =#{empId}
+        GROUP BY monthTab.mon
+    </select>
+    <select id="sumLastYearNetPay" parameterType="EmpSalary" resultType="String">
+        SELECT sum(salary_net_pay)
+        FROM emp_salary
+        where salary_year_month like concat(#{salaryYearMonth}, '%')
+          and salary_emp_id = #{salaryEmpId}
+          and disabled = 0
+    </select>
+
+</mapper>

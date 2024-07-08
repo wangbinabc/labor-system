@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpEffectivenessMapper">
+
+    <resultMap type="EmpEffectiveness" id="EmpEffectivenessResult">
+        <result property="effId" column="eff_id"/>
+        <result property="effEmpId" column="eff_emp_id"/>
+        <result property="effEmpIdcard" column="eff_emp_idcard"/>
+        <result property="effEmpProfitValue" column="eff_emp_profit_value"/>
+        <result property="effCostIndex" column="eff_cost_index"/>
+        <result property="effCostValue" column="eff_cost_value"/>
+        <!--        <result property="effYear"    column="eff_year"    />-->
+        <!--        <result property="effMonth"    column="eff_month"    />-->
+        <result property="effYearMonth" column="eff_year_month"/>
+        <!--        <result property="effMonth"    column="eff_month"    />-->
+        <result property="disabled" column="disabled"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectEmpEffectivenessVo">
+        select eff_id, eff_emp_id,
+        INSERT
+        (
+        SP_DECRYPT
+        (
+        eff_emp_idcard
+        )
+        ,
+        5
+        ,
+        10
+        ,
+        '**********'
+        )
+        as
+        eff_emp_idcard
+        ,
+        eff_emp_profit_value
+        ,
+        eff_cost_index
+        ,
+        eff_cost_value
+        ,
+        eff_year_month
+        ,
+        emp_effectiveness.disabled
+        ,
+        emp_effectiveness.create_by
+        ,
+        emp_effectiveness.create_time
+        ,
+        emp_effectiveness.update_by
+        ,
+        emp_effectiveness.update_time
+        from emp_effectiveness
+            left join employee
+        on emp_effectiveness.eff_emp_id = employee.emp_id
+    </sql>
+
+    <select id="selectEmpEffectivenessList" parameterType="EmpEffectiveness" resultMap="EmpEffectivenessResult">
+        <include refid="selectEmpEffectivenessVo"/>
+        <where>
+            <if test="effEmpId != null ">and eff_emp_id = #{effEmpId}</if>
+            <if test="effEmpIdcard != null  and effEmpIdcard != ''">and CAST(SP_DECRYPT(eff_emp_idcard) AS CHAR(128)) =
+                #{effEmpIdcard}
+            </if>
+            <if test="effEmpProfitValue != null ">and eff_emp_profit_value = #{effEmpProfitValue}</if>
+            <if test="effCostIndex != null ">and eff_cost_index = #{effCostIndex}</if>
+            <if test="effCostValue != null ">and eff_cost_value = #{effCostValue}</if>
+            <!--            <if test="effYear != null  and effYear != ''"> and eff_year = #{effYear}</if>-->
+            <!--            <if test="effMonth != null  and effMonth != ''"> and eff_month = #{effMonth}</if>-->
+            <if test="effYearMonth != null  and effYearMonth != ''">and eff_year_month = #{effYearMonth}</if>
+            and emp_effectiveness.disabled = 0 and employee.disabled = 0
+        </where>
+    </select>
+
+    <select id="selectEmpEffectivenessByEffId" parameterType="Long" resultMap="EmpEffectivenessResult">
+        <include refid="selectEmpEffectivenessVo"/>
+        where eff_id = #{effId} and emp_effectiveness.disabled = 0
+    </select>
+    <select id="findInfosByEmpIdsAndCreateTime" resultType="com.yuantu.labor.domain.EmpEffectiveness">
+        <include refid="selectEmpEffectivenessVo"/>
+        where emp_effectiveness.disabled = 0
+        <if test="now != null">
+            and eff_year_month = DATE_FORMAT(#{now}, '%Y-%m')
+        </if>
+        and eff_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">#{empId}</foreach>
+    </select>
+
+    <insert id="insertEmpEffectiveness" parameterType="EmpEffectiveness" useGeneratedKeys="true" keyProperty="effId">
+        insert into emp_effectiveness
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="effEmpId != null">eff_emp_id,</if>
+            <if test="effEmpIdcard != null">eff_emp_idcard,</if>
+            <if test="effEmpProfitValue != null">eff_emp_profit_value,</if>
+            <if test="effCostIndex != null">eff_cost_index,</if>
+            <if test="effCostValue != null">eff_cost_value,</if>
+            <!--            <if test="effYear != null">eff_year,</if>-->
+            <!--            <if test="effMonth != null">eff_month,</if>-->
+            <if test="effYearMonth != null">eff_year_month,</if>
+            <if test="disabled != null">disabled,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="effEmpId != null">#{effEmpId},</if>
+            <if test="effEmpIdcard != null">#{effEmpIdcard},</if>
+            <if test="effEmpProfitValue != null">#{effEmpProfitValue},</if>
+            <if test="effCostIndex != null">#{effCostIndex},</if>
+            <if test="effCostValue != null">#{effCostValue},</if>
+            <!--            <if test="effYear != null">#{effYear},</if>-->
+            <!--            <if test="effMonth != null">#{effMonth},</if>-->
+            <if test="effYearMonth != null">#{effYearMonth},</if>
+            <if test="disabled != null">#{disabled},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+    <insert id="insertBatch">
+        insert into emp_effectiveness(eff_emp_id, eff_emp_idcard, eff_emp_profit_value, eff_cost_index, eff_cost_value,
+        eff_year_month, disabled, create_by, create_time)
+        values
+        <foreach collection="effectInfos" item="item" separator=",">
+            (#{item.effEmpId}, #{item.effEmpIdcard}, #{item.effEmpProfitValue}, #{item.effCostIndex}, #{item.effCostValue},
+             #{item.effYearMonth}, #{item.disabled}, #{item.createBy}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <update id="updateEmpEffectiveness" parameterType="EmpEffectiveness">
+        update emp_effectiveness
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="effEmpId != null">eff_emp_id = #{effEmpId},</if>
+            <if test="effEmpIdcard != null">eff_emp_idcard = #{effEmpIdcard},</if>
+            <if test="effEmpProfitValue != null">eff_emp_profit_value = #{effEmpProfitValue},</if>
+            <if test="effCostIndex != null">eff_cost_index = #{effCostIndex},</if>
+            <if test="effCostValue != null">eff_cost_value = #{effCostValue},</if>
+            <!--            <if test="effYear != null">eff_year = #{effYear},</if>-->
+            <!--            <if test="effMonth != null">eff_month = #{effMonth},</if>-->
+            <if test="effYearMonth != null">eff_year_month = #{effYearMonth},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where eff_id = #{effId}
+    </update>
+
+    <delete id="deleteEmpEffectivenessByEffId" parameterType="Long">
+        delete
+        from emp_effectiveness
+        where eff_id = #{effId}
+    </delete>
+
+    <delete id="deleteEmpEffectivenessByEffIds" parameterType="String">
+        delete from emp_effectiveness where eff_id in
+        <foreach item="effId" collection="array" open="(" separator="," close=")">
+            #{effId}
+        </foreach>
+    </delete>
+    <update id="removeInfosByEmpNameAndTime">
+         update emp_effectiveness  set  emp_effectiveness.disabled = 1
+         where eff_year_month = #{yearMonth}
+         and eff_emp_id = (select emp_id from employee where emp_name = #{empName} limit 1)
+    </update>
+
+    <resultMap type="com.yuantu.labor.vo.EmpEffectivenessCountVO" id="EmpEfficiencyResult">
+        <result property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="profit" column="profit"/>
+        <result property="attendance" column="attend_ratio"/>
+        <result property="performance" column="perform_ratio"/>
+        <result property="cost" column="cost_ratio"/>
+        <result property="efficiency" column="effect_ratio"/>
+    </resultMap>
+
+    <select id="selectEmpEffectiveness" parameterType="com.yuantu.labor.vo.EmpEffectivenessSearchVO"
+            resultMap="EmpEfficiencyResult">
+        select id, emp_efficiency.emp_id, employee.emp_name, profit, attend_ratio, perform_ratio, cost_ratio,
+        effect_ratio, create_time
+        from emp_efficiency
+        left JOIN employee on employee.emp_id = emp_efficiency.emp_id
+        <where>
+            <if test="empName != null  and empName != ''">and (employee.emp_name like concat('%', #{empName}, '%') or
+                CAST(SP_DECRYPT(employee.emp_idcard) AS CHAR(128))
+                like
+                concat('%', #{empName}, '%'))
+            </if>
+            <if test="searchYearMonth != null  and searchYearMonth != ''">and DATE_FORMAT(create_time, '%Y-%m') =
+                #{searchYearMonth}
+            </if>
+        </where>
+    </select>
+
+    <resultMap type="com.yuantu.labor.vo.DeptEffectivenessCountVO" id="DeptEfficiencyResult">
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="deptProfitValue" column="dept_profit"/>
+        <result property="attendance" column="dept_attend_ratio"/>
+        <result property="performance" column="dept_perform_ratio"/>
+        <result property="cost" column="dept_cost_ratio"/>
+        <result property="efficiency" column="dept_effect_ratio"/>
+    </resultMap>
+
+    <select id="selectDeptEfficiency" parameterType="com.yuantu.labor.vo.DeptEffectivenessSearchVO"
+            resultMap="DeptEfficiencyResult">
+        select id, dept_efficiency.dept_id,dept_name, dept_profit, dept_attend_ratio, dept_perform_ratio,
+        dept_cost_ratio, dept_effect_ratio, dept_efficiency.create_time
+        from dept_efficiency
+        LEFT JOIN department on department.dept_id = dept_efficiency.dept_id
+        <where>
+            <if test="deptName !=null and deptName!=''">and dept_name like concat('%',#{deptName},'%')</if>
+            <if test="searchYearMonth != null  and searchYearMonth != ''">and DATE_FORMAT(dept_efficiency.create_time,
+                '%Y-%m') = #{searchYearMonth}
+            </if>
+        </where>
+    </select>
+</mapper>

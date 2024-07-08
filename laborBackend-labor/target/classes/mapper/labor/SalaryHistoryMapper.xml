@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.SalaryHistoryMapper">
+
+    <resultMap type="SalaryHistory" id="SalaryHistoryResult">
+        <result property="hisId" column="his_id"/>
+        <result property="hisEmpId" column="his_emp_id"/>
+        <result property="hisEmpName" column="his_emp_name"/>
+        <result property="hisEmpIdcard" column="his_emp_idcard"/>
+        <result property="hisYearMonth" column="his_year_month"/>
+        <result property="hisPreviousLevel" column="his_previous_level"/>
+        <result property="hisNextLevel" column="his_next_level"/>
+        <result property="hisChangeType" column="his_change_type"/>
+        <result property="hisIspostChange" column="his_isPost_change"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectSalaryHistoryVo">
+        select his_id,
+               his_emp_id,
+               his_emp_name,
+               his_emp_idcard,
+               his_year_month,
+               his_previous_level,
+               his_next_level,
+               his_change_type,
+               his_isPost_change,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from salary_history
+    </sql>
+
+    <select id="selectSalaryHistoryList" parameterType="com.yuantu.labor.vo.SalaryHisQueryVO"
+            resultMap="SalaryHistoryResult">
+        select his_id, his_emp_id, emp_name as his_emp_name, CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) as his_emp_idcard ,
+               his_year_month, his_previous_level, his_next_level, his_change_type, his_isPost_change,
+        salary_history.create_by,
+        salary_history.create_time,
+        salary_history.update_by,
+        salary_history.update_time
+        from salary_history
+        left join employee on salary_history.his_emp_id = employee.emp_id
+        <where>
+
+            <if test="empName != null  and empName != ''">and (emp_name like concat('%', #{empName}, '%') or
+                CAST(SP_DECRYPT(emp_idcard) AS CHAR(128)) like concat('%', #{empName}, '%'))
+            </if>
+            <if test="year !=null and year !=''">and his_year_month like concat(#{year},'%') and his_change_type=1</if>
+            <if test="hisIds !=null">
+                and his_id in
+                <foreach item="hisId" collection="hisIds" open="(" separator="," close=")">
+                    #{hisId}
+                </foreach>
+            </if>
+            <if test="isRelated !=null and isRelated == 1 "> and employee.disabled= 1</if>
+             and salary_history.disabled = 0
+        </where>
+    </select>
+
+    <insert id="insertSalaryHistory" parameterType="SalaryHistory" useGeneratedKeys="true" keyProperty="hisId">
+        insert into salary_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hisEmpId != null">his_emp_id,</if>
+            <if test="hisEmpName != null">his_emp_name,</if>
+            <if test="hisEmpIdcard != null">his_emp_idcard,</if>
+            <if test="hisYearMonth != null">his_year_month,</if>
+            <if test="hisPreviousLevel != null">his_previous_level,</if>
+            <if test="hisNextLevel != null">his_next_level,</if>
+            <if test="hisChangeType != null">his_change_type,</if>
+            <if test="hisIspostChange != null">his_isPost_change,</if>
+            <if test="createBy != null">create_by,</if>
+            create_time,
+            <if test="updateBy != null">update_by,</if>
+            update_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hisEmpId != null">#{hisEmpId},</if>
+            <if test="hisEmpName != null">#{hisEmpName},</if>
+            <if test="hisEmpIdcard != null">#{hisEmpIdcard},</if>
+            <if test="hisYearMonth != null">#{hisYearMonth},</if>
+            <if test="hisPreviousLevel != null">#{hisPreviousLevel},</if>
+            <if test="hisNextLevel != null">#{hisNextLevel},</if>
+            <if test="hisChangeType != null">#{hisChangeType},</if>
+            <if test="hisIspostChange != null">#{hisIspostChange},</if>
+            <if test="createBy != null">#{createBy},</if>
+            sysdate(),
+            <if test="updateBy != null">#{updateBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+
+    <update id="removeInfosByYearmonthAndEmpId">
+        update salary_history
+        set disabled = 1
+        where his_emp_id = #{empId}
+          and his_year_month = #{yearMonth}
+          and disabled = 0
+    </update>
+
+
+    <select id="selectInfosByEmpId" resultType="com.yuantu.labor.domain.SalaryHistory">
+        <include refid="selectSalaryHistoryVo"/>
+        where disabled = 0 and his_emp_id = #{empId}
+    </select>
+
+</mapper>

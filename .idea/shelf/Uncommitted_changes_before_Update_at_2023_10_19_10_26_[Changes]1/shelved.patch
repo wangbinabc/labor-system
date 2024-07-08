@@ -1,0 +1,518 @@
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/SalaryHistoryServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.service.impl;\r\n\r\nimport java.util.List;\r\nimport com.yuantu.common.utils.DateUtils;\r\nimport com.yuantu.labor.domain.Employee;\r\nimport com.yuantu.labor.mapper.EmployeeMapper;\r\nimport com.yuantu.labor.vo.ChartDataVO;\r\nimport com.yuantu.labor.vo.PieChartVO;\r\nimport com.yuantu.labor.vo.SalaryHisQueryVO;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\nimport com.yuantu.labor.mapper.SalaryHistoryMapper;\r\nimport com.yuantu.labor.domain.SalaryHistory;\r\nimport com.yuantu.labor.service.ISalaryHistoryService;\r\nimport org.springframework.transaction.annotation.Transactional;\r\n\r\n/**\r\n * 薪级变动Service业务层处理\r\n * \r\n * @author ruoyi\r\n * @date 2023-10-07\r\n */\r\n@Service\r\npublic class SalaryHistoryServiceImpl implements ISalaryHistoryService \r\n{\r\n    @Autowired\r\n    private SalaryHistoryMapper salaryHistoryMapper;\r\n    @Autowired\r\n    private EmployeeMapper employeeMapper;\r\n\r\n    /**\r\n     * 查询薪级变动\r\n     * \r\n     * @param hisId 薪级变动主键\r\n     * @return 薪级变动\r\n     */\r\n    @Override\r\n    public SalaryHistory selectSalaryHistoryByHisId(Integer hisId)\r\n    {\r\n        return salaryHistoryMapper.selectSalaryHistoryByHisId(hisId);\r\n    }\r\n\r\n    /**\r\n     * 查询薪级变动列表\r\n     * \r\n     * @param vo 薪级变动\r\n     * @return 薪级变动\r\n     */\r\n    @Override\r\n    public List<SalaryHistory> selectSalaryHistoryList(SalaryHisQueryVO vo)\r\n    {\r\n\r\n        return salaryHistoryMapper.selectSalaryHistoryList(vo);\r\n    }\r\n\r\n    /**\r\n     * 新增薪级变动\r\n     * \r\n     * @param salaryHistory 薪级变动\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    @Transactional\r\n    public int insertSalaryHistory(SalaryHistory salaryHistory,Employee emp)\r\n    {\r\n        employeeMapper.updateEmployee(emp);\r\n        return salaryHistoryMapper.insertSalaryHistory(salaryHistory);\r\n    }\r\n\r\n    /**\r\n     * 修改薪级变动\r\n     * \r\n     * @param salaryHistory 薪级变动\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int updateSalaryHistory(SalaryHistory salaryHistory)\r\n    {\r\n        Employee emp = employeeMapper.selectEmployeeByEmpId(salaryHistory.getHisEmpId());\r\n        emp.setEmpSalaryLevel(salaryHistory.getHisNextLevel());\r\n        employeeMapper.updateEmployee(emp);\r\n        return salaryHistoryMapper.updateSalaryHistory(salaryHistory);\r\n    }\r\n\r\n    /**\r\n     * 批量删除薪级变动\r\n     * \r\n     * @param hisIds 需要删除的薪级变动主键\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int deleteSalaryHistoryByHisIds(Integer[] hisIds)\r\n    {\r\n        return salaryHistoryMapper.deleteSalaryHistoryByHisIds(hisIds);\r\n    }\r\n\r\n    /**\r\n     * 删除薪级变动信息\r\n     * \r\n     * @param hisId 薪级变动主键\r\n     * @return 结果\r\n     */\r\n    @Override\r\n    public int deleteSalaryHistoryByHisId(Integer hisId)\r\n    {\r\n        return salaryHistoryMapper.deleteSalaryHistoryByHisId(hisId);\r\n    }\r\n\r\n    @Override\r\n    public Integer countNumByChangeType(Integer changeType) {\r\n        Integer result = salaryHistoryMapper.countNumByChangeType(changeType);\r\n        if(result == null){\r\n            result = 0;\r\n        }\r\n        return result;\r\n    }\r\n\r\n    @Override\r\n    public String countAmountByChangeType(Integer changeType) {\r\n        String result = salaryHistoryMapper.countAmountByChangeType(changeType);\r\n        if(result == null){\r\n            result = \"0\";\r\n        }\r\n        return result;\r\n    }\r\n\r\n    @Override\r\n    public List<PieChartVO> countNumByRecentYears(Integer changeType) {\r\n        return salaryHistoryMapper.countNumByRecentYears(changeType);\r\n    }\r\n\r\n    @Override\r\n    public List<ChartDataVO> countAmountByRecentYears(Integer changeType) {\r\n        return salaryHistoryMapper.countAmountByRecentYears(changeType);\r\n    }\r\n\r\n    @Override\r\n    public Integer checkSalaryHisUnique(SalaryHistory salaryHistory) {\r\n        return salaryHistoryMapper.checkSalaryHisUnique(salaryHistory);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/SalaryHistoryServiceImpl.java b/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/SalaryHistoryServiceImpl.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/SalaryHistoryServiceImpl.java	(revision e9ae9ad05bf725b98067d045dff479503441bd82)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/service/impl/SalaryHistoryServiceImpl.java	(date 1697678116132)
+@@ -1,18 +1,37 @@
+ package com.yuantu.labor.service.impl;
+ 
++import java.text.SimpleDateFormat;
++import java.util.Date;
+ import java.util.List;
++import java.util.Map;
++import java.util.function.Function;
++import java.util.stream.Collectors;
++
++import cn.afterturn.easypoi.excel.ExcelImportUtil;
++import cn.afterturn.easypoi.excel.entity.ImportParams;
++import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
++import com.yuantu.common.core.domain.model.LoginUser;
++import com.yuantu.common.exception.ServiceException;
+ import com.yuantu.common.utils.DateUtils;
+-import com.yuantu.labor.domain.Employee;
++import com.yuantu.common.utils.bean.BeanUtils;
++import com.yuantu.labor.cenum.EmpSalaryEnum;
++import com.yuantu.labor.cenum.FileImportStatusEnum;
++import com.yuantu.labor.cenum.ImportFileTypeEnum;
++import com.yuantu.labor.cenum.ProjectClassifyEnum;
++import com.yuantu.labor.domain.*;
++import com.yuantu.labor.handler.SalaryHisExcelImportVerifyHandler;
++import com.yuantu.labor.mapper.EmpDocumentMapper;
+ import com.yuantu.labor.mapper.EmployeeMapper;
+-import com.yuantu.labor.vo.ChartDataVO;
+-import com.yuantu.labor.vo.PieChartVO;
+-import com.yuantu.labor.vo.SalaryHisQueryVO;
++import com.yuantu.labor.mapper.FileImportRecordMapper;
++import com.yuantu.labor.vo.*;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+ import com.yuantu.labor.mapper.SalaryHistoryMapper;
+-import com.yuantu.labor.domain.SalaryHistory;
+ import com.yuantu.labor.service.ISalaryHistoryService;
+ import org.springframework.transaction.annotation.Transactional;
++import org.springframework.web.multipart.MultipartFile;
+ 
+ /**
+  * 薪级变动Service业务层处理
+@@ -28,6 +47,18 @@
+     @Autowired
+     private EmployeeMapper employeeMapper;
+ 
++    @Autowired
++    private EmpDocumentMapper empDocumentMapper;
++
++    @Autowired
++    private FileImportRecordMapper fileImportRecordMapper;
++    @Autowired
++    private FileService fileService;
++
++    private SalaryHisExcelImportVerifyHandler salaryHisExcelImportVerifyHandler;
++
++    private static final Logger log = LoggerFactory.getLogger(SalaryHistoryServiceImpl.class);
++
+     /**
+      * 查询薪级变动
+      * 
+@@ -138,4 +169,89 @@
+     public Integer checkSalaryHisUnique(SalaryHistory salaryHistory) {
+         return salaryHistoryMapper.checkSalaryHisUnique(salaryHistory);
+     }
++
++    @Override
++    public ImportResultVO importSalaryHisData(MultipartFile multipartFile, LoginUser user) {
++        Date now = new Date();
++        //实例化FileImportRecord导入记录对象,通用代码
++        FileImportRecord fileImportRecord = new FileImportRecord();
++        fileImportRecord.setSuccessCount(0);
++        fileImportRecord.setFailureCount(0);
++        fileImportRecord.setTotalCount(0);
++        fileImportRecord.setDisabled(false);
++        fileImportRecord.setFileType(ImportFileTypeEnum.SIXTEEN.getKey());
++        fileImportRecord.setImportStatus(FileImportStatusEnum.DURING.getKey());
++        fileImportRecord.setCreatorId(user.getUserId());
++        fileImportRecord.setCreatedTime(now);
++
++        //先创建数据库导入记录
++        fileImportRecordMapper.insertFileImportRecord(fileImportRecord);
++
++        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd*HH:mm:ss");
++
++        String nowStr = dateFormat.format(now);
++
++        ExcelImportResult<SalaryHisImportVO> excelDate = getExcelDate(multipartFile, SalaryHisImportVO.class);
++        List<ErrorForm> failReport = excelDate.getFailList().stream()
++                .map(entity -> {
++                    int line = entity.getRowNum() == null ? 0 : entity.getRowNum() + 1;
++                    return new ErrorForm(line, entity.getErrorMsg());
++                }).collect(Collectors.toList());
++        return null;
++    }
++
++    private ExcelImportResult<SalaryHisImportVO> getExcelDate(MultipartFile file, Class<SalaryHisImportVO> salaryHisImportClass) {
++
++        try {
++            //ImportParams对象用于存放导入过程参数
++            ImportParams params = new ImportParams();
++            params.setHeadRows(1);
++            params.setTitleRows(0);
++            params.setNeedVerify(true);
++            //Excel单元格数据是否规范校验
++            params.setVerifyHandler(salaryHisExcelImportVerifyHandler);
++            return ExcelImportUtil.importExcelMore(file.getInputStream(), salaryHisImportClass, params);
++        } catch (Exception e) {
++            log.error("获取excel数据失败", e);
++            throw new ServiceException("获取excel数据失败");
++        } finally {
++            // 清除threadLocal 防止内存泄漏
++            ThreadLocal<List<SalaryHisCheckVO>> threadLocal = salaryHisExcelImportVerifyHandler.getThreadLocal();
++            if (threadLocal != null) {
++                threadLocal.remove();
++            }
++        }
++    }
++
++    private void batchInsertTrainResultInfos(String userName, List<SalaryHisImportVO> resultImportInfos) {
++        List<String> idList = resultImportInfos.stream().map(SalaryHisImportVO::getHisEmpIdcard).collect(Collectors.toList());
++        Map<String, Employee> existEmpMap = employeeMapper.findInfoByIdCards(idList).stream().collect(Collectors.toMap(Employee::getEmpIdcard, Function.identity()));
++        Date now = new Date();
++
++        for (SalaryHisImportVO salaryHisImportInfo : resultImportInfos) {
++            SalaryHistory SalaryHis = new SalaryHistory();
++            BeanUtils.copyProperties(salaryHisImportInfo, SalaryHis);
++            SalaryHis.setUpdateBy(userName);
++            SalaryHis.setUpdateTime(now);
++            SalaryHis.setCreateBy(userName);
++            SalaryHis.setCreateTime(now);
++
++            String idcard = salaryHisImportInfo.getHisEmpIdcard();
++            Long empId = existEmpMap.get(idcard).getEmpId();
++            SalaryHis.setHisEmpId(empId);
++
++            for (EmpSalaryEnum value : EmpSalaryEnum.values()) {
++                if (value.getValue().equals(salaryHisImportInfo.getHisPreviousLevel())) {
++                    salaryHisImportInfo.setHisPreviousLevel(value.getKey());
++                }
++                if (value.getValue().equals(salaryHisImportInfo.getHisPreviousLevel())) {
++                    salaryHisImportInfo.setHisPreviousLevel(value.getKey());
++                }
++            }
++
++
++
++            //insertTrainResultByExcel(trainResult);
++        }
++    }
+ }
+Index: laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainResultController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.web.controller.labor;\r\n\r\n\r\nimport java.util.List;\r\nimport javax.servlet.http.HttpServletResponse;\r\n\r\n\r\nimport com.yuantu.common.core.domain.model.LoginUser;\r\nimport com.yuantu.labor.domain.EmpDocument;\r\nimport com.yuantu.labor.domain.TrainProject;\r\nimport com.yuantu.labor.service.IFileService;\r\nimport com.yuantu.labor.service.ITrainProjectService;\r\nimport com.yuantu.labor.vo.FileVO;\r\nimport com.yuantu.labor.vo.TrainResultVO;\r\nimport io.swagger.annotations.Api;\r\nimport io.swagger.annotations.ApiOperation;\r\nimport com.yuantu.common.utils.DateUtils;\r\nimport org.springframework.security.access.prepost.PreAuthorize;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport com.yuantu.common.annotation.Log;\r\nimport com.yuantu.common.core.controller.BaseController;\r\nimport com.yuantu.common.core.domain.AjaxResult;\r\nimport com.yuantu.common.enums.BusinessType;\r\nimport com.yuantu.labor.domain.TrainResult;\r\nimport com.yuantu.labor.service.ITrainResultService;\r\nimport com.yuantu.common.utils.poi.ExcelUtil;\r\nimport com.yuantu.common.core.page.TableDataInfo;\r\nimport org.springframework.web.multipart.MultipartFile;\r\n\r\n/**\r\n * 培训成果Controller\r\n *\r\n * @author ruoyi\r\n * @date 2023-09-25\r\n */\r\n@Api(\"培训成果管理\")\r\n@RestController\r\n@RequestMapping(\"/labor/result\")\r\npublic class TrainResultController extends BaseController {\r\n    @Autowired\r\n    private ITrainResultService trainResultService;\r\n    @Autowired\r\n    private ITrainProjectService trainProjectService;\r\n    @Autowired\r\n    private IFileService fileService;\r\n\r\n\r\n    /**\r\n     * 查询培训成果列表\r\n     */\r\n    @ApiOperation(\"查询培训成果列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:list')\")\r\n    @GetMapping(\"/list\")\r\n    public TableDataInfo list(TrainResult trainResult) {\r\n        startPage();\r\n        List<TrainResult> list = trainResultService.selectTrainResultList(trainResult);\r\n        return getDataTable(list);\r\n    }\r\n\r\n    /**\r\n     * 导出培训成果列表\r\n     */\r\n    @ApiOperation(\"导出培训成果列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:export')\")\r\n    @Log(title = \"培训成果\", businessType = BusinessType.EXPORT)\r\n    @PostMapping(\"/export\")\r\n    public void export(HttpServletResponse response, TrainResult trainResult) {\r\n        List<TrainResult> list = trainResultService.selectTrainResultList(trainResult);\r\n        ExcelUtil<TrainResult> util = new ExcelUtil<TrainResult>(TrainResult.class);\r\n        util.exportExcel(response, list, \"培训成果数据\");\r\n    }\r\n\r\n    /**\r\n     * 获取培训成果详细信息\r\n     */\r\n    @ApiOperation(\"获取培训成果详细信息\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:query')\")\r\n    @GetMapping(value = \"/getInfo/{resultId}\")\r\n    public AjaxResult getInfo(@PathVariable(\"resultId\") Integer resultId) {\r\n        return success(trainResultService.selectTrainResultByResultId(resultId));\r\n    }\r\n\r\n    /**\r\n     * 新增培训成果\r\n     * resultAnnexPath:存的是上传文件的fileId\r\n     */\r\n    @ApiOperation(\"新增培训成果\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:add')\")\r\n    @Log(title = \"培训成果\", businessType = BusinessType.INSERT)\r\n    @PostMapping(\"/add\")\r\n    public AjaxResult add(@RequestBody TrainResult trainResult) {\r\n        int result = trainResultService.checkResultUnique(trainResult);\r\n        if (result > 0) {\r\n            return error(\"增加'\" + trainResult.getResultName() + \"'失败，培训成果名称已经存在\");\r\n        }\r\n        TrainProject trainProject = trainProjectService.selectTrainProjectByProjectId(trainResult.getResultProjectId());\r\n        trainResult.setResultProjectName(trainProject.getProjectName());\r\n        String username = getUsername();\r\n        return toAjax(trainResultService.insertTrainResult(trainResult, username));\r\n    }\r\n\r\n    /**\r\n     * 修改培训成果\r\n     * resultAnnexPath:存的是上传文件的fileId\r\n     */\r\n    @ApiOperation(\"修改培训成果\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:edit')\")\r\n    @Log(title = \"培训成果\", businessType = BusinessType.UPDATE)\r\n    @PutMapping(\"/edit\")\r\n    public AjaxResult edit(@RequestBody TrainResult trainResult) {\r\n        int result = trainResultService.checkResultUnique(trainResult);\r\n        if (result > 0) {\r\n            return error(\"修改'\" + trainResult.getResultName() + \"'失败，培训成果名称已经存在\");\r\n        }\r\n        TrainProject trainProject = trainProjectService.selectTrainProjectByProjectId(trainResult.getResultProjectId());\r\n        trainResult.setResultProjectName(trainProject.getProjectName());\r\n        String username = getUsername();\r\n        return toAjax(trainResultService.updateTrainResult(trainResult, username));\r\n    }\r\n\r\n    /**\r\n     * 删除培训成果\r\n     */\r\n    @ApiOperation(\"删除培训成果\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:remove')\")\r\n    @Log(title = \"培训成果\", businessType = BusinessType.DELETE)\r\n    @DeleteMapping(\"/remove/{resultIds}\")\r\n    public AjaxResult remove(@PathVariable Integer[] resultIds) {\r\n        return toAjax(trainResultService.deleteTrainResultByResultIds(resultIds));\r\n    }\r\n\r\n    /**\r\n     * 初始化新增页面，返回培训项目列表\r\n     *\r\n     * @return\r\n     */\r\n    @ApiOperation(\"初始化新增页面，返回培训项目列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:query')\")\r\n    @GetMapping(\"/initAdd\")\r\n    public AjaxResult initAdd() {\r\n        AjaxResult ajax = AjaxResult.success();\r\n        List<TrainProject> projectList = trainProjectService.selectTrainProjectList(new TrainProject());\r\n        ajax.put(\"projectData\", projectList);\r\n        return ajax;\r\n    }\r\n\r\n    /**\r\n     * 上传文件\r\n     *\r\n     * @param file\r\n     * @return\r\n     */\r\n    @ApiOperation(\"上传文件\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:upload')\")\r\n    @PostMapping(value = \"/upload\")\r\n    public AjaxResult uploadResultFile(@RequestBody MultipartFile file) {\r\n        String fileType = \"7\";\r\n        String username = getUsername();\r\n        return success(fileService.upLoadEmpFile(fileType, \"train\", file, username));\r\n    }\r\n\r\n    /**\r\n     * 下载文件\r\n     *\r\n     * @param fileId\r\n     * @param response\r\n     */\r\n    @ApiOperation(\"下载文件\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:download')\")\r\n    @GetMapping(\"/download\")\r\n    public void downloadResultFile(@RequestParam Long fileId, HttpServletResponse response) {\r\n        fileService.downloadEmpFile(fileId, response);\r\n    }\r\n\r\n    /**\r\n     * 补传附件件或者修改附件,返回附件id\r\n     *\r\n     * @param resultId\r\n     * @param file\r\n     * @return\r\n     */\r\n    @ApiOperation(\"补传附件件或者修改附件,返回附件id\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:upload')\")\r\n    @PostMapping(value = \"/reUpload\")\r\n    public AjaxResult reUploadAnnex(@RequestParam Integer resultId, @RequestBody MultipartFile file) {\r\n        List<EmpDocument> docs = trainResultService.selectDocumentByResultId(resultId);\r\n        if (docs != null && docs.size() > 0) {\r\n            //删除旧记录\r\n            trainResultService.deleteDocumentByResultId(resultId);\r\n        }\r\n\r\n\r\n        String fileType = \"7\";\r\n        String username = getUsername();\r\n        FileVO vo = fileService.upLoadEmpFile(fileType, \"train\", file, username);\r\n\r\n        //更新\r\n        EmpDocument document = new EmpDocument();\r\n        document.setDocId(vo.getFileId());\r\n        document.setDocEmpId(new Long(resultId));\r\n        document.setDocUpdateTime(DateUtils.getNowDate());\r\n        trainResultService.updateDocument(document);\r\n\r\n        return success(vo);\r\n    }\r\n\r\n    /**\r\n     * 根据条件查询培训成果\r\n     *\r\n     * @param trainResult\r\n     * @return\r\n     */\r\n    @ApiOperation(\"根据条件查询培训成果\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:query')\")\r\n    @GetMapping(\"/queryResult\")\r\n    public TableDataInfo queryResult(TrainResult trainResult) {\r\n        startPage();\r\n        List<TrainResultVO> list = trainResultService.selectTrainResultListByWhere(trainResult);\r\n        return getDataTable(list);\r\n    }\r\n\r\n    /**\r\n     * 培训成果统计\r\n     */\r\n    @ApiOperation(\"培训成果统计,包括：培训成果变化情况,培训成果数量统计,培训成果分布情况\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:query')\")\r\n    @GetMapping(\"/counting\")\r\n    public AjaxResult counting() {\r\n        AjaxResult ajax = AjaxResult.success();\r\n        ajax.put(\"yearCountData\", trainResultService.countByYear());\r\n        ajax.put(\"deptCountData\", trainResultService.countByDept());\r\n        ajax.put(\"classifyCountData\", trainResultService.countByClassify());\r\n        ajax.put(\"methodCountData\", trainResultService.countByMethod());\r\n        ajax.put(\"natureCountData\", trainResultService.countByNature());\r\n\r\n        return ajax;\r\n    }\r\n\r\n    @ApiOperation(value = \"下载培训成果模板\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:download')\")\r\n    @GetMapping(\"/excel/download\")\r\n    public void downloadExcel(HttpServletResponse response) {\r\n        try {\r\n            trainProjectService.downloadExcel(response,\"trainResult.xlsx\");\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    @ApiOperation(\"导入培训成果数据\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:result:import')\")\r\n    @PostMapping(\"/importData\")\r\n    public AjaxResult importData(MultipartFile file) {\r\n        LoginUser loginUser = getLoginUser();\r\n        return success(trainResultService.importTrainResultData(file, loginUser));\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainResultController.java b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainResultController.java
+--- a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainResultController.java	(revision e9ae9ad05bf725b98067d045dff479503441bd82)
++++ b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/TrainResultController.java	(date 1697680659631)
+@@ -105,7 +105,7 @@
+      * resultAnnexPath:存的是上传文件的fileId
+      */
+     @ApiOperation("修改培训成果")
+-    @PreAuthorize("@ss.hasPermi('labor:result:edit')")
++    //@PreAuthorize("@ss.hasPermi('labor:result:edit')")
+     @Log(title = "培训成果", businessType = BusinessType.UPDATE)
+     @PutMapping("/edit")
+     public AjaxResult edit(@RequestBody TrainResult trainResult) {
+Index: laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/SalaryHistoryController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.web.controller.labor;\r\n\r\nimport java.math.BigDecimal;\r\nimport java.util.*;\r\nimport javax.servlet.http.HttpServletResponse;\r\n\r\nimport com.yuantu.labor.domain.Employee;\r\nimport com.yuantu.labor.service.IEmployeeService;\r\nimport com.yuantu.labor.vo.*;\r\nimport io.swagger.annotations.Api;\r\nimport io.swagger.annotations.ApiOperation;\r\nimport org.springframework.security.access.prepost.PreAuthorize;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.PutMapping;\r\nimport org.springframework.web.bind.annotation.DeleteMapping;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\nimport com.yuantu.common.annotation.Log;\r\nimport com.yuantu.common.core.controller.BaseController;\r\nimport com.yuantu.common.core.domain.AjaxResult;\r\nimport com.yuantu.common.enums.BusinessType;\r\nimport com.yuantu.labor.domain.SalaryHistory;\r\nimport com.yuantu.labor.service.ISalaryHistoryService;\r\nimport com.yuantu.common.utils.poi.ExcelUtil;\r\nimport com.yuantu.common.core.page.TableDataInfo;\r\n\r\n/**\r\n * 薪级变动Controller\r\n * \r\n * @author ruoyi\r\n * @date 2023-10-07\r\n */\r\n@Api(\"薪级变动管理\")\r\n@RestController\r\n@RequestMapping(\"/labor/salaryhis\")\r\npublic class SalaryHistoryController extends BaseController\r\n{\r\n    @Autowired\r\n    private ISalaryHistoryService salaryHistoryService;\r\n    @Autowired\r\n    private IEmployeeService employeeService;\r\n\r\n    /**\r\n     * 查询薪级变动列表\r\n     */\r\n    @ApiOperation(\"查询薪级变动列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:list')\")\r\n    @GetMapping(\"/list\")\r\n    public TableDataInfo list(SalaryHisQueryVO vo)\r\n    {\r\n        startPage();\r\n        List<SalaryHistory> list = salaryHistoryService.selectSalaryHistoryList(vo);\r\n        return getDataTable(list);\r\n    }\r\n\r\n    /**\r\n     * 导出薪级变动列表\r\n     */\r\n    @ApiOperation(\"导出薪级变动列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:export')\")\r\n    @Log(title = \"薪级变动\", businessType = BusinessType.EXPORT)\r\n    @PostMapping(\"/export/{hisIds}\")\r\n    public void export(HttpServletResponse response, @PathVariable Integer[] hisIds)\r\n    {\r\n        SalaryHisQueryVO vo = new SalaryHisQueryVO();\r\n        vo.setHisIds(hisIds);\r\n        List<SalaryHistory> list = salaryHistoryService.selectSalaryHistoryList(vo);\r\n        ExcelUtil<SalaryHistory> util = new ExcelUtil<SalaryHistory>(SalaryHistory.class);\r\n        util.exportExcel(response, list, \"薪级变动数据\");\r\n    }\r\n\r\n    /**\r\n     * 获取薪级变动详细信息\r\n     */\r\n    @ApiOperation(\"获取薪级变动详细信息\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:query')\")\r\n    @GetMapping(value = \"/getInfo/{hisId}\")\r\n    public AjaxResult getInfo(@PathVariable(\"hisId\") Integer hisId)\r\n    {\r\n        return success(salaryHistoryService.selectSalaryHistoryByHisId(hisId));\r\n    }\r\n\r\n    /**\r\n     * 新增薪级变动\r\n     */\r\n    @ApiOperation(\"新增薪级变动\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:add')\")\r\n    @Log(title = \"薪级变动\", businessType = BusinessType.INSERT)\r\n    @PostMapping(\"/add\")\r\n    public AjaxResult add(@RequestBody SalaryHistory salaryHistory)\r\n\r\n    {\r\n        Employee emp = employeeService.selectEmployeeByEmpId(salaryHistory.getHisEmpId());\r\n        emp.setEmpSalaryLevel(salaryHistory.getHisNextLevel());\r\n        salaryHistory.setHisEmpIdcard(emp.getEmpIdcard());\r\n        salaryHistory.setHisEmpName(emp.getEmpName());\r\n\r\n        int result = salaryHistoryService.checkSalaryHisUnique(salaryHistory);\r\n        if(result>0){\r\n            return  error(\"增加\"+salaryHistory.getHisEmpName()+\"的\"+salaryHistory.getHisYearMonth()+\"薪资变动失败，该月薪酬变动数据已经存在\");\r\n\r\n        }\r\n        return toAjax(salaryHistoryService.insertSalaryHistory(salaryHistory,emp));\r\n    }\r\n\r\n    /**\r\n     * 修改薪级变动\r\n     */\r\n    @ApiOperation(\"修改薪级变动\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:edit')\")\r\n    @Log(title = \"薪级变动\", businessType = BusinessType.UPDATE)\r\n    @PutMapping(\"/edit\")\r\n    public AjaxResult edit(@RequestBody SalaryHistory salaryHistory)\r\n    {\r\n        return toAjax(salaryHistoryService.updateSalaryHistory(salaryHistory));\r\n    }\r\n\r\n    /**\r\n     * 删除薪级变动\r\n     */\r\n    @ApiOperation(\"删除薪级变动\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:remove')\")\r\n    @Log(title = \"薪级变动\", businessType = BusinessType.DELETE)\r\n\t@DeleteMapping(\"/remove/{hisIds}\")\r\n    public AjaxResult remove(@PathVariable Integer[] hisIds)\r\n    {\r\n        return toAjax(salaryHistoryService.deleteSalaryHistoryByHisIds(hisIds));\r\n    }\r\n    @ApiOperation(\" 初始化新增页面，返回员工列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:query')\")\r\n    @GetMapping(\"/initAdd\")\r\n    public AjaxResult initAdd() {\r\n        AjaxResult ajax = AjaxResult.success();\r\n        EmployeeInfoVO infoVO = new EmployeeInfoVO();\r\n        List<String> statusList = new ArrayList<>();\r\n        statusList.add(\"1\");\r\n        statusList.add(\"2\");\r\n        statusList.add(\"5\");\r\n        statusList.add(\"6\");\r\n        statusList.add(\"7\");\r\n        infoVO.setEmpStatusList(statusList);\r\n        List<EmpNameCardVO>  empNameCardList = employeeService.selectEmpNameAndCard(infoVO);        ajax.put(\"empNameAndCardData\",empNameCardList);\r\n        return ajax;\r\n    }\r\n    @ApiOperation(\"初始化修改页面，返回员工修改历史记录\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:query')\")\r\n    @GetMapping(\"/initEdit/{salaryId}\")\r\n    public  AjaxResult initEdit(@PathVariable(\"salaryId\") Integer salaryId){\r\n        return success(salaryHistoryService.selectSalaryHistoryByHisId(salaryId));\r\n    }\r\n\r\n    /**\r\n     * 薪资变动数据统计,返回页面的数据如下\r\n     * numberRiseThisyear:今年升薪的人数\r\n     * AmountRiseThisyear:今年升薪的金额\r\n     * numberFallThisyear:今年降薪的人数\r\n     * AmountFallThisyear:今年降薪的金额\r\n     * riseYearsArray:近几年升薪的年份\r\n     * riseNumArray：近几年升薪的人数\r\n     * riseAmountArray：近几年升薪的金额\r\n     * fallYearsArray：近几年降薪的年份\r\n     * fallNumArray：近几年降薪的人数\r\n     * fallAmountArray：近几年降薪的金额\r\n     */\r\n    @ApiOperation(\"薪资变动数据统计,包括：升降薪人数，金额，近几年变化\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salaryhis:query')\")\r\n    @GetMapping(\"/counting\")\r\n    public AjaxResult counting(){\r\n        AjaxResult ajax = AjaxResult.success();\r\n        ajax.put(\"numberRiseThisyear\",salaryHistoryService.countNumByChangeType(1));\r\n        ajax.put(\"AmountRiseThisyear\",salaryHistoryService.countAmountByChangeType(1));\r\n        ajax.put(\"numberFallThisyear\",salaryHistoryService.countNumByChangeType(2));\r\n        ajax.put(\"AmountFallThisyear\",salaryHistoryService.countAmountByChangeType(2));\r\n\r\n        List<ChartDataVO> countRiseByYears = salaryHistoryService.countAmountByRecentYears(1);\r\n        if(countRiseByYears!=null){\r\n            String[] riseYears = new String[countRiseByYears.size()];\r\n            Integer[] riseNums = new Integer[countRiseByYears.size()];\r\n            BigDecimal[] riseAmounts = new BigDecimal[countRiseByYears.size()];\r\n            for(int i=0;i<countRiseByYears.size();i++){\r\n                ChartDataVO riseVO = countRiseByYears.get(i);\r\n                riseYears[i] = riseVO.getName();\r\n                riseNums[i] = riseVO.getNumval();\r\n                riseAmounts[i] = riseVO.getAmountval();\r\n            }\r\n            ajax.put(\"riseYearsArray\",riseYears);\r\n            ajax.put(\"riseNumArray\", riseNums);\r\n            ajax.put(\"riseAmountArray\",riseAmounts);\r\n        }\r\n\r\n        List<ChartDataVO> countFallByYears =  salaryHistoryService.countAmountByRecentYears(2);\r\n        if(countFallByYears!=null){\r\n            String[] fallYears = new String[countFallByYears.size()];\r\n            Integer[] fallNums = new Integer[countFallByYears.size()];\r\n            BigDecimal[] fallAmounts = new BigDecimal[countFallByYears.size()];\r\n            for(int i=0;i<countFallByYears.size();i++){\r\n                ChartDataVO fallVO = countFallByYears.get(i);\r\n                fallYears[i] = fallVO.getName();\r\n                fallNums[i] = fallVO.getNumval();\r\n                fallAmounts[i] = fallVO.getAmountval();\r\n            }\r\n            ajax.put(\"fallYearsArray\",fallYears);\r\n            ajax.put(\"fallNumArray\", fallNums);\r\n            ajax.put(\"fallAmountArray\",fallAmounts);\r\n        }\r\n\r\n\r\n        return ajax;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/SalaryHistoryController.java b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/SalaryHistoryController.java
+--- a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/SalaryHistoryController.java	(revision e9ae9ad05bf725b98067d045dff479503441bd82)
++++ b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/SalaryHistoryController.java	(date 1697623978588)
+@@ -4,8 +4,10 @@
+ import java.util.*;
+ import javax.servlet.http.HttpServletResponse;
+ 
++import com.yuantu.common.core.domain.model.LoginUser;
+ import com.yuantu.labor.domain.Employee;
+ import com.yuantu.labor.service.IEmployeeService;
++import com.yuantu.labor.service.ITrainProjectService;
+ import com.yuantu.labor.vo.*;
+ import io.swagger.annotations.Api;
+ import io.swagger.annotations.ApiOperation;
+@@ -27,6 +29,7 @@
+ import com.yuantu.labor.service.ISalaryHistoryService;
+ import com.yuantu.common.utils.poi.ExcelUtil;
+ import com.yuantu.common.core.page.TableDataInfo;
++import org.springframework.web.multipart.MultipartFile;
+ 
+ /**
+  * 薪级变动Controller
+@@ -43,6 +46,7 @@
+     private ISalaryHistoryService salaryHistoryService;
+     @Autowired
+     private IEmployeeService employeeService;
++    private ITrainProjectService trainProjectService;
+ 
+     /**
+      * 查询薪级变动列表
+@@ -61,7 +65,7 @@
+      * 导出薪级变动列表
+      */
+     @ApiOperation("导出薪级变动列表")
+-    @PreAuthorize("@ss.hasPermi('labor:salaryhis:export')")
++    //@PreAuthorize("@ss.hasPermi('labor:salaryhis:export')")
+     @Log(title = "薪级变动", businessType = BusinessType.EXPORT)
+     @PostMapping("/export/{hisIds}")
+     public void export(HttpServletResponse response, @PathVariable Integer[] hisIds)
+@@ -211,4 +215,23 @@
+ 
+         return ajax;
+     }
++
++    @ApiOperation(value = "下载薪酬变动情况模板")
++    //@PreAuthorize("@ss.hasPermi('labor:salaryhis:download')")
++    @GetMapping("/excel/download")
++    public void downloadExcel(HttpServletResponse response) {
++        try {
++            trainProjectService.downloadExcel(response,"trainResult.xlsx");
++        } catch (Exception e) {
++            e.printStackTrace();
++        }
++    }
++
++    @ApiOperation("导入薪酬变动情况数据")
++    //@PreAuthorize("@ss.hasPermi('labor:salaryhis:import')")
++    @PostMapping("/importData")
++    public AjaxResult importData(MultipartFile file) {
++        LoginUser loginUser = getLoginUser();
++        return success(salaryHistoryService.importSalaryHisData(file, loginUser));
++    }
+ }
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.cenum;\r\n\r\nimport lombok.AllArgsConstructor;\r\nimport lombok.Getter;\r\n\r\n/**\r\n * @Author : wj\r\n * @create 2023/3/17 11:18\r\n */\r\n@Getter\r\n@AllArgsConstructor\r\npublic enum ImportFileTypeEnum {\r\n\r\n    ONE(\"1\", \"人员信息\"),\r\n\r\n    TWO(\"2\", \"借工基本信息\"),\r\n\r\n    THREE(\"3\", \"职业资格管理\"),\r\n\r\n    FOUR(\"4\", \"社会履历\"),\r\n\r\n    FIVE(\"5\", \"项目履历\"),\r\n\r\n    SIX(\"6\", \"部门绩效\"),\r\n\r\n    SEVEN(\"7\", \"培训项目\"),\r\n\r\n    EIGHT(\"8\", \"培训记录\"),\r\n\r\n    NINE(\"9\", \"培训成果\"),\r\n\r\n    TEN(\"10\", \"专家信息\"),\r\n\r\n    ELEVEN(\"11\", \"考勤信息\"),\r\n\r\n    TWELVE(\"12\", \"员工绩效信息\"),\r\n\r\n    THIRTEEN(\"13\", \"省公司专业考核\"),\r\n\r\n    FOURTEEN(\"14\", \"员工福利信息\"),\r\n\r\n    FIFTEEN(\"15\", \"员工健康档案信息\"),\r\n    ;\r\n\r\n    private String key;\r\n\r\n    private String value;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java b/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java	(revision e9ae9ad05bf725b98067d045dff479503441bd82)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/cenum/ImportFileTypeEnum.java	(date 1697624519606)
+@@ -40,6 +40,9 @@
+     FOURTEEN("14", "员工福利信息"),
+ 
+     FIFTEEN("15", "员工健康档案信息"),
++
++    SIXTEEN("16", "薪酬变动"),
++    SEVENTEEN("17","员工薪资"),
+     ;
+ 
+     private String key;
+Index: laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.framework.config;\r\n\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.http.HttpMethod;\r\nimport org.springframework.security.authentication.AuthenticationManager;\r\nimport org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;\r\nimport org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;\r\nimport org.springframework.security.config.annotation.web.builders.HttpSecurity;\r\nimport org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;\r\nimport org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;\r\nimport org.springframework.security.config.http.SessionCreationPolicy;\r\nimport org.springframework.security.core.userdetails.UserDetailsService;\r\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\nimport org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;\r\nimport org.springframework.security.web.authentication.logout.LogoutFilter;\r\nimport org.springframework.web.filter.CorsFilter;\r\nimport com.yuantu.framework.config.properties.PermitAllUrlProperties;\r\nimport com.yuantu.framework.security.filter.JwtAuthenticationTokenFilter;\r\nimport com.yuantu.framework.security.handle.AuthenticationEntryPointImpl;\r\nimport com.yuantu.framework.security.handle.LogoutSuccessHandlerImpl;\r\n\r\n/**\r\n * spring security配置\r\n * \r\n * @author ruoyi\r\n */\r\n@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)\r\npublic class SecurityConfig extends WebSecurityConfigurerAdapter\r\n{\r\n    /**\r\n     * 自定义用户认证逻辑\r\n     */\r\n    @Autowired\r\n    private UserDetailsService userDetailsService;\r\n    \r\n    /**\r\n     * 认证失败处理类\r\n     */\r\n    @Autowired\r\n    private AuthenticationEntryPointImpl unauthorizedHandler;\r\n\r\n    /**\r\n     * 退出处理类\r\n     */\r\n    @Autowired\r\n    private LogoutSuccessHandlerImpl logoutSuccessHandler;\r\n\r\n    /**\r\n     * token认证过滤器\r\n     */\r\n    @Autowired\r\n    private JwtAuthenticationTokenFilter authenticationTokenFilter;\r\n    \r\n    /**\r\n     * 跨域过滤器\r\n     */\r\n    @Autowired\r\n    private CorsFilter corsFilter;\r\n\r\n    /**\r\n     * 允许匿名访问的地址\r\n     */\r\n    @Autowired\r\n    private PermitAllUrlProperties permitAllUrl;\r\n\r\n    /**\r\n     * 解决 无法直接注入 AuthenticationManager\r\n     *\r\n     * @return\r\n     * @throws Exception\r\n     */\r\n    @Bean\r\n    @Override\r\n    public AuthenticationManager authenticationManagerBean() throws Exception\r\n    {\r\n        return super.authenticationManagerBean();\r\n    }\r\n\r\n    /**\r\n     * anyRequest          |   匹配所有请求路径\r\n     * access              |   SpringEl表达式结果为true时可以访问\r\n     * anonymous           |   匿名可以访问\r\n     * denyAll             |   用户不能访问\r\n     * fullyAuthenticated  |   用户完全认证可以访问（非remember-me下自动登录）\r\n     * hasAnyAuthority     |   如果有参数，参数表示权限，则其中任何一个权限可以访问\r\n     * hasAnyRole          |   如果有参数，参数表示角色，则其中任何一个角色可以访问\r\n     * hasAuthority        |   如果有参数，参数表示权限，则其权限可以访问\r\n     * hasIpAddress        |   如果有参数，参数表示IP地址，如果用户IP和参数匹配，则可以访问\r\n     * hasRole             |   如果有参数，参数表示角色，则其角色可以访问\r\n     * permitAll           |   用户可以任意访问\r\n     * rememberMe          |   允许通过remember-me登录的用户访问\r\n     * authenticated       |   用户登录后可访问\r\n     */\r\n    @Override\r\n    protected void configure(HttpSecurity httpSecurity) throws Exception\r\n    {\r\n        // 注解标记允许匿名访问的url\r\n        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity.authorizeRequests();\r\n        permitAllUrl.getUrls().forEach(url -> registry.antMatchers(url).permitAll());\r\n\r\n        httpSecurity\r\n                // CSRF禁用，因为不使用session\r\n                .csrf().disable()\r\n                // 禁用HTTP响应标头\r\n                .headers().cacheControl().disable().and()\r\n                // 认证失败处理类\r\n                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()\r\n                // 基于token，所以不需要session\r\n                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()\r\n                // 过滤请求\r\n                .authorizeRequests()\r\n                // 对于登录login 注册register 验证码captchaImage 允许匿名访问\r\n                .antMatchers(\"/login\", \"/register\", \"/captchaImage\").permitAll()\r\n                // 静态资源，可匿名访问\r\n                .antMatchers(HttpMethod.GET, \"/\", \"/*.html\", \"/**/*.html\", \"/**/*.css\", \"/**/*.js\", \"/profile/**\").permitAll()\r\n                .antMatchers(\"/swagger-ui.html\", \"/swagger-resources/**\", \"/webjars/**\", \"/*/api-docs\", \"/druid/**\").permitAll()\r\n              //  .antMatchers(\"/labor/**\").permitAll()\r\n                // 除上面外的所有请求全部需要鉴权认证\r\n                .anyRequest().authenticated()\r\n                .and()\r\n                .headers().frameOptions().disable();\r\n        // 添加Logout filter\r\n        httpSecurity.logout().logoutUrl(\"/logout\").logoutSuccessHandler(logoutSuccessHandler);\r\n        // 添加JWT filter\r\n        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);\r\n        // 添加CORS filter\r\n        httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);\r\n        httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);\r\n    }\r\n\r\n    /**\r\n     * 强散列哈希加密实现\r\n     */\r\n    @Bean\r\n    public BCryptPasswordEncoder bCryptPasswordEncoder()\r\n    {\r\n        return new BCryptPasswordEncoder();\r\n    }\r\n\r\n    /**\r\n     * 身份认证接口\r\n     */\r\n    @Override\r\n    protected void configure(AuthenticationManagerBuilder auth) throws Exception\r\n    {\r\n        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java b/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java
+--- a/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java	(revision e9ae9ad05bf725b98067d045dff479503441bd82)
++++ b/laborBackend-framework/src/main/java/com/yuantu/framework/config/SecurityConfig.java	(date 1697620238903)
+@@ -117,6 +117,18 @@
+                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
+               //  .antMatchers("/labor/**").permitAll()
+                 // 除上面外的所有请求全部需要鉴权认证
++                .antMatchers("/labor/dir/**").permitAll()
++                .antMatchers("/labor/worker/**").permitAll()
++                .antMatchers("/labor/materials/**").permitAll()
++                .antMatchers("/labor/expert/**").permitAll()
++                .antMatchers("/labor/resume/**").permitAll()
++                .antMatchers("/labor/train/**").permitAll()
++                .antMatchers("/labor/project/**").permitAll()
++                .antMatchers("/labor/result/**").permitAll()
++                .antMatchers("/labor/salaryconf/**").permitAll()
++                .antMatchers("/labor/salary/**").permitAll()
++                .antMatchers("/labor/salaryhis/**").permitAll()
++                .antMatchers("/labor/budget/**").permitAll()
+                 .anyRequest().authenticated()
+                 .and()
+                 .headers().frameOptions().disable();
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisImportVO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisImportVO.java b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisImportVO.java
+new file mode 100644
+--- /dev/null	(date 1697623426866)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisImportVO.java	(date 1697623426866)
+@@ -0,0 +1,67 @@
++package com.yuantu.labor.vo;
++
++import cn.afterturn.easypoi.handler.inter.IExcelDataModel;
++import cn.afterturn.easypoi.handler.inter.IExcelModel;
++import cn.afterturn.easypoi.excel.annotation.Excel;
++import lombok.Data;
++
++@Data
++public class SalaryHisImportVO implements IExcelDataModel, IExcelModel {
++    /** 人员姓名 */
++    @Excel(name = "姓名")
++    private String hisEmpName;
++
++    /** 身份证 */
++    @Excel(name = "身份证")
++    private String hisEmpIdcard;
++
++    /** 年月 */
++    @Excel(name = "变动年月")
++    private String hisYearMonth;
++
++    /** 变动前薪级 */
++    @Excel(name = "变动前薪级")
++    private String hisPreviousLevel;
++
++    /** 变动后薪级 */
++    @Excel(name = "变动后薪级")
++    private String hisNextLevel;
++
++    /** 变动类别 */
++    @Excel(name = "变动类别")
++    private String hisChangeType;
++
++    /** 是否岗位变动引起的 */
++    @Excel(name = "是否由岗位变动引起")
++    private String hisIspostChange;
++
++    /**
++     * 行号
++     */
++    private int rowNum;
++
++    /**
++     * 错误消息
++     */
++    private String errorMsg;
++
++    @Override
++    public Integer getRowNum() {
++        return this.rowNum;
++    }
++
++    @Override
++    public void setRowNum(Integer rowNum) {
++        this.rowNum = rowNum;
++    }
++
++    @Override
++    public String getErrorMsg() {
++        return this.errorMsg;
++    }
++
++    @Override
++    public void setErrorMsg(String errorMsg) {
++        this.errorMsg = errorMsg;
++    }
++}
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisCheckVO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisCheckVO.java b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisCheckVO.java
+new file mode 100644
+--- /dev/null	(date 1697624519954)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/vo/SalaryHisCheckVO.java	(date 1697624519954)
+@@ -0,0 +1,15 @@
++package com.yuantu.labor.vo;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@NoArgsConstructor
++@AllArgsConstructor
++public class SalaryHisCheckVO {
++    private String hisEmpIdcard;
++    private String hisYearMonth;
++
++    private Integer rowNum;
++}
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/service/ISalaryHistoryService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.labor.service;\r\n\r\nimport java.util.List;\r\n\r\nimport com.yuantu.labor.domain.Employee;\r\nimport com.yuantu.labor.domain.SalaryHistory;\r\nimport com.yuantu.labor.vo.ChartDataVO;\r\nimport com.yuantu.labor.vo.PieChartVO;\r\nimport com.yuantu.labor.vo.SalaryHisQueryVO;\r\n\r\n/**\r\n * 薪级变动Service接口\r\n * \r\n * @author ruoyi\r\n * @date 2023-10-07\r\n */\r\npublic interface ISalaryHistoryService \r\n{\r\n    /**\r\n     * 查询薪级变动\r\n     * \r\n     * @param hisId 薪级变动主键\r\n     * @return 薪级变动\r\n     */\r\n    public SalaryHistory selectSalaryHistoryByHisId(Integer hisId);\r\n\r\n    /**\r\n     * 查询薪级变动列表\r\n     * \r\n     * @param vo 薪级变动\r\n     * @return 薪级变动集合\r\n     */\r\n    public List<SalaryHistory> selectSalaryHistoryList(SalaryHisQueryVO vo);\r\n\r\n    /**\r\n     * 新增薪级变动\r\n     * \r\n     * @param salaryHistory 薪级变动\r\n     * @return 结果\r\n     */\r\n    public int insertSalaryHistory(SalaryHistory salaryHistory, Employee employee);\r\n\r\n    /**\r\n     * 修改薪级变动\r\n     * \r\n     * @param salaryHistory 薪级变动\r\n     * @return 结果\r\n     */\r\n    public int updateSalaryHistory(SalaryHistory salaryHistory);\r\n\r\n    /**\r\n     * 批量删除薪级变动\r\n     * \r\n     * @param hisIds 需要删除的薪级变动主键集合\r\n     * @return 结果\r\n     */\r\n    public int deleteSalaryHistoryByHisIds(Integer[] hisIds);\r\n\r\n    /**\r\n     * 删除薪级变动信息\r\n     * \r\n     * @param hisId 薪级变动主键\r\n     * @return 结果\r\n     */\r\n    public int deleteSalaryHistoryByHisId(Integer hisId);\r\n\r\n    /**\r\n     * 统计升薪/降薪总人数\r\n     * @param changeType\r\n     * @return\r\n     */\r\n    public Integer countNumByChangeType(Integer changeType);\r\n\r\n    /**\r\n     * 统计今年升薪/降薪总金额\r\n     * @param changeType\r\n     * @return\r\n     */\r\n    public String countAmountByChangeType(Integer changeType);\r\n\r\n    /**\r\n     * 近5年来升薪降薪的人数\r\n     * @param changeType\r\n     * @return\r\n     */\r\n    public List<PieChartVO> countNumByRecentYears(Integer changeType);\r\n    /**\r\n     * 近5年来升薪降薪的金额\r\n     * @param changeType\r\n     * @return\r\n     */\r\n    public List<ChartDataVO> countAmountByRecentYears(Integer changeType);\r\n\r\n    /**\r\n     * 检查唯一性\r\n     * @param salaryHistory\r\n     * @return\r\n     */\r\n    public Integer checkSalaryHisUnique(SalaryHistory salaryHistory);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/service/ISalaryHistoryService.java b/laborBackend-labor/src/main/java/com/yuantu/labor/service/ISalaryHistoryService.java
+--- a/laborBackend-labor/src/main/java/com/yuantu/labor/service/ISalaryHistoryService.java	(revision e9ae9ad05bf725b98067d045dff479503441bd82)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/service/ISalaryHistoryService.java	(date 1697623978548)
+@@ -2,11 +2,14 @@
+ 
+ import java.util.List;
+ 
++import com.yuantu.common.core.domain.model.LoginUser;
+ import com.yuantu.labor.domain.Employee;
+ import com.yuantu.labor.domain.SalaryHistory;
+ import com.yuantu.labor.vo.ChartDataVO;
++import com.yuantu.labor.vo.ImportResultVO;
+ import com.yuantu.labor.vo.PieChartVO;
+ import com.yuantu.labor.vo.SalaryHisQueryVO;
++import org.springframework.web.multipart.MultipartFile;
+ 
+ /**
+  * 薪级变动Service接口
+@@ -97,4 +100,6 @@
+      * @return
+      */
+     public Integer checkSalaryHisUnique(SalaryHistory salaryHistory);
++
++    public ImportResultVO importSalaryHisData(MultipartFile multipartFile, LoginUser user);
+ }
+Index: laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/EmpSalaryController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yuantu.web.controller.labor;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport javax.servlet.http.HttpServletResponse;\r\n\r\nimport com.github.pagehelper.Page;\r\nimport com.yuantu.common.constant.HttpStatus;\r\nimport com.yuantu.common.utils.PageUtils;\r\nimport com.yuantu.labor.domain.EmpExpert;\r\nimport com.yuantu.labor.domain.Employee;\r\nimport com.yuantu.labor.domain.SalaryConfig;\r\nimport com.yuantu.labor.service.IEmployeeService;\r\nimport com.yuantu.labor.service.ISalaryConfigService;\r\nimport com.yuantu.labor.vo.*;\r\nimport io.swagger.annotations.ApiOperation;\r\nimport org.springframework.security.access.prepost.PreAuthorize;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.PutMapping;\r\nimport org.springframework.web.bind.annotation.DeleteMapping;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\nimport com.yuantu.common.annotation.Log;\r\nimport com.yuantu.common.core.controller.BaseController;\r\nimport com.yuantu.common.core.domain.AjaxResult;\r\nimport com.yuantu.common.enums.BusinessType;\r\nimport com.yuantu.labor.domain.EmpSalary;\r\nimport com.yuantu.labor.service.IEmpSalaryService;\r\nimport com.yuantu.common.utils.poi.ExcelUtil;\r\nimport com.yuantu.common.core.page.TableDataInfo;\r\n\r\n/**\r\n * 员工酬薪主Controller\r\n *\r\n * @author ruoyi\r\n * @date 2023-09-26\r\n */\r\n@RestController\r\n@RequestMapping(\"/labor/salary\")\r\npublic class EmpSalaryController extends BaseController {\r\n    @Autowired\r\n    private IEmpSalaryService empSalaryService;\r\n    @Autowired\r\n    private IEmployeeService employeeService;\r\n    @Autowired\r\n    private ISalaryConfigService salaryConfigService;\r\n\r\n    /**\r\n     * 查询员工酬薪主列表\r\n     */\r\n    @ApiOperation(\"查询员工酬薪主列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:list')\")\r\n    @GetMapping(\"/list\")\r\n    public TableDataInfo list(EmpSalary empSalary) {\r\n        startPage();\r\n        List<EmpSalary> list = empSalaryService.selectEmpSalaryList(empSalary);\r\n        return getDataTable(list);\r\n    }\r\n\r\n    /**\r\n     * 导出员工酬薪主列表\r\n     */\r\n    @ApiOperation(\"导出员工酬薪主列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:export')\")\r\n    @Log(title = \"员工酬薪主\", businessType = BusinessType.EXPORT)\r\n    @GetMapping(\"/export/{salaryIds}\")\r\n    public void export(HttpServletResponse response, @PathVariable Integer[] salaryIds) {\r\n        EmpSalaryQueryVO vo = new EmpSalaryQueryVO();\r\n\r\n        List<EmpSalaryResultVO> list = empSalaryService.selectSalaryAndItemBySalaryIds(salaryIds);\r\n        ExcelUtil<EmpSalaryResultVO> util = new ExcelUtil<EmpSalaryResultVO>(EmpSalaryResultVO.class);\r\n        util.exportExcel(response, list, \"员工酬薪主数据\");\r\n    }\r\n\r\n    /**\r\n     * 获取员工酬薪主详细信息\r\n     */\r\n    @ApiOperation(\"获取员工酬薪主详细信息\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @GetMapping(value = \"/getInfo/{salaryId}\")\r\n    public AjaxResult getInfo(@PathVariable(\"salaryId\") Integer salaryId) {\r\n        return success(empSalaryService.selectSalaryAndItemBySalaryId(salaryId));\r\n    }\r\n\r\n    /**\r\n     * 新增员工酬薪主\r\n     */\r\n    @ApiOperation(\"新增员工酬薪\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:add')\")\r\n    @Log(title = \"员工酬薪主\", businessType = BusinessType.INSERT)\r\n    @PostMapping(\"/add\")\r\n    public AjaxResult add(@RequestBody EmpSalary empSalary) {\r\n        Employee emp = employeeService.selectEmployeeByEmpId(empSalary.getSalaryEmpId());\r\n        empSalary.setSalaryEmpName(emp.getEmpName());\r\n        empSalary.setSalaryEmpIdcard(emp.getEmpIdcard());\r\n\r\n        Integer result = empSalaryService.checkSalarytUnique(empSalary);\r\n        if (result != null) {\r\n            return error(\"增加\" + empSalary.getSalaryEmpName() + \"的\" + empSalary.getSalaryYearMonth() + \"工资失败，该月薪酬已经存在\");\r\n        }\r\n        String username = getUsername();\r\n        return toAjax(empSalaryService.insertEmpSalary(empSalary, username));\r\n    }\r\n\r\n    /**\r\n     * 修改员工酬薪主\r\n     */\r\n    @ApiOperation(\"修改员工酬薪主\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:edit')\")\r\n    @Log(title = \"员工酬薪主\", businessType = BusinessType.UPDATE)\r\n    @PutMapping(\"/edit\")\r\n    public AjaxResult edit(@RequestBody EmpSalary empSalary) {\r\n        String username = getUsername();\r\n        return toAjax(empSalaryService.updateEmpSalary(empSalary, username));\r\n    }\r\n\r\n    /**\r\n     * 删除员工酬薪主\r\n     */\r\n    @ApiOperation(\"删除员工酬薪主\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @Log(title = \"员工酬薪主\", businessType = BusinessType.DELETE)\r\n    @DeleteMapping(\"/remove/{salaryIds}\")\r\n    public AjaxResult remove(@PathVariable Integer[] salaryIds) {\r\n        return toAjax(empSalaryService.deleteEmpSalaryBySalaryIds(salaryIds));\r\n    }\r\n\r\n    @ApiOperation(\"初始化新增页面，返回员工列表，薪酬配置列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @GetMapping(\"/initAdd\")\r\n    public AjaxResult initAdd() {\r\n        //返回员工列表\r\n        EmployeeInfoVO infoVO = new EmployeeInfoVO();\r\n        List<String> statusList = new ArrayList<>();\r\n        statusList.add(\"1\");\r\n        statusList.add(\"2\");\r\n        statusList.add(\"5\");\r\n        statusList.add(\"6\");\r\n        statusList.add(\"7\");\r\n        infoVO.setEmpStatusList(statusList);\r\n        List<EmpNameCardVO> empNameCardList = employeeService.selectEmpNameAndCard(infoVO);\r\n\r\n        //返回薪酬配置列表\r\n        List<SalaryConfig> salaryConfigList = salaryConfigService.selectSalaryConfigList(new SalaryConfig());\r\n\r\n        AjaxResult ajax = AjaxResult.success();\r\n        ajax.put(\"empNameCardData\", empNameCardList);\r\n        ajax.put(\"salaryConfigData\", salaryConfigList);\r\n        return ajax;\r\n    }\r\n\r\n    @ApiOperation(\"初始化修改页面，返回员工月份薪酬对象\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @GetMapping(\"/initEdit/{salaryId}\")\r\n    public AjaxResult initEdit(@PathVariable(\"salaryId\") Integer salaryId) {\r\n        return success(empSalaryService.selectSalaryAndItemBySalaryId(salaryId));\r\n    }\r\n\r\n    @ApiOperation(\"根据条件模糊查询月度薪资列表\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @GetMapping(\"/querySalery\")\r\n    public TableDataInfoVO querySalary(EmpSalaryQueryVO queryVO) {\r\n        if (queryVO.getMonthInterval() != null) {\r\n            String interval = queryVO.getMonthInterval();\r\n            queryVO.setBeginMonth(interval.substring(0, 7));\r\n            queryVO.setEndMonth(interval.substring(interval.length() - 7));\r\n        }\r\n        //System.out.println(queryVO.toString());\r\n\r\n        startPage();\r\n\r\n        SalaryTableDataVO vo = empSalaryService.selectSalarDataByWhere(queryVO);\r\n        TableDataInfoVO rspData = new TableDataInfoVO();\r\n\r\n        rspData.setColumns(vo.getItemTitles());\r\n        rspData.setColData(vo.getItemData());\r\n\r\n        TableDataInfo subInfo = getDataTable(vo.getSalaryMainData());\r\n\r\n        rspData.setCode(subInfo.getCode());\r\n        rspData.setMsg(subInfo.getMsg());\r\n        rspData.setRows(subInfo.getRows());\r\n        rspData.setTotal(subInfo.getTotal());\r\n        return rspData;\r\n    }\r\n\r\n    /**\r\n     * 年度薪酬统计，查询参数封装在EmpSalaryQueryVO里的empName和year\r\n     * * empName里是员工名称或者身份证\r\n     *\r\n     * @param vo\r\n     * @return\r\n     */\r\n    @ApiOperation(\"年度薪酬统计\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @GetMapping(\"/countByYear\")\r\n    public TableDataInfo countByYear(EmpSalaryQueryVO vo) {\r\n        startPage();\r\n        List<EmpSalaryYearCountVO> list = empSalaryService.countByYear(vo);\r\n        return getDataTable(list);\r\n    }\r\n\r\n    /**\r\n     * 没有复选框，那么导出是将查询出来数据导出，查询参数封装在EmpSalaryQueryVO里的empName和year\r\n     * empName里是员工名称或者身份证\r\n     *\r\n     * @param response\r\n     * @param vo\r\n     */\r\n    @ApiOperation(\"导出年度薪酬统计数据\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:export')\")\r\n    @Log(title = \"员工酬薪年度统计数据\", businessType = BusinessType.EXPORT)\r\n    @PostMapping(\"/exportYearCount\")\r\n    public void exportYearCount(HttpServletResponse response, EmpSalaryQueryVO vo) {\r\n        List<EmpSalaryYearCountVO> list = empSalaryService.countByYear(vo);\r\n        ExcelUtil<EmpSalaryYearCountVO> util = new ExcelUtil<EmpSalaryYearCountVO>(EmpSalaryYearCountVO.class);\r\n        util.exportExcel(response, list, \"员工酬薪年度统计数据\");\r\n    }\r\n\r\n    /**\r\n     * EmpSalaryQueryVO里的empId,year为参数，统计某员工在某年度薪资数据汇总\r\n     *\r\n     * @param vo\r\n     * @return\r\n     */\r\n    @ApiOperation(\"获取员工酬薪年度统计信息，需要员工id和年度为参数\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @GetMapping(value = \"/getEmpYearCount\")\r\n    public AjaxResult getEmpYearCount(EmpSalaryQueryVO vo) {\r\n        return success(empSalaryService.getEmpYearCountr(vo));\r\n    }\r\n\r\n    /**\r\n     * 薪酬统计，下面是输入参数说明\r\n     * monthInterval:选择时间 例如：2022-01--2023-10\r\n     * empName:姓名和身份证\r\n     * empCategory：人员类别\r\n     * empEmployingUnits：单位名\r\n     * empDept：部门id\r\n     *\r\n     * @param queryVO\r\n     * @return\r\n     */\r\n    @ApiOperation(\"薪酬统计\")\r\n    @PreAuthorize(\"@ss.hasPermi('labor:salary:query')\")\r\n    @GetMapping(value = \"/countSalary\")\r\n    public TableDataInfo countSalary(EmpSalaryQueryVO queryVO) {\r\n        if (queryVO.getMonthInterval() != null) {\r\n            String interval = queryVO.getMonthInterval();\r\n            queryVO.setBeginMonth(interval.substring(0, 7));\r\n            queryVO.setEndMonth(interval.substring(interval.length() - 7));\r\n        }\r\n\r\n        startPage();\r\n        List<EmpSalaryCountVO> list = empSalaryService.countSalary(queryVO);\r\n        return getDataTable(list);\r\n    }\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/EmpSalaryController.java b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/EmpSalaryController.java
+--- a/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/EmpSalaryController.java	(revision e9ae9ad05bf725b98067d045dff479503441bd82)
++++ b/laborBackend-admin/src/main/java/com/yuantu/web/controller/labor/EmpSalaryController.java	(date 1697620921775)
+@@ -39,6 +39,7 @@
+  * @author ruoyi
+  * @date 2023-09-26
+  */
++@ApiOperation("员工薪资管理")
+ @RestController
+ @RequestMapping("/labor/salary")
+ public class EmpSalaryController extends BaseController {
+Index: laborBackend-labor/src/main/java/com/yuantu/labor/handler/SalaryHisExcelImportVerifyHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/laborBackend-labor/src/main/java/com/yuantu/labor/handler/SalaryHisExcelImportVerifyHandler.java b/laborBackend-labor/src/main/java/com/yuantu/labor/handler/SalaryHisExcelImportVerifyHandler.java
+new file mode 100644
+--- /dev/null	(date 1697625356916)
++++ b/laborBackend-labor/src/main/java/com/yuantu/labor/handler/SalaryHisExcelImportVerifyHandler.java	(date 1697625356916)
+@@ -0,0 +1,56 @@
++package com.yuantu.labor.handler;
++
++import cn.afterturn.easypoi.excel.entity.result.ExcelVerifyHandlerResult;
++import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
++import com.yuantu.labor.domain.Employee;
++import com.yuantu.labor.mapper.EmployeeMapper;
++import com.yuantu.labor.vo.SalaryHisCheckVO;
++import com.yuantu.labor.vo.SalaryHisImportVO;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Component;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.StringJoiner;
++@Component
++public class SalaryHisExcelImportVerifyHandler implements IExcelVerifyHandler<SalaryHisImportVO> {
++    @Autowired
++    private EmployeeMapper employeeMapper;
++    private final ThreadLocal<List<SalaryHisCheckVO>> threadLocal = new ThreadLocal<>();
++
++    @Override
++    public ExcelVerifyHandlerResult verifyHandler(SalaryHisImportVO salaryHisImport) {
++        StringJoiner joiner = new StringJoiner(",");
++
++        //验证身份证是否存在
++        Employee existEmployee = employeeMapper.findInfoByHistoryEmpIdCard(salaryHisImport.getHisEmpIdcard());
++        if (existEmployee == null) {
++            joiner.add("该员工不存在");
++        }
++        //验证Excel重复行
++        List<SalaryHisCheckVO> threadLocalVal = threadLocal.get();
++        if (threadLocalVal == null) {
++            threadLocalVal = new ArrayList<>();
++        }
++
++        threadLocalVal.forEach(e -> {
++            if (e.getHisEmpIdcard().equals(salaryHisImport.getHisEmpIdcard()) && e.getHisYearMonth().equals(salaryHisImport.getHisYearMonth())) {
++                int lineNumber = e.getRowNum() + 1;
++                joiner.add("培训成果与第" + lineNumber + "行重复");
++            }
++        });
++
++        // 添加本行数据对象到ThreadLocal中
++        threadLocalVal.add(new SalaryHisCheckVO(salaryHisImport.getHisEmpIdcard(), salaryHisImport.getHisYearMonth(),salaryHisImport.getRowNum()));
++        threadLocal.set(threadLocalVal);
++
++        if (joiner.length() != 0) {
++            return new ExcelVerifyHandlerResult(false, joiner.toString());
++        }
++        return new ExcelVerifyHandlerResult(true);
++    }
++
++    public ThreadLocal<List<SalaryHisCheckVO>> getThreadLocal() {
++        return threadLocal;
++    }
++}

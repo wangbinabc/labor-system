@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.PostHistoryMapper">
+
+    <resultMap type="PostHistory" id="PostHistoryResult">
+        <result property="phId" column="ph_id"/>
+        <result property="phEmpId" column="ph_emp_id"/>
+        <result property="phEmpName" column="ph_emp_name"/>
+        <result property="phEmpIdcard" column="ph_emp_idcard"/>
+        <result property="phOriginPostName" column="ph_origin_post_name"/>
+        <result property="phOriginPostLevel" column="ph_origin_post_level"/>
+        <result property="phDestinPostName" column="ph_destin_post_name"/>
+        <result property="phDestinPostLevel" column="ph_destin_post_level"/>
+        <result property="phAdjustReason" column="ph_adjust_reason"/>
+        <result property="phAdjustDate" column="ph_adjust_date"/>
+        <result property="phAdjustType" column="ph_adjust_type"/>
+        <result property="phUpdateDate" column="ph_update_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="insertType" column="insert_type"/>
+    </resultMap>
+
+    <sql id="selectPostHistoryVo">
+        select ph_id,
+               ph_emp_id,
+               ph_emp_name,
+        INSERT
+        (
+        SP_DECRYPT
+        (
+        employee.emp_idcard
+        )
+        ,
+        5
+        ,
+        10
+        ,
+        '**********'
+        )
+        as
+        ph_emp_idcard
+        ,
+        ph_origin_post_name
+        ,
+        ph_origin_post_level
+        ,
+        ph_destin_post_name
+        ,
+        ph_destin_post_level
+        ,
+        ph_adjust_reason
+        ,
+        ph_adjust_date
+        ,
+        ph_adjust_type
+        ,
+        ph_update_date
+        ,
+        post_history
+        .
+        create_by
+        ,
+        post_history
+        .
+        create_time
+        ,
+        post_history
+        .
+        update_by
+        ,
+        post_history
+        .
+        update_time
+        ,
+        post_history
+        .
+        insert_type
+        from post_history
+            left join employee
+        on ph_emp_id = employee.emp_id
+    </sql>
+
+    <select id="findExportInfos" resultType="com.yuantu.labor.domain.PostHistory">
+        <include refid="selectPostHistoryVo"/>
+        where post_history.disabled = 0
+        <if test="export.ids != null and export.ids.size() > 0 ">
+            and ph_id in
+            <foreach collection="export.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectPostHistoryList" parameterType="PostHistory" resultMap="PostHistoryResult">
+        <include refid="selectPostHistoryVo"/>
+        <where>
+            and post_history.disabled = 0
+            <if test="phEmpId != null ">and ph_emp_id = #{phEmpId}</if>
+            <if test="phEmpName != null  and phEmpName != ''">and ph_emp_name like concat('%', #{phEmpName}, '%')</if>
+            <if test="phEmpIdcard != null  and phEmpIdcard != ''">and CAST(SP_DECRYPT(ph_emp_idcard) AS CHAR(128)) =
+                #{phEmpIdcard}
+            </if>
+            <if test="phOriginPostName != null  and phOriginPostName != ''">and ph_origin_post_name like concat('%',
+                #{phOriginPostName}, '%')
+            </if>
+            <if test="phOriginPostLevel != null  and ph_origin_post_level != ''">and ph_origin_post_level =
+                #{phOriginPostLevel}
+            </if>
+            <if test="phDestinPostName != null  and phDestinPostName != ''">and ph_destin_post_name like concat('%',
+                #{phDestinPostName}, '%')
+            </if>
+            <if test="phDestinPostLevel != null  and phDestinPostLevel != ''">and ph_destin_post_level =
+                #{phDestinPostLevel}
+            </if>
+            <if test="phAdjustReason != null  and phAdjustReason != ''">and ph_adjust_reason = #{phAdjustReason}</if>
+            <if test="phAdjustDate != null ">and ph_adjust_date = #{phAdjustDate}</if>
+            <if test="phAdjustType != null  and phAdjustType != ''">and ph_adjust_type = #{phAdjustType}</if>
+            <if test="phUpdateDate != null ">and ph_update_date = #{phUpdateDate}</if>
+            <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="isRelated !=null and isRelated == 1 ">and employee.disabled= 1</if>
+        </where>
+    </select>
+
+
+    <select id="selectPostHistoryListByScreen" parameterType="com.yuantu.labor.vo.PostHistoryScreenVO"
+            resultMap="PostHistoryResult">
+        <include refid="selectPostHistoryVo"/>
+        <where>
+            and post_history.disabled = 0
+            <if test="phEmpId != null ">and ph_emp_id = #{phEmpId}</if>
+            <if test="phEmpName != null  and phEmpName != ''">and ph_emp_name like concat('%', #{phEmpName}, '%')</if>
+            <if test="phEmpIdcard != null  and phEmpIdcard != ''">and CAST(SP_DECRYPT(ph_emp_idcard) AS CHAR(128)) like
+                concat('%', #{phEmpIdcard}, '%')
+            </if>
+            <if test="phOriginPostName != null  and phOriginPostName != ''">and ph_origin_post_name like concat('%',
+                #{phOriginPostName}, '%')
+            </if>
+            <if test="phOriginPostLevel != null  and ph_origin_post_level != ''">and ph_origin_post_level =
+                #{phOriginPostLevel}
+            </if>
+            <if test="phDestinPostName != null  and phDestinPostName != ''">and ph_destin_post_name like concat('%',
+                #{phDestinPostName}, '%')
+            </if>
+            <if test="phDestinPostLevel != null  and phDestinPostLevel != ''">and ph_destin_post_level =
+                #{phDestinPostLevel}
+            </if>
+            <if test="phAdjustReason != null  and phAdjustReason != ''">and ph_adjust_reason = #{phAdjustReason}</if>
+            <if test="phAdjustDateStart != null ">and ph_adjust_date &gt;= #{phAdjustDateStart}</if>
+            <if test="phAdjustDateEnd != null ">and ph_adjust_date &lt;= #{phAdjustDateEnd}</if>
+            <if test="phAdjustType != null  and phAdjustType != ''">and ph_adjust_type = #{phAdjustType}</if>
+            <if test="phUpdateDate != null ">and ph_update_date = #{phUpdateDate}</if>
+            <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="isRelated !=null and isRelated == 1 ">and employee.disabled= 1</if>
+        </where>
+    </select>
+
+    <select id="selectPostHistoryByPhId" parameterType="Long" resultMap="PostHistoryResult">
+        <include refid="selectPostHistoryVo"/>
+        where ph_id = #{phId} and post_history.disabled = 0
+    </select>
+
+    <select id="selectPostHistoryListByParamsVo" parameterType="com.yuantu.labor.vo.PostQueryParamsVo"
+            resultMap="PostHistoryResult">
+        <include refid="selectPostHistoryVo"/>
+        <where>
+            and post_history.disabled = 0
+            <if test="nameOrIdcard != null  and nameOrIdcard != ''">and (ph_emp_name like concat('%', #{nameOrIdcard},
+                '%') or CAST(SP_DECRYPT(ph_emp_idcard) AS CHAR(128)) like concat('%', #{nameOrIdcard},
+                '%'))
+            </if>
+            <if test="phAdjustDate != null  and phAdjustDate != ''">and ph_adjust_date = #{phAdjustDate}</if>
+            <if test="isRelated !=null and isRelated == 1 ">and employee.disabled= 1</if>
+
+        </where>
+    </select>
+
+    <select id="countPostHistoryByYears" parameterType="Long" resultType="com.yuantu.labor.vo.PostChangesCountVO">
+        SELECT temp.ph_adjust_type, temp.ph_adjust_year, count(1) count_result
+        from (SELECT post_history.ph_adjust_type, year (post_history.ph_adjust_date) ph_adjust_year
+              FROM post_history
+              where year (post_history.ph_adjust_date) > year (now())-#{years} and disabled = 0) temp
+        GROUP BY temp.ph_adjust_year, temp.ph_adjust_type
+        ORDER BY temp.ph_adjust_year DESC
+    </select>
+
+    <insert id="insertPostHistory" parameterType="PostHistory" useGeneratedKeys="true" keyProperty="phId">
+        insert into post_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phEmpId != null">ph_emp_id,</if>
+            <if test="phEmpName != null">ph_emp_name,</if>
+            <if test="phEmpIdcard != null">ph_emp_idcard,</if>
+            <if test="phOriginPostName != null">ph_origin_post_name,</if>
+            <if test="phOriginPostLevel != null">ph_origin_post_level,</if>
+            <if test="phDestinPostName != null">ph_destin_post_name,</if>
+            <if test="phDestinPostLevel != null">ph_destin_post_level,</if>
+            <if test="phAdjustReason != null">ph_adjust_reason,</if>
+            <if test="phAdjustDate != null">ph_adjust_date,</if>
+            <if test="phAdjustType != null">ph_adjust_type,</if>
+            <if test="phUpdateDate != null">ph_update_date,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="insertType != null">insert_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="phEmpId != null">#{phEmpId},</if>
+            <if test="phEmpName != null">#{phEmpName},</if>
+            <if test="phEmpIdcard != null">SP_ENCRYPT(#{phEmpIdcard}),</if>
+            <if test="phOriginPostName != null">#{phOriginPostName},</if>
+            <if test="phOriginPostLevel != null">#{phOriginPostLevel},</if>
+            <if test="phDestinPostName != null">#{phDestinPostName},</if>
+            <if test="phDestinPostLevel != null">#{phDestinPostLevel},</if>
+            <if test="phAdjustReason != null">#{phAdjustReason},</if>
+            <if test="phAdjustDate != null">#{phAdjustDate},</if>
+            <if test="phAdjustType != null">#{phAdjustType},</if>
+            <if test="phUpdateDate != null">#{phUpdateDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="insertType != null">#{insertType},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePostHistory" parameterType="PostHistory">
+        update post_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phEmpId != null">ph_emp_id = #{phEmpId},</if>
+            <if test="phEmpName != null">ph_emp_name = #{phEmpName},</if>
+            <if test="phEmpIdcard != null">ph_emp_idcard = #{phEmpIdcard},</if>
+            <if test="phOriginPostName != null">ph_origin_post_name = #{phOriginPostName},</if>
+            <if test="phOriginPostLevel != null">ph_origin_post_level = #{phOriginPostLevel},</if>
+            <if test="phDestinPostName != null">ph_destin_post_name = #{phDestinPostName},</if>
+            <if test="phDestinPostLevel != null">ph_destin_post_level = #{phDestinPostLevel},</if>
+            <if test="phAdjustReason != null">ph_adjust_reason = #{phAdjustReason},</if>
+            <if test="phAdjustDate != null">ph_adjust_date = #{phAdjustDate},</if>
+            <if test="phAdjustType != null">ph_adjust_type = #{phAdjustType},</if>
+            <if test="phUpdateDate != null">ph_update_date = #{phUpdateDate},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="insertType != null">insert_type = #{insertType},</if>
+        </trim>
+        where ph_id = #{phId}
+    </update>
+
+    <update id="deletePostHistoryByPhId" parameterType="Long">
+        update post_history
+        set disabled = 1
+        where ph_id = #{phId}
+    </update>
+
+    <update id="deletePostHistoryByPhIds" parameterType="String">
+        update post_history set disabled = 1 where ph_id in
+        <foreach item="phId" collection="array" open="(" separator="," close=")">
+            #{phId}
+        </foreach>
+    </update>
+    <update id="removeCurrentDayInfo">
+        update post_history
+        set disabled = 1
+        where ph_emp_id = #{empId}
+          and disabled = 0
+          and DATE_FORMAT(create_time, '%Y-%m-%d') = DATE_FORMAT(now(), '%Y-%m-%d')
+    </update>
+</mapper>

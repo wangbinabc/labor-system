@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuantu.labor.mapper.EmpTrainMapper">
+
+    <resultMap type="com.yuantu.labor.domain.EmpTrain" id="EmpTrainResult">
+        <result property="trainId" column="train_id"/>
+        <result property="trainProjectId" column="train_project_id"/>
+        <result property="trainProjectName" column="train_project_name"/>
+        <result property="trainPeriod" column="train_period"/>
+        <result property="trainFee" column="train_fee"/>
+        <result property="trainAddrMethod" column="train_addr_method"/>
+        <result property="trainBeginTime" column="train_begin_time"/>
+        <result property="trainEndTime" column="train_end_time"/>
+        <result property="trainExamMethod" column="train_exam_method"/>
+        <result property="trainEmpId" column="train_emp_id"/>
+        <result property="trainEmpName" column="train_emp_name"/>
+        <result property="trainEmpIdcard" column="train_emp_idcard"/>
+        <result property="trainWorkUnitsId" column="train_work_units_id"/>
+        <result property="trainWorkUnitsName" column="train_work_units_name"/>
+        <result property="trainHrCompanyId" column="train_hr_company_id"/>
+        <result property="trainHrCompanyName" column="train_hr_company_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <resultMap type="com.yuantu.labor.vo.EmpTrainResultVO" id="EmpTrainVOResult">
+        <result property="trainId" column="train_id"/>
+        <result property="trainProjectId" column="train_project_id"/>
+        <result property="trainProjectName" column="train_project_name"/>
+        <result property="trainPeriod" column="train_period"/>
+        <result property="trainFee" column="train_fee"/>
+        <result property="trainAddrMethod" column="train_addr_method"/>
+        <result property="trainBeginTime" column="train_begin_time"/>
+        <result property="trainEndTime" column="train_end_time"/>
+        <result property="trainExamMethod" column="train_exam_method"/>
+        <result property="trainEmpId" column="train_emp_id"/>
+        <result property="trainEmpName" column="train_emp_name"/>
+        <result property="trainEmpIdcard" column="train_emp_idcard"/>
+        <result property="trainWorkUnitsId" column="train_work_units_id"/>
+        <result property="trainWorkUnitsName" column="train_work_units_name"/>
+        <result property="trainHrCompanyId" column="train_hr_company_id"/>
+        <result property="trainHrCompanyName" column="train_hr_company_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="projectContent" column="project_content"/>
+        <result property="projectNature" column="project_nature"/>
+        <result property="projectMethod" column="project_method"/>
+    </resultMap>
+     <sql id="selectEmpTrainVo">
+        select train_id,
+               train_project_id,
+               train_project_name,
+               train_period,
+               train_fee,
+               train_addr_method,
+               train_begin_time,
+               train_end_time,
+               train_exam_method,
+               train_emp_id,
+               train_emp_name,
+               train_emp_idcard,
+               train_work_units_id,
+               train_work_units_name,
+               train_hr_company_id,
+               train_hr_company_name,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from emp_train
+    </sql>
+
+    <select id="selectEmpTrainList" parameterType="com.yuantu.labor.domain.EmpTrain" resultMap="EmpTrainResult">
+        <include refid="selectEmpTrainVo"/>
+        <where>
+            <if test="trainProjectId != null ">and train_project_id = #{trainProjectId}</if>
+            <if test="trainProjectName != null  and trainProjectName != ''">and train_project_name like concat('%',
+                #{trainProjectName}, '%')
+            </if>
+            <if test="trainPeriod != null ">and train_period = #{trainPeriod}</if>
+            <if test="trainFee != null ">and train_fee = #{trainFee}</if>
+            <if test="trainAddrMethod != null  and trainAddrMethod != ''">and train_addr_method = #{trainAddrMethod}
+            </if>
+            <if test="trainBeginTime != null ">and train_begin_time = #{trainBeginTime}</if>
+            <if test="trainEndTime != null ">and train_end_time = #{trainEndTime}</if>
+            <if test="trainExamMethod != null  and trainExamMethod != ''">and train_exam_method = #{trainExamMethod}
+            </if>
+            <if test="trainEmpId != null ">and train_emp_id = #{trainEmpId}</if>
+            <if test="trainEmpName != null  and trainEmpName != ''">and train_emp_name like concat('%', #{trainEmpName},
+                '%')
+            </if>
+            <if test="trainEmpIdcard != null  and trainEmpIdcard != ''">and train_emp_idcard = #{trainEmpIdcard}</if>
+            <if test="trainWorkUnitsId != null ">and train_work_units_id = #{trainWorkUnitsId}</if>
+            <if test="trainWorkUnitsName != null  and trainWorkUnitsName != ''">and train_work_units_name like
+                concat('%', #{trainWorkUnitsName}, '%')
+            </if>
+            <if test="trainHrCompanyId != null ">and train_hr_company_id = #{trainHrCompanyId}</if>
+            <if test="trainHrCompanyName != null  and trainHrCompanyName != ''">and train_hr_company_name like
+                concat('%', #{trainHrCompanyName}, '%')
+            </if>
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <select id="selectEmpTrainByEmpId" parameterType="Integer" resultMap="EmpTrainVOResult">
+        select train_id,
+               train_project_id,
+               project_name as train_project_name,
+               train_period,
+               train_fee,
+               train_addr_method,
+               train_begin_time,
+               train_end_time,
+               train_exam_method,
+               train_emp_id,
+               train_emp_name,
+               train_emp_idcard,
+               train_work_units_id,
+               train_work_units_name,
+               train_hr_company_id,
+               train_hr_company_name,
+               emp_train.create_by,
+               emp_train.create_time,
+               emp_train.update_by,
+               emp_train.update_time,
+               project_nature,
+               project_content,
+               project_method
+        from emp_train
+                 LEFT JOIN train_project ON emp_train.train_project_id = train_project.project_id
+        where train_emp_id = #{empId}
+          and emp_train.disabled = 0
+        ORDER BY train_begin_time
+    </select>
+    <select id="countEmpTrainNatureNumByEmpId" parameterType="Integer" resultType="com.yuantu.labor.vo.PieChartVO">
+        select value, dict_label as name
+        from (select count(*) as value,project_nature as name
+              from emp_train LEFT JOIN train_project
+              ON emp_train.train_project_id = train_project.project_id
+              where train_emp_id =#{empId} and emp_train.disabled = 0
+              group by train_project.project_nature) as tempTable
+                 LEFT JOIN sys_dict_data
+                           on `tempTable`.`name` = sys_dict_data.dict_value and sys_dict_data.dict_type = 'train_nature'
+    </select>
+    <select id="countEmpTrainPeriodByEmpId" parameterType="Integer" resultType="com.yuantu.labor.vo.PieChartVO">
+
+        select value, dict_label as name
+        from (select sum(train_period) as value,project_nature as name
+              from emp_train LEFT JOIN train_project
+              ON emp_train.train_project_id = train_project.project_id
+              where train_emp_id = #{empId} and emp_train.disabled = 0
+              group by train_project.project_nature) as tempTable
+                 LEFT JOIN sys_dict_data
+                           on `tempTable`.`name` = sys_dict_data.dict_value and sys_dict_data.dict_type = 'train_nature'
+    </select>
+
+    <select id="countRecentYearsTrainNumByEmpId" parameterType="Integer" resultType="com.yuantu.labor.vo.PieChartVO">
+        select count(train_period) as value,c_year as name,'培训课程个数' as id
+        from
+            (
+            select year (now())-4 as c_year union all
+            select year (now())-3 as c_year union all
+            select year (now())-2 as c_year union all
+            select year (now())-1 as c_year union all
+            select year (now()) as c_year
+            ) as yeartab
+            LEFT JOIN emp_train
+        ON c_year = year (train_begin_time) and emp_train.disabled = 0 and train_emp_id = #{empId}
+        GROUP BY c_year
+    </select>
+    <select id="countRecentYearsTrainPeriodByEmpId" parameterType="Integer" resultType="com.yuantu.labor.vo.PieChartVO">
+        select COALESCE(sum(train_period), 0) as value,c_year as name,'培训时长' as id
+        from
+            (
+            select year (now())-4 as c_year union all
+            select year (now())-3 as c_year union all
+            select year (now())-2 as c_year union all
+            select year (now())-1 as c_year union all
+            select year (now()) as c_year
+            ) as yeartab
+            LEFT JOIN emp_train
+        ON c_year = year (train_begin_time) and emp_train.disabled = 0 and train_emp_id = #{empId}
+        GROUP BY c_year
+    </select>
+
+    <select id="findInfosByEmpIds" resultType="com.yuantu.labor.domain.EmpTrain">
+        <include refid="selectEmpTrainVo"/>
+        where disabled = 0 and train_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+    <select id="findInfosDuringOneYearByEmpIds" resultType="com.yuantu.labor.domain.EmpTrain">
+        <include refid="selectEmpTrainVo"/>
+        where disabled = 0 and create_time >= DATE_SUB(NOW(), INTERVAL 1 YEAR) and train_emp_id in
+        <foreach collection="empIds" item="empId" open="(" separator="," close=")">
+            #{empId}
+        </foreach>
+    </select>
+
+
+</mapper>

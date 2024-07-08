@@ -1,0 +1,126 @@
+ruoyi:
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  #  profile: C:/ruoyi/uploadPath
+  #profile: /home/yuantu/yqc_labor/file
+  profile: D:/ruoyi/uploadPath
+
+#test22
+
+# 数据源配置
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      # 主库数据源
+      master:
+#        url: jdbc:mysql://192.168.0.100:3306/yqc_labor_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+#        username: ENC(PMDgIuFa5boKp4JYR094/SADFSqDrjta)
+#        password: ENC(mfzApjU3ZSPXC/8r/2glfg==)
+        url: jdbc:mysql://127.0.0.1:3306/labordb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: root
+
+        #        url: jdbc:mysql://1.117.59.139:3060/yqc_labor_system?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+        #        username: root
+        #        password: Nj223456
+#        url: jdbc:mysql://192.168.0.203:3306/labor?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8&sql_mode=NO_ENGINE_SUBSTITUTION
+#        username: ENC(P0xbfQkeYyRcxwYkKzuuRw==)
+#        password: ENC(GWEc8MqcrpqVCKA4sX8+Oo3SRARwl0El)
+      #        url: jdbc:mysql://192.168.0.200:3306/labor?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      #        username: ENC(4R0/ctHeL3SFG75T9f4qiA==)
+      #        password: ENC(2lwDN8kwQAGHAr8GiQgL3zNnDwMoPNy1)
+
+      # 从库数据源
+      slave:
+        # 从数据源开关/默认关闭
+        enabled: false
+        url:
+        username:
+        password:
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置连接超时时间
+      connectTimeout: 30000
+      # 配置网络超时时间
+      socketTimeout: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+      #        login-username: ruoyi
+      #        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+
+  # redis 配置
+  redis:
+    # 地址
+    #host: 192.168.0.100
+    host: localhost
+    #host: 192.168.0.203
+    #host: 192.168.0.200
+    # 端口，默认为6379
+    #    port: 7380
+    port: 6379
+    # 数据库索引
+    database: 1
+    # 密码
+    #    password: Zym@yt-redis
+    # password:
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  # pathMapping: /dev-api
+#path:
+#  #resource: /home/yuantu/yqc_labor/resource
+#  resource: D:\test1\resource
+jasypt:
+  encryptor:
+    password: sadXinao_enn1026 # 密钥(自定义随意编写)
+
+
