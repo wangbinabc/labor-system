@@ -62,6 +62,7 @@ public class BudgetController extends BaseController
     }
 
     /**
+     * 查询所有的预算列表（无预算类别和年份）
      * 查询匹配的预算列表（预算类别和年份）
      * @param budgetTypeId
      * @param budgetYear
@@ -74,4 +75,15 @@ public class BudgetController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 删除budget记录
+     * @param budgetId
+     */
+    @ApiOperation("删除budget记录")
+    @GetMapping("/delList")
+    public void delList(Integer budgetId) {
+        if (budgetId != null) {
+            budgetService.delList(budgetId);
+        }
+    }
 }
