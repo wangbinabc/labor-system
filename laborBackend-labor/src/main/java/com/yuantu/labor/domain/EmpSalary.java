@@ -31,6 +31,7 @@ public class EmpSalary extends BaseEntity
     @Excel(name = "身份证")
     private String salaryEmpIdcard;
 
+
     /** 年月 */
     @Excel(name = "工资年月")
     private String salaryYearMonth;

@@ -33,6 +33,22 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
+
+    <resultMap id="empSalaryMap" type="EmpSalary">
+        <id property="salaryId" column="salary_id"/>
+        <result property="salaryEmpName" column="salary_emp_name"/>
+        <result property="salaryEmpIdcard" column="salary_emp_idcard"/>
+        <result property="empDeptName" column="emp_dept_name"/>
+
+        <collection property="salaryItems" ofType="EmpSalaryItem">
+            <id property="itemId" column="item_id"/>
+            <result property="itemConfItem" column="item_conf_item"/>
+            <result property="itemValue" column="item_value"/>
+        </collection>
+    </resultMap>
+
+
+
     <sql id="selectEmpSalaryVo">
         select salary_emp_name,
                CAST(SP_DECRYPT(salary_emp_idcard) AS CHAR(128)) as salary_emp_idcard,
@@ -80,7 +96,28 @@
         </where>
     </select>
 
-
+<!--1.3.1 主页面显示-->
+        <select id="showMain" resultMap="empSalaryMap">
+            SELECT
+                salary_id as 序号,
+                emp_salary.salary_emp_name ,
+                emp_salary.salary_emp_idcard ,
+                emp_dept_name ,
+                e1.item_value ,
+                e2.item_value ,
+                e3.item_value ,
+                e4.item_value
+            FROM
+                emp_salary
+                    LEFT JOIN emp_salary_item AS e1 ON e1.item_salary_id = emp_salary.salary_id AND e1.item_conf_item = '基本工资'
+                    LEFT JOIN emp_salary_item AS e2 ON e2.item_salary_id = emp_salary.salary_id AND e2.item_conf_item = '绩效工资'
+                    LEFT JOIN emp_salary_item AS e3 ON e3.item_salary_id = emp_salary.salary_id AND e3.item_conf_item = '工龄工资'
+                    LEFT JOIN emp_salary_item AS e4 ON e4.item_salary_id = emp_salary.salary_id AND e4.item_conf_item = '补扣工资'
+                    LEFT JOIN salary_config ON salary_config.conf_id = e1.item_conf_id
+                    LEFT JOIN employee ON employee.emp_id = emp_salary.salary_emp_id
+            WHERE
+                salary_config.conf_type_label = '工资'and emp_salary.disabled = 0;
+        </select>
 <!--    输入姓名或者身份证号查找-->
 
     <select id="selectByNameOrId" parameterType="EmpSalary" resultMap="EmpSalaryResult">

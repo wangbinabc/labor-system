@@ -35,4 +35,7 @@ public interface IEmpSalaryService {
     //根据身份证号或者姓名查找
 
     public List<EmpSalary> selectByNameOrId(EmpSalary empSalary);
+    //主页初始化显示
+
+
 }

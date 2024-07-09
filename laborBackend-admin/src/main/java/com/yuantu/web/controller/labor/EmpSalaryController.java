@@ -64,5 +64,11 @@ public class EmpSalaryController extends BaseController {
     }
 
     //1薪资构成配置
+    //主页初始化
+    @GetMapping("/initWeb")
+    public TableDataInfo  init(  ){
+        return null;
+    }
+
 }
 
