@@ -35,4 +35,9 @@ public interface BudgetMapper
      */
     public List<Budget> selectMatchBudgetList(@Param("budgetTypeId") String budgetTypeId, @Param("budgetYear") Long budgetYear);
 
+    /**
+     * 删除budget记录
+     * @param budgetId
+     */
+    public void delList(Integer budgetId);
 }
