@@ -37,6 +37,7 @@ public class BudgetServiceImpl implements IBudgetService
     }
 
     /**
+     * 查询所有的预算列表（无预算类别和年份）
      * 查询匹配的预算列表（预算类别和年份）
      * @param budgetTypeId
      * @param budgetYear
@@ -45,6 +46,15 @@ public class BudgetServiceImpl implements IBudgetService
     @Override
     public List<Budget> selectMatchBudgetList(String budgetTypeId, Long budgetYear) {
         return budgetMapper.selectMatchBudgetList(budgetTypeId,budgetYear);
+    }
+
+    /**
+     * 删除budget记录
+     * @param budgetId
+     */
+    @Override
+    public void delList(Integer budgetId) {
+        budgetMapper.delList(budgetId);
     }
 
 }
