@@ -45,8 +45,8 @@
             resultMap="TrainProjectResult">
         <include refid="selectTrainProjectVo"/>
         <where>
-            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
-                '%')
+            <if test="projectName != null  and projectName != ''">
+                and project_name like concat('%', #{projectName},'%')
             </if>
             <if test="projectContent != null  and projectContent != ''">and project_content = #{projectContent}</if>
             <if test="projectYear != null  and projectYear != ''">and project_year = #{projectYear}</if>

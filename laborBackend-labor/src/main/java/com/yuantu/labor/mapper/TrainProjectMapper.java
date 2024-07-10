@@ -22,6 +22,12 @@ public interface TrainProjectMapper
 
      List<TrainProject> selectTrainProjectByProjectName(String projectName);
 
+    /**
+     * 筛选查询
+     * @author junjia
+     * @param vo
+     * @return
+     */
      List<TrainProject> selectTrainProjectListByQueryVO(TrainProjectQueryVO vo);
 
      List<TrainProject> selectTrainProjectListByKeyword(String keyword);
@@ -33,6 +39,14 @@ public interface TrainProjectMapper
      * @return List<TrainProject>
      */
     List<TrainProject> selectTrainProjectList(TrainProject trainProject);
+
+    /**
+     * 多选删除
+     * @author junjia
+     * @param ids
+     * @return
+     */
+    int deleteTrainProjectByProjectIds(Integer[] ids);
 
 
 

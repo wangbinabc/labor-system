@@ -51,4 +51,5 @@ public interface EmpSalaryMapper {
     List<EmpSalary> findInfosByEmpIdsAndCurrentTime(@Param("empIds") List<Long> empIds, @Param("now") Date now);
 
     List<EmpSalary> findInfosByEmpIds(@Param("empIds") List<Long> singletonList);
+
 }
