@@ -115,6 +115,7 @@
         UPDATE budget_detail SET disabled=1 WHERE detail_budget_id=#{budgetId}
     </update>
 
+
 <!--    更新删除（有错，找不到java.util.List）-->
 <!--    <update id="delList" parameterType="java.util.List">-->
 <!--        UPDATE budget SET disabled=1 WHERE budget_id=#{budgetIds}-->
