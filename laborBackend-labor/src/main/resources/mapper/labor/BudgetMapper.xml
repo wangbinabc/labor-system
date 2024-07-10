@@ -105,9 +105,29 @@
         </where>
     </select>
 
+<!--    删除budget记录-->
     <update id="delList" parameterType="int">
         UPDATE budget SET disabled=1 WHERE budget_id=#{budgetId}
     </update>
+
+<!--    删除对应的budgetDetail-->
+    <update id="delDetailsList" parameterType="int">
+        UPDATE budget_detail SET disabled=1 WHERE detail_budget_id=#{budgetId}
+    </update>
+
+
+<!--    更新删除（有错，找不到java.util.List）-->
+<!--    <update id="delList" parameterType="java.util.List">-->
+<!--        UPDATE budget SET disabled=1 WHERE budget_id=#{budgetIds}-->
+<!--        <where>-->
+<!--            <if test="budgetIds != null and budgetIds.size() > 0">-->
+<!--                and budget_id in-->
+<!--                <foreach collection="budgetIds" item="budgetId" open="(" separator="," close=")" index="">-->
+<!--                    #{budgetId}-->
+<!--                </foreach>-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </update>-->
 
 <!--    budget_detail-->
 <!--    * 查询所有的预算列表（无预算类别和年份）-->
