@@ -2,8 +2,6 @@ package com.yuantu.labor.mapper;
 
 import java.util.List;
 import com.yuantu.labor.domain.Budget;
-import com.yuantu.labor.domain.BudgetDetail;
-import com.yuantu.labor.vo.BudgetQueryVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -40,4 +38,10 @@ public interface BudgetMapper
      * @param budgetId
      */
     public void delList(Integer budgetId);
+
+    /**
+     * 删除对应的budgetDetail
+     * @param budgetId
+     */
+    public void delDetailsList(Integer budgetId);
 }

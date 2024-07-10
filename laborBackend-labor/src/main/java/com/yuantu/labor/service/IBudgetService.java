@@ -2,7 +2,6 @@ package com.yuantu.labor.service;
 
 import java.util.List;
 import com.yuantu.labor.domain.Budget;
-import com.yuantu.labor.vo.BudgetQueryVO;
 
 /**
  * 预算主Service接口
