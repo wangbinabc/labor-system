@@ -55,11 +55,35 @@ public class BudgetController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Budget budget)
     {
+        //hello
         startPage();
         List<Budget> list = budgetService.selectBudgetList(budget);
         return getDataTable(list);
     }
 
+    /**
+     * 查询所有的预算列表（无预算类别和年份）
+     * 查询匹配的预算列表（预算类别和年份）
+     * @param budgetTypeId
+     * @param budgetYear
+     * @return
+     */
+    @ApiOperation("搜索匹配的预算列表")
+    @GetMapping("/listMatch")
+    public TableDataInfo listMatch(String budgetTypeId, Long budgetYear) {
+        List<Budget> list = budgetService.selectMatchBudgetList(budgetTypeId, budgetYear);
+        return getDataTable(list);
+    }
 
-
+    /**
+     * 删除budget记录
+     * @param budgetId
+     */
+    @ApiOperation("删除budget记录")
+    @GetMapping("/delList")
+    public void delList(Integer budgetId) {
+        if (budgetId != null) {
+            budgetService.delList(budgetId);
+        }
+    }
 }

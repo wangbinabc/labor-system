@@ -20,6 +20,24 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <resultMap type="BudgetDetail" id="BudgetDetailResult">
+        <result property="detailId" column="detail_id"/>
+        <result property="detailBudgetId" column="detail_budget_id"/>
+        <result property="detailMonth" column="detail_month"/>
+        <result property="detailBudgetAmount" column="detail_budget_amount"/>
+        <result property="detailActualAmount" column="detail_actual_amount"/>
+        <result property="budgetCompanyId" column="budget_company_id"/>
+        <result property="budgetCompanyName" column="budget_company_name"/>
+        <result property="budgetTypeId" column="budget_type_id"/>
+        <result property="budgetTypeName" column="budget_type_name"/>
+        <result property="budgetYear" column="budget_year"/>
+        <result property="budgetExecProgress" column="budget_exec_progress"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
     <sql id="selectBudgetVo">
         select budget_id,
                budget_company_id,
@@ -36,6 +54,24 @@
                update_by,
                update_time
         from budget
+    </sql>
+
+    <sql id="selectBudgetDetailVo">
+        select budget_detail.detail_id,
+               budget_detail.detail_budget_id,
+               budget_detail.detail_month,
+               budget_detail.detail_budget_amount,
+               budget_detail.detail_actual_amount,
+               budget.budget_company_id,
+               budget.budget_company_name,
+               budget.budget_type_id,
+               budget.budget_type_name,
+               budget.budget_year,
+               budget.budget_exec_progress,
+               budget.create_by,
+               budget.create_time,
+               budget.update_by,
+               budget.update_time
     </sql>
 
     <select id="selectBudgetList" parameterType="Budget" resultMap="BudgetResult">
@@ -59,5 +95,48 @@
         </where>
     </select>
 
+    <!--    * 查询所有的预算列表（无预算类别和年份）-->
+    <!--    * 查询匹配的预算列表（预算类别和年份）-->
+    <select id="selectMatchBudgetList" resultMap="BudgetResult">
+        <include refid="selectBudgetVo"/>
+        <where>
+            <if test="budgetTypeId != null">and budget_type_id = #{budgetTypeId}</if>
+            <if test="budgetYear != null">and budget_year = #{budgetYear}</if>
+        </where>
+    </select>
 
+<!--    删除budget记录-->
+    <update id="delList" parameterType="int">
+        UPDATE budget SET disabled=1 WHERE budget_id=#{budgetId}
+    </update>
+
+<!--    删除对应的budgetDetail-->
+    <update id="delDetailsList" parameterType="int">
+        UPDATE budget_detail SET disabled=1 WHERE detail_budget_id=#{budgetId}
+    </update>
+
+
+<!--    更新删除（有错，找不到java.util.List）-->
+<!--    <update id="delList" parameterType="java.util.List">-->
+<!--        UPDATE budget SET disabled=1 WHERE budget_id=#{budgetIds}-->
+<!--        <where>-->
+<!--            <if test="budgetIds != null and budgetIds.size() > 0">-->
+<!--                and budget_id in-->
+<!--                <foreach collection="budgetIds" item="budgetId" open="(" separator="," close=")" index="">-->
+<!--                    #{budgetId}-->
+<!--                </foreach>-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </update>-->
+
+<!--    budget_detail-->
+<!--    * 查询所有的预算列表（无预算类别和年份）-->
+<!--    * 查询匹配的预算列表（预算类别和年份）-->
+<!--    <select id="selectMatchBudgetList" resultMap="BudgetDetailResult">-->
+<!--        <include refid="selectBudgetDetailVo"/>-->
+<!--        <where>-->
+<!--            <if test="budgetTypeId != null">and budget_type_id = #{budgetTypeId}</if>-->
+<!--            <if test="budgetYear != null">and budget_year = #{budgetYear}</if>-->
+<!--        </where>-->
+<!--    </select>-->
 </mapper>

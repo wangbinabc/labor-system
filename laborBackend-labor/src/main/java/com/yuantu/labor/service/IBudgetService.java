@@ -2,7 +2,6 @@ package com.yuantu.labor.service;
 
 import java.util.List;
 import com.yuantu.labor.domain.Budget;
-import com.yuantu.labor.vo.BudgetQueryVO;
 
 /**
  * 预算主Service接口
@@ -21,5 +20,18 @@ public interface IBudgetService
      */
     public List<Budget> selectBudgetList(Budget budget);
 
+    /**
+     * 查询所有的预算列表（无预算类别和年份）
+     * 查询匹配的预算列表（预算类别和年份）
+     * @param budgetTypeId
+     * @param budgetYear
+     * @return
+     */
+    public List<Budget> selectMatchBudgetList(String budgetTypeId, Long budgetYear);
 
+    /**
+     * 删除budget记录
+     * @param budgetId
+     */
+    public void delList(Integer budgetId);
 }

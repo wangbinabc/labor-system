@@ -80,6 +80,20 @@
             </if>
         </where>
     </select>
+
+
+<!--    输入姓名或者身份证号查找-->
+
+    <select id="selectByNameOrId" parameterType="EmpSalary" resultMap="EmpSalaryResult">
+        <include refid="selectEmpSalaryVo"/>
+        <where>
+
+            <if test="salaryEmpIdcard != null  and salaryEmpIdcard != ''">and salary_emp_idcard = #{salaryEmpIdcard}
+            </if>
+            <if test="salaryEmpName != null  and salaryEmpName != ''">and salary_emp_name like  CONCAT('%',#{salaryEmpName},'%')
+            </if>
+        </where>
+    </select>
     <select id="selectEmpSalaryItemListBySalaryId" parameterType="Integer" resultMap="EmpSalaryItemRatioResult">
         select item_id,
         item_salary_id,

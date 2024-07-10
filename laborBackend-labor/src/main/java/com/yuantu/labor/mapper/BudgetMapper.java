@@ -2,9 +2,8 @@ package com.yuantu.labor.mapper;
 
 import java.util.List;
 import com.yuantu.labor.domain.Budget;
-import com.yuantu.labor.domain.BudgetDetail;
-import com.yuantu.labor.vo.BudgetQueryVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -26,6 +25,23 @@ public interface BudgetMapper
      */
     public List<Budget> selectBudgetList(Budget budget);
 
+    /**
+     * 查询匹配的预算列表（预算类别和年份）
+     * @param budgetTypeId
+     * @param budgetYear
+     * @return
+     */
+    public List<Budget> selectMatchBudgetList(@Param("budgetTypeId") String budgetTypeId, @Param("budgetYear") Long budgetYear);
 
+    /**
+     * 删除budget记录
+     * @param budgetId
+     */
+    public void delList(Integer budgetId);
 
+    /**
+     * 删除对应的budgetDetail
+     * @param budgetId
+     */
+    public void delDetailsList(Integer budgetId);
 }
