@@ -41,6 +41,10 @@
             <version>3.8.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.yuantu</groupId>
+            <artifactId>laborBackend-system</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

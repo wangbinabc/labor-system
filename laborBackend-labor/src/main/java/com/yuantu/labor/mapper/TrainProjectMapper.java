@@ -19,13 +19,37 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TrainProjectMapper 
 {
-;
 
-    public List<TrainProject> selectTrainProjectByProjectName(String projectName);
+     List<TrainProject> selectTrainProjectByProjectName(String projectName);
 
-    public List<TrainProject> selectTrainProjectListByQueryVO(TrainProjectQueryVO vo);
+    /**
+     * 筛选查询
+     * @author junjia
+     * @param vo
+     * @return
+     */
+     List<TrainProject> selectTrainProjectListByQueryVO(TrainProjectQueryVO vo);
 
-    public List<TrainProject> selectTrainProjectListByKeyword(String keyword);
+     List<TrainProject> selectTrainProjectListByKeyword(String keyword);
+
+    /**
+     * 模糊查询
+     * @author junjia
+     * @param trainProject
+     * @return List<TrainProject>
+     */
+    List<TrainProject> selectTrainProjectList(TrainProject trainProject);
+
+    /**
+     * 多选删除
+     * @author junjia
+     * @param ids
+     * @return
+     */
+    int deleteTrainProjectByProjectIds(Integer[] ids);
+
+
+
 
 
 }
