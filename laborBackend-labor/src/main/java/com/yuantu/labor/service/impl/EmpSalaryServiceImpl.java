@@ -95,6 +95,13 @@ public class EmpSalaryServiceImpl implements IEmpSalaryService {
     public List<SalaryChartVO> countPastYearNetPay(EmpSalaryQueryVO queryVO) {
         return empSalaryMapper.countPastYearNetPay(queryVO);
     }
+//根据身份证号或姓名查找
+    @Override
+    public List<EmpSalary> selectByNameOrId(EmpSalary empSalary) {
+        return empSalaryMapper.selectByNameOrId(empSalary);
+    }
+//主页初始化
+
 
 }
 

@@ -29,7 +29,7 @@ public interface EmpSalaryMapper {
      * @return 员工酬薪主集合
      */
     public List<EmpSalary> selectEmpSalaryList(EmpSalary empSalary);
-
+    public List<EmpSalary> selectByNameOrId(EmpSalary empSalary);
     public List<EmpSalaryItem> selectEmpSalaryItemListBySalaryId(Integer salaryId);
 
     /**
@@ -51,4 +51,9 @@ public interface EmpSalaryMapper {
     List<EmpSalary> findInfosByEmpIdsAndCurrentTime(@Param("empIds") List<Long> empIds, @Param("now") Date now);
 
     List<EmpSalary> findInfosByEmpIds(@Param("empIds") List<Long> singletonList);
+
+
+    //主页显示
+
+
 }
