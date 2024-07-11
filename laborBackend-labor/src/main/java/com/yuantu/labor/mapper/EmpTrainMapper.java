@@ -55,4 +55,11 @@ public interface EmpTrainMapper {
      */
     int countTrainProjectByMonth(String date);
 
+    /**
+     * 根据月份统计不同培训性质下的员工培训数量
+     * @param yearMonth 指定的年月，格式为 'YYYY-MM'
+     * @return 统计结果列表
+     */
+    List<EmpTrainProjectVO> countTrainingByNature(@Param("yearMonth") String yearMonth);
+
 }

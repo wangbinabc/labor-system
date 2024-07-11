@@ -6,6 +6,7 @@ import com.yuantu.labor.domain.TrainProject;
 import com.yuantu.labor.mapper.EmpSalaryMapper;
 import com.yuantu.labor.mapper.EmpTrainMapper;
 import com.yuantu.labor.mapper.TrainProjectMapper;
+import com.yuantu.labor.vo.EmpTrainProjectVO;
 import com.yuantu.labor.vo.TrainProjectQueryVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,5 +57,15 @@ public class MapperTest {
     public void testCountTrainProjectByMonth(){
         int i = empTrainMapper.countTrainProjectByMonth("2023-11");
         System.out.println(i);
+    }
+
+    @Test
+    public void countTrainingByNature(){
+        List<EmpTrainProjectVO> empTrainProjectVOS = empTrainMapper.countTrainingByNature("2023-11");
+        for (EmpTrainProjectVO empTrainProjectVO : empTrainProjectVOS) {
+            String projectNature = empTrainProjectVO.getProjectNature();
+            int trainingCount = empTrainProjectVO.getTrainingCount();
+            System.out.println(projectNature+" = "+trainingCount);
+        }
     }
 }

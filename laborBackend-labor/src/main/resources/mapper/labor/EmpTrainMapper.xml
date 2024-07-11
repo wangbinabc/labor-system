@@ -51,6 +51,7 @@
         <result property="projectNature" column="project_nature"/>
         <result property="projectMethod" column="project_method"/>
     </resultMap>
+
      <sql id="selectEmpTrainVo">
         select train_id,
                train_project_id,
@@ -206,6 +207,19 @@
 
     <select id="countTrainProjectByMonth" parameterType="String" resultType="int">
         SELECT COUNT(train_id) FROM emp_train WHERE DATE_FORMAT(train_begin_time, '%Y-%m') = #{date}
+    </select>
+
+    <select id="countTrainingByNature" resultType="com.yuantu.labor.vo.EmpTrainProjectVO">
+        SELECT
+            train_project.project_nature,
+            COUNT(emp_train.train_id) AS training_count
+        FROM
+            emp_train
+                LEFT JOIN train_project ON emp_train.train_project_id = train_project.project_id
+        WHERE
+            DATE_FORMAT(train_begin_time, '%Y-%m') = #{yearMonth}
+        GROUP BY
+            train_project.project_nature
     </select>
 
 
