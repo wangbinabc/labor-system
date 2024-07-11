@@ -26,7 +26,7 @@ public interface TrainProjectMapper
      * 筛选查询
      * @author junjia
      * @param vo
-     * @return
+     * @return 培训项目集合
      */
      List<TrainProject> selectTrainProjectListByQueryVO(TrainProjectQueryVO vo);
 
@@ -36,7 +36,7 @@ public interface TrainProjectMapper
      * 模糊查询
      * @author junjia
      * @param trainProject
-     * @return List<TrainProject>
+     * @return 培训项目集合
      */
     List<TrainProject> selectTrainProjectList(TrainProject trainProject);
 
@@ -44,7 +44,7 @@ public interface TrainProjectMapper
      * 多选删除
      * @author junjia
      * @param ids
-     * @return
+     * @return 删除的培训项目的数量
      */
     int deleteTrainProjectByProjectIds(Integer[] ids);
 
