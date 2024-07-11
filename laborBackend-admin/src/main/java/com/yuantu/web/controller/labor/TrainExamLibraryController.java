@@ -42,12 +42,14 @@ public class TrainExamLibraryController extends BaseController
     /**
      * 查询题库列表
      */
+
     //@PreAuthorize("@ss.hasPermi('labor:library:list')")
     @GetMapping("/list")
     @ApiOperation("查询题库列表")
     public TableDataInfo list(TrainExamLibrary trainExamLibrary)
     {
         startPage();
+        System.out.println();
         List<TrainExamLibrary> list = trainExamLibraryService.selectTrainExamLibraryList(trainExamLibrary);
         return getDataTable(list);
     }
