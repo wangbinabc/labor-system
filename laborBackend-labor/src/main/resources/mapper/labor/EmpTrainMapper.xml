@@ -204,5 +204,9 @@
         </foreach>
     </select>
 
+    <select id="countTrainProjectByMonth" parameterType="String" resultType="int">
+        SELECT COUNT(train_id) FROM emp_train WHERE DATE_FORMAT(train_begin_time, '%Y-%m') = #{date}
+    </select>
+
 
 </mapper>

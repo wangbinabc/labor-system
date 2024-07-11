@@ -1,8 +1,10 @@
 package com.yuantu;
 
 import com.yuantu.labor.domain.EmpSalary;
+import com.yuantu.labor.domain.EmpTrain;
 import com.yuantu.labor.domain.TrainProject;
 import com.yuantu.labor.mapper.EmpSalaryMapper;
+import com.yuantu.labor.mapper.EmpTrainMapper;
 import com.yuantu.labor.mapper.TrainProjectMapper;
 import com.yuantu.labor.vo.TrainProjectQueryVO;
 import org.junit.Test;
@@ -21,7 +23,7 @@ public class MapperTest {
     private TrainProjectMapper trainProjectMapper;
 
     @Autowired
-    private EmpSalaryMapper empSalaryMapper;
+    private EmpTrainMapper empTrainMapper;
 
     @Test
     public void testSelectTrainProjectList(){
@@ -50,4 +52,9 @@ public class MapperTest {
     }
 
 
+    @Test
+    public void testCountTrainProjectByMonth(){
+        int i = empTrainMapper.countTrainProjectByMonth("2023-11");
+        System.out.println(i);
+    }
 }

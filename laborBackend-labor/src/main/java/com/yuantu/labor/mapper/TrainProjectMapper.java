@@ -48,8 +48,4 @@ public interface TrainProjectMapper
      */
     int deleteTrainProjectByProjectIds(Integer[] ids);
 
-
-
-
-
 }

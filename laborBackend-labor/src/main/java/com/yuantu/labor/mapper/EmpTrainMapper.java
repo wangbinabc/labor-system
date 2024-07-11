@@ -47,4 +47,12 @@ public interface EmpTrainMapper {
 
     List<EmpTrain> findInfosDuringOneYearByEmpIds(@Param("empIds") List<Long> empIds);
 
+
+    /**
+     * 按月份统计员工参加培训项目的总数
+     * @param date
+     * @return 培训项目的总数
+     */
+    int countTrainProjectByMonth(String date);
+
 }
