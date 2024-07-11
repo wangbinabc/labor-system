@@ -68,4 +68,21 @@ public class MapperTest {
             System.out.println(projectNature+" = "+trainingCount);
         }
     }
+
+    @Test
+    public void insertTrainProject(){
+        TrainProject trainProject= new TrainProject();
+        trainProject.setProjectName("翼装飞行");
+        trainProject.setProjectYear("2024");
+        trainProject.setProjectDeptId(2);
+        trainProject.setProjectDeptName("人力资源部");
+        trainProject.setProjectMethod("内培");
+        trainProject.setProjectClassify("二类");
+        trainProject.setProjectContent("10000万高空飞行");
+        trainProject.setProjectIsfinish("1");
+        int i = trainProjectMapper.insertTrainProject(trainProject);
+        System.out.println(i);
+        System.out.println(trainProject);
+    }
+
 }
