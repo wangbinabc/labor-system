@@ -60,6 +60,6 @@ public interface EmpTrainMapper {
      * @param yearMonth 指定的年月，格式为 'YYYY-MM'
      * @return 统计结果列表
      */
-    List<EmpTrainProjectVO> countTrainingByNature(@Param("yearMonth") String yearMonth);
+    List<EmpTrainProjectVO> countTrainingByNature(String yearMonth);
 
 }
