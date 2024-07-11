@@ -54,4 +54,12 @@ public interface TrainProjectMapper
      * @return
      */
     int insertTrainProject(TrainProject trainProject);
+
+
+    /**
+     * 编辑培训项目
+     * @param trainProject
+     * @return
+     */
+    int updateTrainProject(TrainProject trainProject);
 }

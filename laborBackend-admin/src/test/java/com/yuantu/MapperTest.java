@@ -85,4 +85,14 @@ public class MapperTest {
         System.out.println(trainProject);
     }
 
+    @Test
+    public void updateTrainProject(){
+        List<TrainProject> trainProjects = trainProjectMapper.selectTrainProjectByProjectName("翼装飞行");
+        TrainProject trainProject = trainProjects.get(0);
+        trainProject.setProjectNature("1");
+        int i = trainProjectMapper.updateTrainProject(trainProject);
+        System.out.println(i);
+        System.out.println(trainProject);
+    }
+
 }
